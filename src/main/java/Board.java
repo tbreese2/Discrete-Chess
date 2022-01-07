@@ -15,57 +15,18 @@ public class Board {
     //EFFECTS: creates a new board without pieces
     public Board() {
         board = new Square[8][8];
+        for(int r = 0; r < 8; r++) {
+            for(int c = 0; c < 8; c++) {
+                board[r][c] = new Square();
+            }
+        }
         setBoard();
     }
     
     //MODIFES: Board
     //EFFECTS: clears board and sets new peices
     public void setBoard() {
-        //clear board
-        board = new Square[8][8];
-        
-         for(int r = 0; r < 8; r++) {
-            for(int c = 0; c < 8; c++) {
-                board[r][c] = new Square();
-            }
-        }
-        
-        
-        //set white peices
-        board[0][0].setOccupier("row");
-        board[0][1].setOccupier("knw");
-        board[0][2].setOccupier("biw");
-        board[0][3].setOccupier("quw");
-        board[0][4].setOccupier("kiw");
-        board[0][5].setOccupier("biw");
-        board[0][6].setOccupier("knw");
-        board[0][7].setOccupier("row");
-        board[1][0].setOccupier("paw");
-        board[1][1].setOccupier("paw");
-        board[1][2].setOccupier("paw");
-        board[1][3].setOccupier("paw");
-        board[1][4].setOccupier("paw");
-        board[1][5].setOccupier("paw");
-        board[1][6].setOccupier("paw");
-        board[1][7].setOccupier("paw");
-        
-        //set black peices
-        board[6][0].setOccupier("pab");
-        board[6][1].setOccupier("pab");
-        board[6][2].setOccupier("pab");
-        board[6][3].setOccupier("pab");
-        board[6][4].setOccupier("pab");
-        board[6][5].setOccupier("pab");
-        board[6][6].setOccupier("pab");
-        board[6][7].setOccupier("pab");
-        board[7][0].setOccupier("rob");
-        board[7][1].setOccupier("knb");
-        board[7][2].setOccupier("bib");
-        board[7][3].setOccupier("qub");
-        board[7][4].setOccupier("kib");
-        board[7][5].setOccupier("bib");
-        board[7][6].setOccupier("knb");
-        board[7][7].setOccupier("rob");
+        setBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
     
     //REQUIRES: iinput string must be in FEN format,
@@ -73,17 +34,35 @@ public class Board {
     //for more details
     //MODIFES: Board
     //EFFECTS: sets board according to inputed string
-    public void setBoard(String board) {
-       
+    public void setBoard(String FEN) {
+       // using simple for-loop
+       int r = 7;
+       int c = 0;
+        for (int i = 0; i < FEN.length(); i++) {
+            Boolean flag = Character.isDigit(FEN.charAt(i));
+            if(flag) {
+                for(int b = 0; b < Character.getNumericValue(FEN.charAt(i)); b++){
+                    board[r][c].setOccupier("");
+                    c++;
+                }
+            } else if(FEN.charAt(i) == '/') {
+                r--;
+                c = 0;
+            } else {
+                board[r][c].setOccupier(String.valueOf(FEN.charAt(i)));
+                c++;
+            }
+            
+        }
     }
     
     //EFFECTS: returns string representing board
     public String toString() {
         String out = "";
-        for(int r = 0; r < 8; r++) {
+        for(int r = 7; r >= 0; r--) {
             for(int c = 0; c < 8; c++) {
                 if(board[r][c].isOccupied()) {
-                    out += board[r][c].getOccupier().charAt(0);
+                    out += board[r][c].getOccupier();
                 } else {
                     out += "*";
                 } 

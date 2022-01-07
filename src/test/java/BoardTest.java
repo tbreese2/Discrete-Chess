@@ -24,8 +24,21 @@ public class BoardTest {
         Board instance = new Board();
         instance.setBoard();
         // TODO review the generated test code and remove the default call to fail.
-        String expResult = "rkbqkbkr\npppppppp\n********\n********\n********\n********\npppppppp\nrkbqkbkr\n";
+        String expResult = "rnbqkbnr\npppppppp\n********\n********\n********\n********\nPPPPPPPP\nRNBQKBNR\n";
         String result = instance.toString();
+        assertEquals(expResult, result);
+    }
+    
+    @Test
+    public void testSetBoardFENEdge() {
+        System.out.println("setBoard");
+        Board instance = new Board();
+        String FEN = "8/8/8/4p1K1/2k1P3/8/8/8";
+        instance.setBoard(FEN);
+        // TODO review the generated test code and remove the default call to fail.
+        String expResult = "********\n********\n********\n****p*K*\n**k*P***\n********\n********\n********\n";
+        String result = instance.toString();
+        System.out.println(instance);
         assertEquals(expResult, result);
     }
 
@@ -36,7 +49,7 @@ public class BoardTest {
     public void testToString() {
         System.out.println("toString");
         Board instance = new Board();
-        String expResult = "rkbqkbkr\npppppppp\n********\n********\n********\n********\npppppppp\nrkbqkbkr\n";
+        String expResult = "rnbqkbnr\npppppppp\n********\n********\n********\n********\nPPPPPPPP\nRNBQKBNR\n";
         String result = instance.toString();
         assertEquals(expResult, result);
     }
@@ -48,9 +61,9 @@ public class BoardTest {
     public void testGetPieceAt() {
         System.out.println("toString");
         Board instance = new Board();
-        assertTrue(instance.getPieceAt(1,1).equals("row"));
+        assertTrue(instance.getPieceAt(1,1).equals("R"));
         assertTrue(instance.getPieceAt(3,1).equals(""));
-        assertTrue(instance.getPieceAt(8,2).equals("bib"));
+        assertTrue(instance.getPieceAt(8,2).equals("n"));
     }
 
  {
