@@ -10,7 +10,8 @@
 import java.util.ArrayList;
 
 public class Board {
-    Square[][] board;
+    private Square[][] board;
+    private boolean whiteToPlay;
     
     //EFFECTS: creates a new board without pieces
     public Board() {
@@ -24,17 +25,17 @@ public class Board {
     }
     
     //MODIFES: Board
-    //EFFECTS: clears board and sets new peices
+    //EFFECTS: clears board and sets new peices, sets white to play
     public void setBoard() {
-        setBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        setBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", true);
     }
     
-    //REQUIRES: iinput string must be in FEN format,
+    //REQUIRES: input string must be in FEN postion format,
     //see https://www.chess.com/terms/fen-chess
     //for more details
     //MODIFES: Board
     //EFFECTS: sets board according to inputed string
-    public void setBoard(String FEN) {
+    public void setBoard(String FEN, boolean whiteToPlay) {
        // using simple for-loop
        int r = 7;
        int c = 0;
@@ -54,6 +55,7 @@ public class Board {
             }
             
         }
+        this.whiteToPlay = whiteToPlay;
     }
     
     //EFFECTS: returns string representing board
@@ -84,5 +86,10 @@ public class Board {
         } 
     }
    
+    //EFFECTS: returns true if white is to play
+    public boolean whiteToPlay() {
+        return whiteToPlay;
+    }
+    
     
 }

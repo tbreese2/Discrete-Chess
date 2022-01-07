@@ -34,7 +34,7 @@ public class BoardTest {
         System.out.println("setBoard");
         Board instance = new Board();
         String FEN = "8/8/8/4p1K1/2k1P3/8/8/8";
-        instance.setBoard(FEN);
+        instance.setBoard(FEN, true);
         // TODO review the generated test code and remove the default call to fail.
         String expResult = "********\n********\n********\n****p*K*\n**k*P***\n********\n********\n********\n";
         String result = instance.toString();
