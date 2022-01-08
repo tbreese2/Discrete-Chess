@@ -31,7 +31,7 @@ public class BoardTest {
     
     @Test
     public void testSetBoardFENEdge() {
-        System.out.println("setBoard");
+        System.out.println("setBoardFEN");
         Board instance = new Board();
         String FEN = "8/8/8/4p1K1/2k1P3/8/8/8";
         instance.setBoard(FEN, true);
@@ -42,9 +42,7 @@ public class BoardTest {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of toString method, of class Board.
-     */
+   
     @Test
     public void testToString() {
         System.out.println("toString");
@@ -54,12 +52,22 @@ public class BoardTest {
         assertEquals(expResult, result);
     }
     
-    /**
-     * Test of toString method, of class Board.
-     */
+    @Test
+    public void testToFEN() {
+        System.out.println("toFEN");
+        Board instance = new Board();
+        String FEN = "8/8/8/4p1K1/2k1P3/8/8/8";
+        instance.setBoard(FEN, true);
+        String expResult = "8/8/8/4p1K1/2k1P3/8/8/8";
+        String result = instance.toFEN();
+        System.out.println(result);
+        assertEquals(expResult, result);
+    }
+    
+  
     @Test
     public void testGetPieceAt() {
-        System.out.println("toString");
+        System.out.println("getPieceAt");
         Board instance = new Board();
         assertTrue(instance.getPieceAt(1,1).equals("R"));
         assertTrue(instance.getPieceAt(3,1).equals(""));

@@ -91,5 +91,32 @@ public class Board {
         return whiteToPlay;
     }
     
+    //EFFECTS: returns the board in FEN position format
+    public String toFEN() {
+        String out = "";
+        int count = 0;
+        for(int r = 7; r >= 0; r--) {
+            for(int c = 0; c < 8; c++) {
+                if(board[r][c].isOccupied()) {
+                    if (count != 0) {
+                        out += String.valueOf(count);
+                    }
+                    count = 0;
+                    out += board[r][c].getOccupier();
+                } else {
+                    count++;
+                } 
+            }
+            if (count != 0) {
+                out += String.valueOf(count);
+            }
+            count = 0;
+            if (r != 0) {
+                out += "/";
+            }
+        }
+        return out;
+    }
+    
     
 }
