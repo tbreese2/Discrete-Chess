@@ -28,6 +28,8 @@ public class EngineBoard {
     //combined bitboards
     private long WhitePieces;
     private long BlackPieces;
+    private long AllPieces;
+    
     
     //board information vars
     private boolean whiteToMove;
@@ -86,9 +88,8 @@ public class EngineBoard {
        //now use array to set every single bitboard
        for(r = 7; r >= 0; r--) {
            for(c = 0; c < 8; c++) {
-                String Binary="0000000000000000000000000000000000000000000000000000000000000000";
                 int i = r * 8 + c;
-                long location = 1L << i;
+                long location = Bits.ALL_BITS[i];
                 switch(tempBoard[r][c]) {
                     case "P": 
                         WhitePawns = location | WhitePawns;
@@ -148,11 +149,23 @@ public class EngineBoard {
         | BlackRooks
         | BlackQueens
         | BlackKing;
+        
+        AllPieces = WhitePieces | BlackPieces;
     }
     
+    //EFFECTS: returns combined bitboard in matrix form
     public String toString() {
+        setCombinedBoards();
         long AllPieces = WhitePieces | BlackPieces;
-        return "";
+        return Bits.toBinaryStringMatrix(AllPieces);
+    }
+    
+    
+    //EFFECTS: returns combined bitboard in  matrix form
+    public String toNonMatrixString() {
+        setCombinedBoards();
+        long AllPieces = WhitePieces | BlackPieces;
+        return Bits.toBinaryString(AllPieces);
     }
     
     
