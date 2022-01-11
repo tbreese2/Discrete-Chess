@@ -88,43 +88,43 @@ public class EngineBoard {
            for(c = 0; c < 8; c++) {
                 String Binary="0000000000000000000000000000000000000000000000000000000000000000";
                 int i = r * 8 + c;
-                String location=Binary.substring(i+1)+"1"+Binary.substring(0, i);
+                long location = 1L << i;
                 switch(tempBoard[r][c]) {
                     case "P": 
-                        WhitePawns = Long.parseLong(location, 2) | WhitePawns;
+                        WhitePawns = location | WhitePawns;
                         break;
                     case "N": 
-                        WhiteKnights = Long.parseLong(location, 2) | WhiteKnights;
+                        WhiteKnights = location | WhiteKnights;
                         break;
                     case "B": 
-                        WhiteBishops = Long.parseLong(location, 2) | WhiteBishops;
+                        WhiteBishops = location | WhiteBishops;
                         break;
                     case "R": 
-                        WhiteRooks = Long.parseLong(location, 2) | WhiteRooks;
+                        WhiteRooks = location | WhiteRooks;
                         break;
                     case "Q": 
-                        WhiteQueens = Long.parseLong(location, 2) | WhiteQueens;
+                        WhiteQueens = location | WhiteQueens;
                         break;
                     case "K": 
-                        WhiteKing = Long.parseLong(location, 2) | WhiteKing;
+                        WhiteKing = location | WhiteKing;
                         break;
                     case "p": 
-                        BlackPawns = Long.parseLong(location, 2) | BlackPawns;
+                        BlackPawns = location | BlackPawns;
                         break;
                     case "n": 
-                        BlackKnights = Long.parseLong(location, 2) | BlackKnights;
+                        BlackKnights = location | BlackKnights;
                         break;
                     case "b": 
-                        BlackBishops = Long.parseLong(location, 2) | BlackBishops;
+                        BlackBishops = location | BlackBishops;
                         break;
                     case "r": 
-                        BlackRooks = Long.parseLong(location, 2) | BlackRooks;
+                        BlackRooks = location | BlackRooks;
                         break;
                     case "q": 
-                        BlackQueens = Long.parseLong(location, 2) | BlackQueens;
+                        BlackQueens = location | BlackQueens;
                         break;
                     case "k": 
-                        BlackKing = Long.parseLong(location, 2) | BlackKing;
+                        BlackKing = location | BlackKing;
                         break;
                }
            }
@@ -148,6 +148,11 @@ public class EngineBoard {
         | BlackRooks
         | BlackQueens
         | BlackKing;
+    }
+    
+    public String toString() {
+        long AllPieces = WhitePieces | BlackPieces;
+        return "";
     }
     
     
