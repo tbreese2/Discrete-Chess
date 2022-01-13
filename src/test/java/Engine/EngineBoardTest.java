@@ -35,7 +35,7 @@ public class EngineBoardTest {
         String FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
         boolean whiteToPlay = true;
         EngineBoard instance = new EngineBoard();
-        instance.setBoard(FEN, whiteToPlay);
+        instance.setBoard(FEN, EngineBoard.WHITE);
         assertTrue(instance.toNonMatrixString().equals("1111111111111111000000000000000000000000000000001111111111111111"));
     }
     
@@ -48,7 +48,7 @@ public class EngineBoardTest {
         String FEN = "8/8/8/4p1K1/2k1P3/8/8/8";
         boolean whiteToPlay = true;
         EngineBoard instance = new EngineBoard();
-        instance.setBoard(FEN, whiteToPlay);
+        instance.setBoard(FEN, EngineBoard.WHITE);
         System.out.println(instance.toString());
         System.out.println(instance.toNonMatrixString());
         assertTrue(instance.toNonMatrixString().equals("0000000000000000000000000010100000001010000000000000000000000000"));
