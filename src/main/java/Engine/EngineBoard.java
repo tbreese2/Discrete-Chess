@@ -10,52 +10,37 @@ package Engine;
  */
 public class EngineBoard {
     
-    //basic bitboards
-    private long WhitePawns;
-    private long WhiteKnights;
-    private long WhiteBishops;
-    private long WhiteRooks;
-    private long WhiteQueens;
-    private long WhiteKing;
+    //trying new approach to storing boards, stored in this array instead
+    public final long[][] pieces = new long[2][7];
+    public final long[][] attacks = new long[2][7];
     
-    private long BlackPawns;
-    private long BlackKnights;
-    private long BlackBishops;
-    private long BlackRooks;
-    private long BlackQueens;
-    private long BlackKing;
-    
-    //combined bitboards
-    private long WhitePieces;
-    private long BlackPieces;
-    private long AllPieces;
+    //constants for accessing
+    public static final int ALL = 0;
+    public static final int EMPTY = 0;
+    public static final int PAWN = 1;
+    public static final int KNIGHT = 2;
+    public static final int BISHOP = 3;
+    public static final int ROOK = 4;
+    public static final int QUEEN = 5;
+    public static final int KING = 6;
+
+    public static final int WHITE = 0;
+    public static final int BLACK = 1;
     
     
     //board information vars
-    private boolean whiteToMove;
+    public int colorsTurn, colorsTurnInverse;
     
     //EFFECTS: creates a new engine board without peices
     //NOTE: the engineboard class is designed to use bitboard
     //which are much faster for computations
     public EngineBoard() {
         //initialize all bitboards to be empty
-        WhitePawns = 0L;
-        WhiteKnights = 0L;
-        WhiteBishops = 0L;
-        WhiteRooks = 0L;
-        WhiteQueens = 0L;
-        WhiteKing = 0L;
-    
-        BlackPawns = 0L;
-        BlackKnights = 0L;
-        BlackBishops = 0L;
-        BlackRooks = 0L;
-        BlackQueens = 0L;
-        BlackKing = 0L;
-    
-        //combined bitboards
-        WhitePieces = 0L;
-        BlackPieces = 0L;
+        for(int r = 0; r < pieces.length; r++) {
+            for(int c = 0; c < pieces[r].length; c++) {
+                pieces[r][c] = 0l;
+            }
+        }
     }
     
     //REQUIRES: input string must be in FEN postion format,
@@ -63,7 +48,7 @@ public class EngineBoard {
     //for more details
     //MODIFES: EngineBoard
     //EFFECTS: sets engine board according to inputed string
-    public void setBoard(String FEN, boolean whiteToPlay) {
+    public void setBoard(String FEN, int colorToPlay) {
         
        //first convert FEN to array
        String[][] tempBoard = new String[8][8];
@@ -92,81 +77,64 @@ public class EngineBoard {
                 long location = Bits.ALL_BITS[i];
                 switch(tempBoard[r][c]) {
                     case "P": 
-                        WhitePawns = location | WhitePawns;
+                        pieces[WHITE][PAWN] |= location;
                         break;
                     case "N": 
-                        WhiteKnights = location | WhiteKnights;
+                        pieces[WHITE][KNIGHT] |= location;
                         break;
                     case "B": 
-                        WhiteBishops = location | WhiteBishops;
+                        pieces[WHITE][BISHOP] |= location;
                         break;
                     case "R": 
-                        WhiteRooks = location | WhiteRooks;
+                        pieces[WHITE][ROOK] |= location;
                         break;
                     case "Q": 
-                        WhiteQueens = location | WhiteQueens;
+                        pieces[WHITE][QUEEN] |= location;
                         break;
                     case "K": 
-                        WhiteKing = location | WhiteKing;
+                        pieces[WHITE][KING] |= location;
                         break;
                     case "p": 
-                        BlackPawns = location | BlackPawns;
+                        pieces[BLACK][PAWN] |= location;
                         break;
                     case "n": 
-                        BlackKnights = location | BlackKnights;
+                        pieces[BLACK][KNIGHT] |= location;
                         break;
                     case "b": 
-                        BlackBishops = location | BlackBishops;
+                        pieces[BLACK][BISHOP] |= location;
                         break;
                     case "r": 
-                        BlackRooks = location | BlackRooks;
+                        pieces[BLACK][ROOK] |= location;
                         break;
                     case "q": 
-                        BlackQueens = location | BlackQueens;
+                        pieces[BLACK][QUEEN] |= location;
                         break;
                     case "k": 
-                        BlackKing = location | BlackKing;
+                        pieces[BLACK][KING] |= location;
                         break;
                }
            }
        }
+       pieces[BLACK][ALL] = pieces[BLACK][PAWN] | pieces[BLACK][KNIGHT] | pieces[BLACK][BISHOP]
+            | pieces[BLACK][ROOK] | pieces[BLACK][QUEEN] | pieces[BLACK][KING];
        
-    }
-    
-    //MODIFES: EngineBoard
-    //EFFECTS: sets the combined boards
-    public void setCombinedBoards() {
-        WhitePieces =  WhitePawns
-        | WhiteKnights
-        | WhiteBishops
-        | WhiteRooks
-        | WhiteQueens
-        | WhiteKing;
-        
-        BlackPieces =  BlackPawns
-        | BlackKnights
-        | BlackBishops
-        | BlackRooks
-        | BlackQueens
-        | BlackKing;
-        
-        AllPieces = WhitePieces | BlackPieces;
+       pieces[WHITE][ALL] = pieces[WHITE][PAWN] | pieces[WHITE][KNIGHT] | pieces[WHITE][BISHOP]
+            | pieces[WHITE][ROOK] | pieces[WHITE][QUEEN] | pieces[WHITE][KING];
     }
     
     //EFFECTS: returns combined bitboard in matrix form
     public String toString() {
-        setCombinedBoards();
-        long AllPieces = WhitePieces | BlackPieces;
+        long AllPieces = pieces[BLACK][ALL] | pieces[WHITE][ALL];
         return Bits.toBinaryStringMatrix(AllPieces);
     }
     
     
     //EFFECTS: returns combined bitboard in  matrix form
     public String toNonMatrixString() {
-        setCombinedBoards();
-        long AllPieces = WhitePieces | BlackPieces;
+        long AllPieces = pieces[BLACK][ALL] | pieces[WHITE][ALL];
         return Bits.toBinaryString(AllPieces);
     }
-    
+     
+    //
     
 }

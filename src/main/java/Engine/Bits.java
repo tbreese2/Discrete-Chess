@@ -6,7 +6,7 @@ package Engine;
 
 /**
  *
- * @author tylerbreese
+ * Bagatur chess util
  */
 public class Bits {
 
