@@ -1,4 +1,4 @@
-package Engine.MoveList;
+package Engine;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -28,20 +28,7 @@ public class MoveList {
     }
 
     public final void reserved_add(int move) {
-        //System.out.println(MoveInt.moveToString(move));
         moves[count++] = move;
-
-        /*if (board != null && !board.isPossible(move)) {
-			board.isPossible(move);
-			throw new IllegalStateException();
-		}*/
- /*if (MoveInt.getFigurePID(move) > 7) {
-			//throw new IllegalStateException();
-		}
-		
-		if (MoveInt.getCapturedFigurePID(move) > 7) {
-			//throw new IllegalStateException();
-		}*/
     }
 
     public final void reserved_removeLast() {

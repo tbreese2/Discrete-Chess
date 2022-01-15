@@ -31,6 +31,12 @@ public class EngineBoard {
     //board information vars
     public int colorsTurn, colorsTurnInverse;
     
+    //store checked and pinned pieces
+    //checkedPieces are pieces that check the king from enemy pieces
+    //pinnedPieces are pieces that cannot be moved by player
+    //discovered pieces are pieces that if moved, a check will be created
+    public long checkingPieces, pinnedPieces, discoveredPieces;
+    
     //EFFECTS: creates a new engine board without peices
     //NOTE: the engineboard class is designed to use bitboard
     //which are much faster for computations
@@ -41,6 +47,9 @@ public class EngineBoard {
                 pieces[r][c] = 0l;
             }
         }
+        checkingPieces = 0L;
+        discoveredPieces = 0l;
+        pinnedPieces = 0L;
     }
     
     //REQUIRES: input string must be in FEN postion format,
@@ -135,6 +144,9 @@ public class EngineBoard {
         return Bits.toBinaryString(AllPieces);
     }
      
-    //
+    //MODIFIES: this
+    //EFFECTS: updates checks, pins and discovered attacks
+    public void setCheckingPinnedAndDiscoPieces() {
     
+    }
 }
