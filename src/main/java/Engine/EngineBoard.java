@@ -37,6 +37,9 @@ public class EngineBoard {
     //discovered pieces are pieces that if moved, a check will be created
     public long checkingPieces, pinnedPieces, discoveredPieces;
     
+    //bitboards to store all pieces and empty spaces
+    public long allPieces, emptySpaces;
+    
     //EFFECTS: creates a new engine board without peices
     //NOTE: the engineboard class is designed to use bitboard
     //which are much faster for computations
@@ -124,11 +127,16 @@ public class EngineBoard {
                }
            }
        }
+       
+       //set boards based off 12 core bitboards
        pieces[BLACK][ALL] = pieces[BLACK][PAWN] | pieces[BLACK][KNIGHT] | pieces[BLACK][BISHOP]
             | pieces[BLACK][ROOK] | pieces[BLACK][QUEEN] | pieces[BLACK][KING];
        
        pieces[WHITE][ALL] = pieces[WHITE][PAWN] | pieces[WHITE][KNIGHT] | pieces[WHITE][BISHOP]
             | pieces[WHITE][ROOK] | pieces[WHITE][QUEEN] | pieces[WHITE][KING];
+       
+       allPieces = pieces[colorsTurn][ALL] | pieces[colorsTurn][ALL];
+	emptySpaces = ~allPieces;
     }
     
     //EFFECTS: returns combined bitboard in matrix form

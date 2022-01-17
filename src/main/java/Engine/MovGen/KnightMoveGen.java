@@ -13,23 +13,19 @@ import Engine.*;
 
 public class KnightMoveGen {
     
+    //REQUIRES: pieces is bitboard of knights, emptySpaces i
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves, returns movelist filled with all valid knight moves
-    public static void genAllMoves(MoveList moves, EngineBoard board){
-        if (board.checkingPieces == 0) {
-            generateNotInCheckMoves(moves, board);
-	} else if (Long.bitCount(board.checkingPieces) == 1) {
-            generateInCheckMoves(moves, board);
-	} else {
-            //only the king can move
-            KingMoveGen.genAllMoves(moves, board);
-	}
+    public static void addKnightMoves(final MoveList moves, long pieces, long emptySpa){
+       
     }
     
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves and assumes the king is in check
     public static void generateNotInCheckMoves(MoveList moves, EngineBoard board) {
+        //do non-pinned pieces
         
+        //then pinned pieces
     }
     
     //MODIFIES: moves
