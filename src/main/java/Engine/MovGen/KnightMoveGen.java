@@ -9,6 +9,7 @@ package Engine.MovGen;
  * @author tylerbreese
  */
 import Engine.*;
+import Engine.MovGen.MoveTables.StaticMoves;
 
 
 public class KnightMoveGen {
@@ -16,21 +17,17 @@ public class KnightMoveGen {
     //REQUIRES: pieces is bitboard of knights, emptySpaces i
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves, returns movelist filled with all valid knight moves
-    public static void addKnightMoves(final MoveList moves, long pieces, long emptySpa){
-       
+    public static void addKnightMoves(final MoveList moves, long pieces, final long emptySpaces){
+        while (pieces != 0) {
+            final int fromIndex = Long.numberOfTrailingZeros(pieces);
+            long pieceMoves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
+            while (pieceMoves != 0) {
+                moves.reserved_add(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(pieceMoves), EngineBoard.KNIGHT));
+                pieceMoves &= pieceMoves - 1;
+            }
+            pieces &= pieces - 1;
+	}
     }
     
-    //MODIFIES: moves
-    //EFFECTS: generates all possible knight moves and assumes the king is in check
-    public static void generateNotInCheckMoves(MoveList moves, EngineBoard board) {
-        //do non-pinned pieces
-        
-        //then pinned pieces
-    }
     
-    //MODIFIES: moves
-    //EFFECTS: generates all possible knight moves assuming the king is in check
-    public static void generateInCheckMoves(MoveList moves, EngineBoard board) {
-        
-    }
 }

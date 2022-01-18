@@ -53,4 +53,6 @@ public class EngineBoardTest {
         System.out.println(instance.toNonMatrixString());
         assertTrue(instance.toNonMatrixString().equals("0000000000000000000000000010100000001010000000000000000000000000"));
     }
+    
+    
 }

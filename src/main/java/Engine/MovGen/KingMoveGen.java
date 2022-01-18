@@ -12,9 +12,6 @@ import Engine.MoveList;
  * @author tylerbreese
  */
 public class KingMoveGen {
-    public static final int genAllMoves(MoveList moves, EngineBoard board){
-        int count = 0;
-        
-        return count;
-    }
+   
+
 }
