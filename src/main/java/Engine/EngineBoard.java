@@ -83,10 +83,12 @@ public class EngineBoard {
         }
        
        //now use array to set every single bitboard
+       
+       
        for(r = 7; r >= 0; r--) {
            for(c = 0; c < 8; c++) {
                 int i = r * 8 + c;
-                long location = Bits.ALL_BITS[i];
+                long location = Bits.ALL_BITS[63-i];
                 switch(tempBoard[r][c]) {
                     case "P": 
                         pieces[WHITE][PAWN] |= location;

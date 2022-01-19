@@ -28,20 +28,20 @@ public class MoveGen {
      
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves and assumes the king is in check
-    public static void generateNoCheckMoves(MoveList moves, EngineBoard board) {
+    public static void generateNoCheckMoves(final MoveList moves, final EngineBoard board) {
         //do non-pinned pieces
-        // non pinned pieces
-
 	final long nonPinned = ~board.pinnedPieces;
 	final long[] pieces = board.pieces[board.colorsTurn];
         
 	KnightMoveGen.addKnightMoves(moves, pieces[board.KNIGHT] & nonPinned, board.emptySpaces);
+        PawnMoveGen.addPawnMoves(moves, pieces[board.PAWN] & nonPinned, board, board.emptySpaces);
+        
         //then pinned pieces
     }
     
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves assuming the king is in check
-    public static void generateOneCheckMoves(MoveList moves, EngineBoard board) {
+    public static void generateOneCheckMoves(final MoveList moves, final EngineBoard board) {
         
     }
 }

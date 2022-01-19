@@ -4,6 +4,7 @@
  */
 package Engine.MovGen;
 
+import Engine.Bitboard;
 import Engine.EngineBoard;
 import Engine.MoveList;
 import org.junit.jupiter.api.AfterAll;
@@ -38,18 +39,22 @@ public class MoveGenTest {
         EngineBoard instance = new EngineBoard();
         instance.setBoard(FEN, EngineBoard.WHITE);
         MoveGen.genAllMoves(moves, instance);
-        assertTrue(moves.reserved_getCurrentSize() == 4);
         ArrayList<Integer> toMoves = new ArrayList<>();
         int move = moves.next();
         while(move != 0) {
             toMoves.add(MoveUtil.getToIndex(move));
             move = moves.next();
         }
-        
-        assertTrue(toMoves.contains(40));
-        assertTrue(toMoves.contains(42));
-        assertTrue(toMoves.contains(45));
-        assertTrue(toMoves.contains(47));
+        System.out.println(toMoves);
+        assertTrue(moves.reserved_getCurrentSize() == 20);
+        assertTrue(toMoves.contains(16));
+        assertTrue(toMoves.contains(17));
+        assertTrue(toMoves.contains(18));
+        assertTrue(toMoves.contains(19));
+        assertTrue(toMoves.contains(21));
+        assertTrue(toMoves.contains(22));
+        assertTrue(toMoves.contains(23));
+        assertTrue(toMoves.contains(24));
     }
 
     /**
