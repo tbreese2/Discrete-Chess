@@ -14,7 +14,6 @@ import Engine.MovGen.MoveTables.StaticMoves;
 
 public class KnightMoveGen {
     
-    //REQUIRES: pieces is bitboard of knights, emptySpaces i
     //MODIFIES: moves
     //EFFECTS: generates all possible knight moves, returns movelist filled with all valid knight moves
     public static void addKnightMoves(final MoveList moves, long pieces, final long emptySpaces){

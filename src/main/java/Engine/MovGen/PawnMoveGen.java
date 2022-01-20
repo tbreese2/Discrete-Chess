@@ -5,7 +5,8 @@
 package Engine.MovGen;
 
 import Engine.MoveList;
-import Engine.*;
+import Engine.EngineBoard;
+import Engine.Bitboard;
 
 /**
  *
@@ -13,7 +14,9 @@ import Engine.*;
  */
 public class PawnMoveGen {
 
-    
+    //MODIFIES: movelist
+    //EFFECTS: adds pawn moves to move list, no en pessant or upgrades
+    //however.
     public static void addPawnMoves(final MoveList moves, long pieces, final EngineBoard board, final long possiblePositions) {
 
         if (pieces == 0) {

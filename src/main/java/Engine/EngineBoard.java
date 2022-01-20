@@ -11,6 +11,7 @@ package Engine;
 public class EngineBoard {
     
     //trying new approach to storing boards, stored in this array instead
+    //stored right to left, down to up, h1 is 1l
     public final long[][] pieces = new long[2][7];
     public final long[][] attacks = new long[2][7];
     

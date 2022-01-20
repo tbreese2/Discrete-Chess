@@ -4,12 +4,14 @@
  */
 package Engine.MovGen;
 
-import Engine.*;
 
 /**
  *
  * @author tylerbreese
  */
+
+import Engine.EngineBoard;
+
 public class MoveUtil {
 
     // move types

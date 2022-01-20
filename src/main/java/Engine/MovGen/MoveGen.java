@@ -4,9 +4,9 @@
  */
 package Engine.MovGen;
 
-import Engine.*;
 import Engine.MoveList;
 import Engine.MovGen.KnightMoveGen;
+import Engine.EngineBoard;
 /**
  *
  * @author tylerbreese
@@ -35,6 +35,10 @@ public class MoveGen {
         
 	KnightMoveGen.addKnightMoves(moves, pieces[board.KNIGHT] & nonPinned, board.emptySpaces);
         PawnMoveGen.addPawnMoves(moves, pieces[board.PAWN] & nonPinned, board, board.emptySpaces);
+        BishopMoveGen.addBishopMoves(moves, pieces[board.BISHOP] & nonPinned, board.allPieces, board.emptySpaces);
+        RookMoveGen.addRookMoves(moves, pieces[board.ROOK] & nonPinned, board.allPieces, board.emptySpaces);
+        QueenMoveGen.addQueenMoves(moves, pieces[board.QUEEN] & nonPinned, board.allPieces, board.emptySpaces);
+        KingMoveGen.addKingMoves(moves, board);
         
         //then pinned pieces
     }
