@@ -16,7 +16,6 @@ import static  Engine.EngineBoard.WHITE;
 
 public final class CheckUtil {
 
-    //@formatter:off
     public static boolean isInCheck(final ChessBoard cb, int color) {
         final int kingIndex = cb.kingIndex[color];
         int colorInverse = 1 - color;
@@ -29,7 +28,6 @@ public final class CheckUtil {
     public static long getCheckingPieces(final ChessBoard cb) {
         final int kingIndex = cb.kingIndex[cb.colorToMove];
 
-        // put 'super-piece' in kings position
         return (cb.pieces[cb.colorToMoveInverse][KNIGHT] & StaticMoves.KNIGHT_MOVES[kingIndex]
                 | (cb.pieces[cb.colorToMoveInverse][ROOK] | cb.pieces[cb.colorToMoveInverse][QUEEN]) & MagicUtil.getRookMoves(kingIndex, cb.allPieces)
                 | (cb.pieces[cb.colorToMoveInverse][BISHOP] | cb.pieces[cb.colorToMoveInverse][QUEEN]) & MagicUtil.getBishopMoves(kingIndex, cb.allPieces)
@@ -49,14 +47,12 @@ public final class CheckUtil {
             case QUEEN:
                 return cb.pieces[cb.colorToMoveInverse][QUEEN] & MagicUtil.getQueenMoves(cb.kingIndex[cb.colorToMove], cb.allPieces);
             default:
-                //king can never set the other king in check
                 return 0;
         }
     }
 
     public static boolean isInCheck(final int kingIndex, final int colorToMove, final long[] enemyPieces, final long allPieces) {
 
-        // put 'super-piece' in kings position
         return (enemyPieces[KNIGHT] & StaticMoves.KNIGHT_MOVES[kingIndex]
                 | (enemyPieces[ROOK] | enemyPieces[QUEEN]) & MagicUtil.getRookMoves(kingIndex, allPieces)
                 | (enemyPieces[BISHOP] | enemyPieces[QUEEN]) & MagicUtil.getBishopMoves(kingIndex, allPieces)
@@ -71,7 +67,6 @@ public final class CheckUtil {
                     | enemyPieces[KING] & StaticMoves.KING_MOVES[kingIndex]) != 0;
         }
 
-        // put 'super-piece' in kings position
         return (enemyPieces[KNIGHT] & StaticMoves.KNIGHT_MOVES[kingIndex]
                 | (enemyPieces[ROOK] | enemyPieces[QUEEN]) & MagicUtil.getRookMoves(kingIndex, allPieces)
                 | (enemyPieces[BISHOP] | enemyPieces[QUEEN]) & MagicUtil.getBishopMoves(kingIndex, allPieces)
@@ -81,7 +76,6 @@ public final class CheckUtil {
 
     public static boolean isInCheckIncludingKing(final int kingIndex, final int colorToMove, final long[] enemyPieces, final long allPieces) {
 
-        // put 'super-piece' in kings position
         return (enemyPieces[KNIGHT] & StaticMoves.KNIGHT_MOVES[kingIndex]
                 | (enemyPieces[ROOK] | enemyPieces[QUEEN]) & MagicUtil.getRookMoves(kingIndex, allPieces)
                 | (enemyPieces[BISHOP] | enemyPieces[QUEEN]) & MagicUtil.getBishopMoves(kingIndex, allPieces)
