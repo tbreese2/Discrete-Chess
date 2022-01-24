@@ -14,7 +14,7 @@ import static Engine.EngineBoard.QUEEN;
 import static Engine.EngineBoard.ROOK;
 import static Engine.EngineBoard.WHITE;
 
-import Engine.MovGen.ChessBoard;
+import Engine.MoveGen.ChessBoard;
 
 public class Eval {
     //eval constants
@@ -22,7 +22,7 @@ public class Eval {
     public final static int[] pieceValues = {100, 325, 325, 500, 1050, 40000};
     
     //using basic eval right now
-    public int boardEval(ChessBoard board) {
+    public static int boardEval(ChessBoard board) {
         int materialCount = 0;
         
         materialCount = (Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])

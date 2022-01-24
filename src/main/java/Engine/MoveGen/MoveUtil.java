@@ -2,14 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Engine.MovGen;
-
+package Engine.MoveGen;
 
 /**
  *
  * @author tylerbreese
  */
-
 import Engine.EngineBoard;
 
 public class MoveUtil {
@@ -17,10 +15,10 @@ public class MoveUtil {
     // move types
     public static final int TYPE_NORMAL = 0;
     public static final int TYPE_EP = 1;
-    public static final int TYPE_PROMOTION_N = EngineBoard.KNIGHT;
-    public static final int TYPE_PROMOTION_B = EngineBoard.BISHOP;
-    public static final int TYPE_PROMOTION_R = EngineBoard.ROOK;
-    public static final int TYPE_PROMOTION_Q = EngineBoard.QUEEN;
+    public static final int TYPE_PROMOTION_N = ChessConstants.NIGHT;
+    public static final int TYPE_PROMOTION_B = ChessConstants.BISHOP;
+    public static final int TYPE_PROMOTION_R = ChessConstants.ROOK;
+    public static final int TYPE_PROMOTION_Q = ChessConstants.QUEEN;
     public static final int TYPE_CASTLING = 6;
 
     // shifts
@@ -36,8 +34,8 @@ public class MoveUtil {
     private static final int MASK_6_BITS = 0x3f; // 6
     private static final int MASK_12_BITS = 0xfff;
 
-    private static final int MASK_ATTACK = 7 << SHIFT_ATTACK; // 3
-    private static final int MASK_PROMOTION = 1 << SHIFT_PROMOTION; // 1
+    private static final int MASK_ATTACK = 7 << 15; // 3
+    private static final int MASK_PROMOTION = 1 << 21; // 1
     private static final int MASK_QUIET = MASK_PROMOTION | MASK_ATTACK;
 
     public static int getFromIndex(final int move) {
@@ -69,40 +67,44 @@ public class MoveUtil {
     }
 
     public static int createWhitePawnMove(final int fromIndex) {
-        return EngineBoard.PAWN << SHIFT_SOURCE | (fromIndex + 8) << SHIFT_TO | fromIndex;
+        return ChessConstants.PAWN << SHIFT_SOURCE | (fromIndex + 8) << SHIFT_TO | fromIndex;
     }
 
     public static int createBlackPawnMove(final int fromIndex) {
-        return EngineBoard.PAWN << SHIFT_SOURCE | (fromIndex - 8) << SHIFT_TO | fromIndex;
+        return ChessConstants.PAWN << SHIFT_SOURCE | (fromIndex - 8) << SHIFT_TO | fromIndex;
     }
 
     public static int createWhitePawn2Move(final int fromIndex) {
-        return EngineBoard.PAWN << SHIFT_SOURCE | (fromIndex + 16) << SHIFT_TO | fromIndex;
+        return ChessConstants.PAWN << SHIFT_SOURCE | (fromIndex + 16) << SHIFT_TO | fromIndex;
     }
 
     public static int createBlackPawn2Move(final int fromIndex) {
-        return EngineBoard.PAWN << SHIFT_SOURCE | (fromIndex - 16) << SHIFT_TO | fromIndex;
+        return ChessConstants.PAWN << SHIFT_SOURCE | (fromIndex - 16) << SHIFT_TO | fromIndex;
     }
 
     public static int createPromotionMove(final int promotionPiece, final int fromIndex, final int toIndex) {
-        return 1 << SHIFT_PROMOTION | promotionPiece << SHIFT_MOVE_TYPE | EngineBoard.PAWN << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
+        return 1 << SHIFT_PROMOTION | promotionPiece << SHIFT_MOVE_TYPE | ChessConstants.PAWN << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 
     public static int createAttackMove(final int fromIndex, final int toIndex, final int sourcePieceIndex, final int attackedPieceIndex) {
         return attackedPieceIndex << SHIFT_ATTACK | sourcePieceIndex << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 
+    public static int createSeeAttackMove(final long fromSquare, final int sourcePieceIndex) {
+        return sourcePieceIndex << SHIFT_SOURCE | Long.numberOfTrailingZeros(fromSquare);
+    }
+
     public static int createPromotionAttack(final int promotionPiece, final int fromIndex, final int toIndex, final int attackedPieceIndex) {
-        return 1 << SHIFT_PROMOTION | promotionPiece << SHIFT_MOVE_TYPE | attackedPieceIndex << SHIFT_ATTACK | EngineBoard.PAWN << SHIFT_SOURCE
+        return 1 << SHIFT_PROMOTION | promotionPiece << SHIFT_MOVE_TYPE | attackedPieceIndex << SHIFT_ATTACK | ChessConstants.PAWN << SHIFT_SOURCE
                 | toIndex << SHIFT_TO | fromIndex;
     }
 
     public static int createEPMove(final int fromIndex, final int toIndex) {
-        return TYPE_EP << SHIFT_MOVE_TYPE | EngineBoard.PAWN << SHIFT_ATTACK | EngineBoard.PAWN << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
+        return TYPE_EP << SHIFT_MOVE_TYPE | ChessConstants.PAWN << SHIFT_ATTACK | ChessConstants.PAWN << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 
     public static int createCastlingMove(final int fromIndex, final int toIndex) {
-        return TYPE_CASTLING << SHIFT_MOVE_TYPE | EngineBoard.KING << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
+        return TYPE_CASTLING << SHIFT_MOVE_TYPE | ChessConstants.KING << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 
     public static boolean isPromotion(final int move) {
@@ -110,7 +112,15 @@ public class MoveUtil {
     }
 
     public static boolean isPawnPush78(final int move) {
-        return getSourcePieceIndex(move) == EngineBoard.PAWN && (getToIndex(move) > 47 || getToIndex(move) < 16);
+        return getSourcePieceIndex(move) == ChessConstants.PAWN && (getToIndex(move) > 47 || getToIndex(move) < 16);
+    }
+
+    public static boolean isPawnPush678(final int move, final int color) {
+        if (color == ChessConstants.WHITE) {
+            return getSourcePieceIndex(move) == ChessConstants.PAWN && getToIndex(move) > 39;
+        } else {
+            return getSourcePieceIndex(move) == ChessConstants.PAWN && getToIndex(move) < 24;
+        }
     }
 
     /**
@@ -131,4 +141,5 @@ public class MoveUtil {
     public static boolean isCastlingMove(int move) {
         return getMoveType(move) == TYPE_CASTLING;
     }
+
 }
