@@ -4,6 +4,7 @@
  */
 package Engine.Eval;
 
+import Engine.Search.MinMax;
 import Engine.EngineValues;
 import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
