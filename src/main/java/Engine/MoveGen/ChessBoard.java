@@ -8,15 +8,15 @@ package Engine.MoveGen;
  *
  * @author tylerbreese
  */
-import static Engine.EngineBoard.BISHOP;
-import static Engine.EngineBoard.BLACK;
-import static Engine.EngineBoard.EMPTY;
-import static Engine.EngineBoard.KING;
-import static Engine.EngineBoard.KNIGHT;
-import static Engine.EngineBoard.PAWN;
-import static Engine.EngineBoard.QUEEN;
-import static Engine.EngineBoard.ROOK;
-import static Engine.EngineBoard.WHITE;
+import static Engine.EngineValues.BISHOP;
+import static Engine.EngineValues.BLACK;
+import static Engine.EngineValues.EMPTY;
+import static Engine.EngineValues.KING;
+import static Engine.EngineValues.KNIGHT;
+import static Engine.EngineValues.PAWN;
+import static Engine.EngineValues.QUEEN;
+import static Engine.EngineValues.ROOK;
+import static Engine.EngineValues.WHITE;
 
 
 public final class ChessBoard {

@@ -12,7 +12,7 @@ import Engine.SearchTree;
  * 
  */
 public class KnightMoveGen {
-    public static void addNightCaptures(final SearchTree tree, long knights, final int[] indexes, final long emptySpaces) {
+    public static void addKnightCaptures(final SearchTree tree, long knights, final int[] indexes, final long emptySpaces) {
         while (knights != 0) {
             final int fromIndex = Long.numberOfTrailingZeros(knights);
             long moves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
@@ -25,15 +25,15 @@ public class KnightMoveGen {
         }
     }
     
-    public static void addNightMoves(final SearchTree tree, long piece, final long emptySpaces) {
-        while (piece != 0) {
-            final int fromIndex = Long.numberOfTrailingZeros(piece);
+    public static void addKnightMoves(final SearchTree tree, long Knights, final long emptySpaces) {
+        while (Knights != 0) {
+            final int fromIndex = Long.numberOfTrailingZeros(Knights);
             long moves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
             while (moves != 0) {
                 tree.addMove(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), NIGHT));
                 moves &= moves - 1;
             }
-            piece &= piece - 1;
+            Knights &= Knights - 1;
         }
     }
 }

@@ -4,10 +4,10 @@
  */
 package Engine.MoveGen;
 
-import static Engine.EngineBoard.BLACK;
-import static Engine.EngineBoard.EMPTY;
-import static Engine.EngineBoard.ROOK;
-import static Engine.EngineBoard.WHITE;
+import static Engine.EngineValues.BLACK;
+import static Engine.EngineValues.EMPTY;
+import static Engine.EngineValues.ROOK;
+import static Engine.EngineValues.WHITE;
 
 public final class CastlingUtil {
 

@@ -4,7 +4,7 @@
  */
 package Engine.MoveGen;
 
-import static Engine.EngineBoard.KING;
+import static Engine.EngineValues.KING;
 import Engine.SearchTree;
 
 /**

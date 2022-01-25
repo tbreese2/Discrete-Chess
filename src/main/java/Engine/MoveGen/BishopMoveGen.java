@@ -4,7 +4,7 @@
  */
 package Engine.MoveGen;
 
-import static Engine.EngineBoard.BISHOP;
+import static Engine.EngineValues.BISHOP;
 import Engine.SearchTree;
 
 /**

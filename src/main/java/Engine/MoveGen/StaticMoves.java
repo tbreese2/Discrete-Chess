@@ -23,16 +23,16 @@ public class StaticMoves {
             for (int newPosition = 0; newPosition < 64; newPosition++) {
                 // attacks
                 if (newPosition == currentPosition + 7 && newPosition % 8 != 7) {
-                    PAWN_ATTACKS[EngineBoard.WHITE][currentPosition] |= Util.POWER_LOOKUP[newPosition];
+                    PAWN_ATTACKS[EngineValues.WHITE][currentPosition] |= Util.POWER_LOOKUP[newPosition];
                 }
                 if (newPosition == currentPosition + 9 && newPosition % 8 != 0) {
-                    PAWN_ATTACKS[EngineBoard.WHITE][currentPosition] |= Util.POWER_LOOKUP[newPosition];
+                    PAWN_ATTACKS[EngineValues.WHITE][currentPosition] |= Util.POWER_LOOKUP[newPosition];
                 }
                 if (newPosition == currentPosition - 7 && newPosition % 8 != 0) {
-                    PAWN_ATTACKS[EngineBoard.BLACK][currentPosition] |= Util.POWER_LOOKUP[newPosition];
+                    PAWN_ATTACKS[EngineValues.BLACK][currentPosition] |= Util.POWER_LOOKUP[newPosition];
                 }
                 if (newPosition == currentPosition - 9 && newPosition % 8 != 7) {
-                    PAWN_ATTACKS[EngineBoard.BLACK][currentPosition] |= Util.POWER_LOOKUP[newPosition];
+                    PAWN_ATTACKS[EngineValues.BLACK][currentPosition] |= Util.POWER_LOOKUP[newPosition];
                 }
             }
         }

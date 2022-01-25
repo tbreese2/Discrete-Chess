@@ -4,7 +4,7 @@
  */
 package Engine.Testing;
 
-import Engine.EngineBoard;
+import Engine.EngineValues;
 import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.MoveGen;

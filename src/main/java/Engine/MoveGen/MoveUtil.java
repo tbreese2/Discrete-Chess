@@ -8,7 +8,7 @@ package Engine.MoveGen;
  *
  * @author tylerbreese
  */
-import Engine.EngineBoard;
+import Engine.EngineValues;
 
 public class MoveUtil {
 

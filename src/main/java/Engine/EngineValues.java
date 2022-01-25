@@ -12,7 +12,7 @@ import Engine.MoveGen.MoveGen;
 import Engine.MoveGen.MoveUtil;
 import java.lang.Math;
 
-public class EngineBoard {
+public class EngineValues {
 
     //constants for accessing
     public static final int ALL = 0;

@@ -9,6 +9,17 @@ package Engine;
  *
  * @author tylerbreese
  */
+import Engine.MoveGen.ChessBoard;
+import Engine.MoveGen.ChessBoardUtil;
+
 public class EngineMain {
+    ChessBoard board;
     
+    public EngineMain() {
+        board = ChessBoardUtil.getNewCB();
+    }
+    
+    public void setFen(String fen) {
+        board = ChessBoardUtil.getNewCB(fen);
+    }
 }
