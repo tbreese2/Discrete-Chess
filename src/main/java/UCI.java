@@ -52,6 +52,16 @@ public class UCI {
                         engine.doUCIMove(args[i]);
                     }
                 }
+                
+            } else if(nextLine.split("\\s+")[0].equals("go")) {
+                String[] args = nextLine.split("\\s+");
+                if(args[1].equals("infinite")) {
+                    engine.setMode("infinite");
+                } else if (args[1].equals("movetime")) {
+                    engine.setMode("movetime");
+                    engine.setMoveTime(Double.valueOf(args[2]));
+                }
+               // String bestmove = engine.generateMove();
             }
             nextLine = inputReader.nextLine();
         }
