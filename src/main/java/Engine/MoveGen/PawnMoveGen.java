@@ -32,7 +32,7 @@ public class PawnMoveGen {
                 long moves = StaticMoves.PAWN_ATTACKS[WHITE][fromIndex] & enemies;
                 while (moves != 0) {
                     final int toIndex = Long.numberOfTrailingZeros(moves);
-                    tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
+                    tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
                     moves &= moves - 1;
                 }
                 piece &= piece - 1;
@@ -61,7 +61,7 @@ public class PawnMoveGen {
                 long moves = StaticMoves.PAWN_ATTACKS[BLACK][fromIndex] & enemies;
                 while (moves != 0) {
                     final int toIndex = Long.numberOfTrailingZeros(moves);
-                    tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
+                    tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
                     moves &= moves - 1;
                 }
                 piece &= piece - 1;

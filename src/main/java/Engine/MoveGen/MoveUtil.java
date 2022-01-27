@@ -86,7 +86,7 @@ public class MoveUtil {
         return 1 << SHIFT_PROMOTION | promotionPiece << SHIFT_MOVE_TYPE | ChessConstants.PAWN << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 
-    public static int createAttackMove(final int fromIndex, final int toIndex, final int sourcePieceIndex, final int attackedPieceIndex) {
+    public static int createCaptureMove(final int fromIndex, final int toIndex, final int sourcePieceIndex, final int attackedPieceIndex) {
         return attackedPieceIndex << SHIFT_ATTACK | sourcePieceIndex << SHIFT_SOURCE | toIndex << SHIFT_TO | fromIndex;
     }
 

@@ -23,6 +23,7 @@ import Engine.MoveGen.MoveUtil;
 import Engine.Search.MinMax;
 import Engine.MoveGen.MoveGen;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
+import Engine.MoveGen.KingMoveGen;
 
 public class EngineMain {
     private final String fileArray = "hgfedcba";
@@ -58,37 +59,59 @@ public class EngineMain {
         
         //check if en passant
         int enPassantMove = 0;
-        SearchTree checkEnPassant = new SearchTree(1);
-        checkEnPassant.startPly();
-        MoveGen.addEpAttacks(checkEnPassant, board);
-        if(checkEnPassant.hasNext()) {
-           int tempMove = checkEnPassant.next();
+        SearchTree checkEnPassantCastle = new SearchTree(1);
+        checkEnPassantCastle.startPly();
+        MoveGen.addEpAttacks(checkEnPassantCastle, board);
+        if(checkEnPassantCastle.hasNext()) {
+           int tempMove = checkEnPassantCastle.next();
            if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
-           && MoveUtil.getToIndex(tempMove) == Long.numberOfTrailingZeros(toLocaion)) {
-               
+           && MoveUtil.getToIndex(tempMove) == Long.numberOfTrailingZeros(toLocaion)) { 
                //then it is an enPassantMove, return move
+               enPassantMove = tempMove;
                return enPassantMove;
            }
         }
-        checkEnPassant.endPly();
+        checkEnPassantCastle.endPly();
         
         //next, check if it is a castling move
+        int castleMove = 0;
+        checkEnPassantCastle = new SearchTree(1);
+        checkEnPassantCastle.startPly();
+        KingMoveGen.addKingCastlingMoves(checkEnPassantCastle, board);
+        if(checkEnPassantCastle.hasNext()) {
+           int tempMove = checkEnPassantCastle.next();
+           if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
+           && MoveUtil.getToIndex(tempMove) == Long.numberOfTrailingZeros(toLocaion)) { 
+               //then it is an enPassantMove, return move
+               castleMove = tempMove;
+               return castleMove;
+           }
+        }
+        checkEnPassantCastle.endPly();
         
-        return MoveUtil.createMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation));
+        //check if it is an capture move
+        if(getPieceIndex(toLocaion, board.colorToMoveInverse) != -1) {
+            //it is an capture move, create an attack move
+            return MoveUtil.createCaptureMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation, board.colorToMove), getPieceIndex(toLocaion, board.colorToMoveInverse));
+        }
+        
+        //check if it is a promotion move
+        
+        return MoveUtil.createMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation, board.colorToMove));
     }
     
-    public int getPieceIndex(long location) {
-        if((board.pieces[board.colorToMove][PAWN] & location) != 0) {
+    public int getPieceIndex(long location, int color) {
+        if((board.pieces[color][PAWN] & location) != 0) {
             return PAWN;
-        } else if((board.pieces[board.colorToMove][KNIGHT] & location) != 0) {
+        } else if((board.pieces[color][KNIGHT] & location) != 0) {
             return KNIGHT;
-        } else if((board.pieces[board.colorToMove][BISHOP] & location) != 0) {
+        } else if((board.pieces[color][BISHOP] & location) != 0) {
             return BISHOP;
-        } else if((board.pieces[board.colorToMove][ROOK] & location) != 0) {
+        } else if((board.pieces[color][ROOK] & location) != 0) {
             return ROOK;
-        } else if((board.pieces[board.colorToMove][QUEEN] & location) != 0) {
+        } else if((board.pieces[color][QUEEN] & location) != 0) {
             return QUEEN;
-        } else if((board.pieces[board.colorToMove][KING] & location) != 0) {
+        } else if((board.pieces[color][KING] & location) != 0) {
             return KING;
         }
         return -1;

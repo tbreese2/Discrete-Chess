@@ -18,7 +18,7 @@ public class KnightMoveGen {
             long moves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
             while (moves != 0) {
                 final int toIndex = Long.numberOfTrailingZeros(moves);
-                tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, KNIGHT, indexes[toIndex]));
+                tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, KNIGHT, indexes[toIndex]));
                 moves &= moves - 1;
             }
             knights &= knights - 1;

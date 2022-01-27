@@ -19,7 +19,7 @@ public class QueenMoveGen {
             long moves = MagicUtil.getQueenMoves(fromIndex, board.allPieces) & emptySpaces;
             while (moves != 0) {
                 final int toIndex = Long.numberOfTrailingZeros(moves);
-                tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, QUEEN, board.pieceIndexes[toIndex]));
+                tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, QUEEN, board.pieceIndexes[toIndex]));
                 moves &= moves - 1;
             }
             queens &= queens - 1;
