@@ -61,7 +61,7 @@ public class UCI {
                     engine.setMode("movetime");
                     engine.setMoveTime(Double.valueOf(args[2]));
                 }
-               // String bestmove = engine.generateMove();
+                System.out.println("bestmove " + engine.generateMove());
             }
             nextLine = inputReader.nextLine();
         }

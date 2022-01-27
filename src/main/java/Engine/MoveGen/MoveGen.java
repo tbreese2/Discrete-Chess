@@ -7,7 +7,6 @@ package Engine.MoveGen;
 import static Engine.EngineValues.BISHOP;
 import static Engine.EngineValues.BLACK;
 import static Engine.EngineValues.KING;
-import static Engine.MoveGen.ChessConstants.NIGHT;
 import static Engine.EngineValues.PAWN;
 import static Engine.EngineValues.QUEEN;
 import static Engine.EngineValues.ROOK;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import Engine.SearchTree;
+import static Engine.MoveGen.ChessConstants.KNIGHT;
 
 public class MoveGen {
 
@@ -49,7 +49,7 @@ public class MoveGen {
         // non pinned pieces
         final long nonPinned = ~board.pinnedPieces;
         final long[] pieces = board.pieces[board.colorToMove];
-        KnightMoveGen.addKnightMoves(tree, pieces[NIGHT] & nonPinned, board.emptySpaces);
+        KnightMoveGen.addKnightMoves(tree, pieces[KNIGHT] & nonPinned, board.emptySpaces);
         BishopMoveGen.addBishopMoves(tree, pieces[BISHOP] & nonPinned, board.allPieces, board.emptySpaces);
         RookMoveGen.addRookMoves(tree, pieces[ROOK] & nonPinned, board.allPieces, board.emptySpaces);
         QueenMoveGen.addQueenMoves(tree, pieces[QUEEN] & nonPinned, board.allPieces, board.emptySpaces);
@@ -87,7 +87,7 @@ public class MoveGen {
             final long nonPinned = ~board.pinnedPieces;
             final long[] pieces = board.pieces[board.colorToMove];
             PawnMoveGen.addPawnMoves(tree, pieces[PAWN] & nonPinned, board, inBetween);
-            KnightMoveGen.addKnightMoves(tree, pieces[NIGHT] & nonPinned, inBetween);
+            KnightMoveGen.addKnightMoves(tree, pieces[KNIGHT] & nonPinned, inBetween);
             BishopMoveGen.addBishopMoves(tree, pieces[BISHOP] & nonPinned, board.allPieces, inBetween);
             RookMoveGen.addRookMoves(tree, pieces[ROOK] & nonPinned, board.allPieces, inBetween);
             QueenMoveGen.addQueenMoves(tree, pieces[QUEEN] & nonPinned, board.allPieces, inBetween);
@@ -104,7 +104,7 @@ public class MoveGen {
         final long enemies = board.friendlyPieces[board.colorToMoveInverse];
         final long[] pieces = board.pieces[board.colorToMove];
         PawnMoveGen.addPawnCapturesAndPromotions(tree, pieces[PAWN] & nonPinned, board, enemies, board.emptySpaces);
-        KnightMoveGen.addKnightCaptures(tree, pieces[NIGHT] & nonPinned, board.pieceIndexes, enemies);
+        KnightMoveGen.addKnightCaptures(tree, pieces[KNIGHT] & nonPinned, board.pieceIndexes, enemies);
         BishopMoveGen.addBishopCaptures(tree, pieces[BISHOP] & nonPinned, board, enemies);
         RookMoveGen.addRookCaptures(tree, pieces[ROOK] & nonPinned, board, enemies);
         QueenMoveGen.addQueenCaptures(tree, pieces[QUEEN] & nonPinned, board, enemies);
@@ -142,14 +142,14 @@ public class MoveGen {
         addEpAttacks(tree, board);
         PawnMoveGen.addPawnCapturesAndPromotions(tree, pieces[PAWN] & nonPinned, board, board.checkingPieces,
                 ChessConstants.IN_BETWEEN[board.kingIndex[board.colorToMove]][Long.numberOfTrailingZeros(board.checkingPieces)]);
-        KnightMoveGen.addKnightCaptures(tree, pieces[NIGHT] & nonPinned, board.pieceIndexes, board.checkingPieces);
+        KnightMoveGen.addKnightCaptures(tree, pieces[KNIGHT] & nonPinned, board.pieceIndexes, board.checkingPieces);
         BishopMoveGen.addBishopCaptures(tree, pieces[BISHOP] & nonPinned, board, board.checkingPieces);
         RookMoveGen.addRookCaptures(tree, pieces[ROOK] & nonPinned, board, board.checkingPieces);
         QueenMoveGen.addQueenCaptures(tree, pieces[QUEEN] & nonPinned, board, board.checkingPieces);
         KingMoveGen.addKingCaptures(tree, board);
     }
 
-    private static void addEpAttacks(final SearchTree tree, final ChessBoard board) {
+    public static void addEpAttacks(final SearchTree tree, final ChessBoard board) {
         if (board.epIndex == 0) {
             return;
         }

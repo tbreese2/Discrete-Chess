@@ -4,8 +4,8 @@
  */
 package Engine.MoveGen;
 
-import static Engine.MoveGen.ChessConstants.NIGHT;
 import Engine.SearchTree;
+import static Engine.MoveGen.ChessConstants.KNIGHT;
 
 /**
  *
@@ -18,7 +18,7 @@ public class KnightMoveGen {
             long moves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
             while (moves != 0) {
                 final int toIndex = Long.numberOfTrailingZeros(moves);
-                tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, NIGHT, indexes[toIndex]));
+                tree.addMove(MoveUtil.createAttackMove(fromIndex, toIndex, KNIGHT, indexes[toIndex]));
                 moves &= moves - 1;
             }
             knights &= knights - 1;
@@ -30,7 +30,7 @@ public class KnightMoveGen {
             final int fromIndex = Long.numberOfTrailingZeros(Knights);
             long moves = StaticMoves.KNIGHT_MOVES[fromIndex] & emptySpaces;
             while (moves != 0) {
-                tree.addMove(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), NIGHT));
+                tree.addMove(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), KNIGHT));
                 moves &= moves - 1;
             }
             Knights &= Knights - 1;
