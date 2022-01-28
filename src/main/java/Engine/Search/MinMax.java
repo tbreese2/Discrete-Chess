@@ -77,30 +77,12 @@ public class MinMax {
             bestMoveValue = 2147483647;
         }
 
-        tree.startPly();
-        MoveGen.generateMoves(tree, board);
-        MoveGen.generateCaptures(tree, board);
-
-        if (depth == 1) {
-            while (tree.hasNext()) {
-                final int move = tree.next();
-                if (!board.isLegal(move)) {
-                    continue;
-                }
-                board.doMove(move);
-                tempScore = Eval.boardEval(board);
-                if (isMaximizingPlayer && tempScore > bestMoveValue) {
-                    bestMoveValue = tempScore;
-                } else if (!isMaximizingPlayer && tempScore < bestMoveValue) {
-                    bestMoveValue = tempScore;
-                }
-                board.undoMove(move);
-            }
-
-            tree.endPly();
-
-            return bestMoveValue;
+        if (depth == 0) {
+            return Eval.boardEval(board);
         } else {
+            tree.startPly();
+            MoveGen.generateMoves(tree, board);
+            MoveGen.generateCaptures(tree, board);
             while (tree.hasNext()) {
                 final int move = tree.next();
                 if (!board.isLegal(move)) {
