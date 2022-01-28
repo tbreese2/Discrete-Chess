@@ -71,34 +71,47 @@ public class MinMax {
         double bestMoveValue = 0;
         double tempScore;
 
-        if (isMaximizingPlayer) {
-            bestMoveValue = -2147483648;
-        } else {
-            bestMoveValue = 2147483647;
-        }
-
         if (depth == 0) {
             return Eval.boardEval(board);
         } else {
             tree.startPly();
             MoveGen.generateMoves(tree, board);
             MoveGen.generateCaptures(tree, board);
-            while (tree.hasNext()) {
-                final int move = tree.next();
-                if (!board.isLegal(move)) {
-                    continue;
+
+            if (isMaximizingPlayer) {
+                bestMoveValue = -2147483648;
+
+                while (tree.hasNext()) {
+                    final int move = tree.next();
+                    if (!board.isLegal(move)) {
+                        continue;
+                    }
+                    board.doMove(move);
+                    tempScore = calcBestMoveMinMax(board, depth - 1, !isMaximizingPlayer, tree);
+                    if (tempScore >= bestMoveValue) {
+                        bestMoveValue = tempScore;
+                    }
+                    board.undoMove(move);
                 }
-                board.doMove(move);
-                tempScore = calcBestMoveMinMax(board, depth - 1, !isMaximizingPlayer, tree);
-                if (isMaximizingPlayer && tempScore > bestMoveValue) {
-                    bestMoveValue = tempScore;
-                } else if (!isMaximizingPlayer && tempScore < bestMoveValue) {
-                    bestMoveValue = tempScore;
+            } else {
+                bestMoveValue = 2147483647;
+                
+                 while (tree.hasNext()) {
+                    final int move = tree.next();
+                    if (!board.isLegal(move)) {
+                        continue;
+                    }
+                    board.doMove(move);
+                    tempScore = calcBestMoveMinMax(board, depth - 1, !isMaximizingPlayer, tree);
+                    if (tempScore <= bestMoveValue) {
+                        bestMoveValue = tempScore;
+                    }
+                    board.undoMove(move);
                 }
-                board.undoMove(move);
             }
-            tree.endPly();
+
         }
+        tree.endPly();
         return bestMoveValue;
     }
 
