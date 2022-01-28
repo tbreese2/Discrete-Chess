@@ -28,7 +28,8 @@ import Engine.MoveGen.KingMoveGen;
 public class EngineMain {
     private final String fileArray = "hgfedcba";
     private final String rankArray = "12345678";
-    private final String peiceArray = " PNBRQK";
+    private final String peiceArray = "  NBRQK";
+    private final String peiceArrayLowerCase = "  nbrqk";
     
     private ChessBoard board;
     private int depth;
@@ -56,6 +57,18 @@ public class EngineMain {
         char[] moveArray = move.toCharArray();
         long originalLocation = getBitBoard(moveArray[0], moveArray[1]);
         long toLocaion = getBitBoard(moveArray[2], moveArray[3]);
+        
+        //check if it is a promotion move
+        if(move.length() == 5 && getPieceIndex(toLocaion, board.colorToMoveInverse) == -1) {
+            String promotion = String.valueOf(move.charAt(4));
+            MoveUtil.createPromotionMove(peiceArrayLowerCase.indexOf(promotion), Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion));
+        }
+        
+        //check if promotion attack
+        if(move.length() == 5 && getPieceIndex(toLocaion, board.colorToMoveInverse) != -1) {
+            String promotion = String.valueOf(move.charAt(4));
+            MoveUtil.createPromotionAttack(peiceArrayLowerCase.indexOf(promotion), Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(toLocaion, board.colorToMoveInverse));
+        }
         
         //check if en passant
         int enPassantMove = 0;
@@ -95,12 +108,10 @@ public class EngineMain {
             return MoveUtil.createCaptureMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation, board.colorToMove), getPieceIndex(toLocaion, board.colorToMoveInverse));
         }
         
-        //check if it is a promotion move
-        
         return MoveUtil.createMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation, board.colorToMove));
     }
     
-    public int getPieceIndex(long location, int color) {
+    public int getPieceIndex(final long location, int color) {
         if((board.pieces[color][PAWN] & location) != 0) {
             return PAWN;
         } else if((board.pieces[color][KNIGHT] & location) != 0) {
@@ -150,12 +161,28 @@ public class EngineMain {
         int piece = MoveUtil.getSourcePieceIndex(move);
         
         String temp = "";
-        if(type == MoveUtil.TYPE_NORMAL) {
-            temp = String.valueOf(fileArray.charAt(fromIndexFile)) +
-                   String.valueOf(rankArray.charAt(fromIndexRank)) +
-                   String.valueOf(fileArray.charAt(toIndexFile)) +
-                   String.valueOf(rankArray.charAt(toIndexRank));
+        temp = String.valueOf(peiceArray.charAt(piece)) +
+               String.valueOf(fileArray.charAt(fromIndexFile)) +
+               String.valueOf(rankArray.charAt(fromIndexRank)) +
+               String.valueOf(fileArray.charAt(toIndexFile)) +
+               String.valueOf(rankArray.charAt(toIndexRank));
+        
+        if(type == MoveUtil.TYPE_PROMOTION_N) {
+            temp += "n";
         }
+        
+        if(type == MoveUtil.TYPE_PROMOTION_B) {
+            temp += "b";
+        }
+        
+        if(type == MoveUtil.TYPE_PROMOTION_R) {
+            temp += "r";
+        }
+        
+        if(type == MoveUtil.TYPE_PROMOTION_Q) {
+            temp += "q";
+        }
+        
         return temp;
     }
 }
