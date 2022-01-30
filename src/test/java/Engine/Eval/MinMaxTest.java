@@ -4,7 +4,7 @@
  */
 package Engine.Eval;
 
-import Engine.Search.MinMax;
+import Engine.Search.Negamax;
 import Engine.EngineValues;
 import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
@@ -43,7 +43,7 @@ public class MinMaxTest {
         int depth = 5;
         boolean isWhite = true;
         int expResult = 0;
-        int result = MinMax.bestMove(instance, depth, isWhite);
+        int result = Negamax.bestMove(instance, depth);
         System.out.println(ChessBoardUtil.toString(instance, false));
         instance.doMove(result);
         System.out.println(ChessBoardUtil.toString(instance, false));
