@@ -36,7 +36,7 @@ public class Negamax {
                 continue;
             }
             board.doMove(move);
-            tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree);
+            tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
             if (tempScore > bestMoveValue) {
                 bestMove = move;
@@ -49,12 +49,12 @@ public class Negamax {
         return bestMove;
     }
 
-    public static int calcBestMoveNegamax(ChessBoard board, int depth, int color, SearchTree tree) {
+    public static int calcBestMoveNegamax(ChessBoard board, int depth, int color, SearchTree tree, int alpha, int beta) {
         int bestMoveValue = 0;
         int tempScore;
 
         if (depth == 0) {
-            return color * Eval.boardEval(board);
+            return -Quiescence(board, tree, -beta, -alpha, -color);
         } else {
             tree.startPly();
             MoveGen.generateMoves(tree, board);
@@ -68,15 +68,59 @@ public class Negamax {
                     continue;
                 }
                 board.doMove(move);
-                tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree);
+                tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, -beta, -alpha);
                 if (tempScore > bestMoveValue) {
                     bestMoveValue = tempScore;
                 }
                 board.undoMove(move);
+                
+                if(bestMoveValue > alpha) {
+                    alpha = bestMoveValue;
+                }
+                
+                if(alpha >= beta) {
+                    tree.endPly();
+                    return alpha;
+                }
             }
             tree.endPly();
             return bestMoveValue;
         }
+    }
+
+    public static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta, int color) {
+        int bestValue = color * Eval.boardEval(board);
+
+        alpha = Math.max(alpha, bestValue);
+
+        if (alpha >= beta) {
+            return bestValue;
+        }
+
+        tree.startPly();
+        MoveGen.generateCaptures(tree, board);
+
+
+        while (tree.hasNext()) {
+            final int move = tree.next();
+            if (!board.isLegal(move)) {
+                continue;
+            }
+            board.doMove(move);
+            int value = -1 * Quiescence(board, tree, -beta, -alpha, -color);
+            board.undoMove(move);
+
+            bestValue = Math.max(bestValue, value);
+
+            alpha = Math.max(alpha, bestValue);
+
+            if (alpha >= beta) {
+                break;
+            }
+        }
+
+        tree.endPly();
+        return bestValue;
     }
 
 }
