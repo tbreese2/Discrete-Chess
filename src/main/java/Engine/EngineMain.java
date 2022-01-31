@@ -20,7 +20,7 @@ import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.Bitboard;
 import Engine.MoveGen.MoveUtil;
-import Engine.Search.MinMax;
+import Engine.Search.Negamax;
 import Engine.MoveGen.MoveGen;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
 import Engine.MoveGen.KingMoveGen;
@@ -143,7 +143,7 @@ public class EngineMain {
     public String generateMove() {
         int depth = 5;
         boolean isWhite = board.colorToMove == WHITE;
-        int result = MinMax.bestMove(board, depth, isWhite);
+        int result = Negamax.bestMove(board, depth);
         board.doMove(result);
         System.out.println(ChessBoardUtil.toString(board, isWhite));
         String move = moveToString(result);
