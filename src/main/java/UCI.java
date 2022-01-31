@@ -47,12 +47,13 @@ public class UCI {
                 } else {
                     engine.setBoardFen(args[1]);
                 }
-                if(args[2].equals("moves")) {
-                    for(int i = 3; i < args.length; i++) {
-                        engine.doUCIMove(args[i]);
+                if(args.length > 2) {
+                    if(args[2].equals("moves")) {
+                        for(int i = 3; i < args.length; i++) {
+                            engine.doUCIMove(args[i]);
+                        }
                     }
                 }
-                
             } else if(nextLine.split("\\s+")[0].equals("go")) {
                 String[] args = nextLine.split("\\s+");
                 if(args[1].equals("infinite")) {
