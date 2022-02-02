@@ -41,7 +41,7 @@ public class Negamax {
             board.doMove(move);
             tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, minInt, maxInt);
 
-            if (tempScore >= bestMoveValue) {
+            if (tempScore > bestMoveValue) {
                 bestMove = move;
                 bestMoveValue = tempScore;
             }
@@ -94,10 +94,11 @@ public class Negamax {
     public static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta, int color) {
         int bestValue = color * Eval.boardEval(board);
 
-        alpha = Math.max(alpha, bestValue);
-
-        if (alpha >= beta) {
-            return bestValue;
+        if (bestValue >= beta) {
+            return beta;
+        }
+        if(alpha < bestValue) {
+            alpha = bestValue;
         }
 
         tree.startPly();
@@ -110,20 +111,20 @@ public class Negamax {
                 continue;
             }
             board.doMove(move);
-            int value = -1 * Quiescence(board, tree, -beta, -alpha, -color);
+            final int value = -1 * Quiescence(board, tree, -beta, -alpha, -color);
             board.undoMove(move);
 
-            bestValue = Math.max(bestValue, value);
-
-            alpha = Math.max(alpha, bestValue);
-
-            if (alpha >= beta) {
-                break;
+            if (value >= beta) {
+                tree.endPly();
+                return beta;
+            }
+            if(value > alpha) {
+                alpha = value;
             }
         }
 
         tree.endPly();
-        return bestValue;
+        return alpha;
     }
 
 }
