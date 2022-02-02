@@ -19,16 +19,7 @@ class qPerfT {
     public static SearchTree tree = new SearchTree(2);
     
     public static void main(String[] args) {
-        System.out.println("generateAllMoves");
-        
-        final long startTime = System.currentTimeMillis();
-        final long count = qPerfT(6, board);
-        final long endTime = System.currentTimeMillis();
-
-        System.out.println("Total execution time: " + (endTime - startTime) / (double) 1000 + " seconds");
-        System.out.println("Total moves generated: " + count);
-        double nodesPerSecond = count / ((endTime - startTime) / (double) 1000);
-        System.out.println("Total nodes per second: " + String.format("%.0f", nodesPerSecond));
+       
     }
     
      //constants for accessing

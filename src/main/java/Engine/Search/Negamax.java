@@ -10,13 +10,16 @@ import Engine.MoveGen.ChessBoard;
 import Engine.SearchTree;
 import static Engine.EngineValues.BLACK;
 import static Engine.EngineValues.WHITE;
+import Engine.MoveGen.ChessBoardUtil;
 
 public class Negamax {
+    public static final int minInt = -2147483647;
+    public static final int maxInt = 2147483647;
 
     public static int bestMove(ChessBoard board, int depth) {
         SearchTree tree = new SearchTree(1);
         int bestMove = 0;
-        double bestMoveValue = -2147483648;
+        double bestMoveValue = minInt;
         int tempScore;
         int color;
 
@@ -36,9 +39,9 @@ public class Negamax {
                 continue;
             }
             board.doMove(move);
-            tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, minInt, maxInt);
 
-            if (tempScore > bestMoveValue) {
+            if (tempScore >= bestMoveValue) {
                 bestMove = move;
                 bestMoveValue = tempScore;
             }
@@ -60,7 +63,7 @@ public class Negamax {
             MoveGen.generateMoves(tree, board);
             MoveGen.generateCaptures(tree, board);
 
-            bestMoveValue = -2147483648;
+            bestMoveValue = minInt;
 
             while (tree.hasNext()) {
                 final int move = tree.next();
@@ -69,6 +72,7 @@ public class Negamax {
                 }
                 board.doMove(move);
                 tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, -beta, -alpha);
+
                 if (tempScore > bestMoveValue) {
                     bestMoveValue = tempScore;
                 }
@@ -79,8 +83,7 @@ public class Negamax {
                 }
                 
                 if(alpha >= beta) {
-                    tree.endPly();
-                    return alpha;
+                    break;
                 }
             }
             tree.endPly();

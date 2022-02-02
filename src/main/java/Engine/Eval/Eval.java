@@ -29,15 +29,13 @@ public class Eval {
                         + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * pieceValues[KNIGHT - 1])
                         + (Long.bitCount(board.pieces[WHITE][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[WHITE][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * pieceValues[QUEEN - 1])
-                        + (Long.bitCount(board.pieces[WHITE][KING]) * pieceValues[KING - 1]);
+                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * pieceValues[QUEEN - 1]);
         
         materialCount -= (Long.bitCount(board.pieces[BLACK][PAWN]) * pieceValues[PAWN - 1])
                         + (Long.bitCount(board.pieces[BLACK][KNIGHT]) * pieceValues[KNIGHT - 1])
                         + (Long.bitCount(board.pieces[BLACK][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[BLACK][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1])
-                        + (Long.bitCount(board.pieces[BLACK][KING]) * pieceValues[KING - 1]);
+                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]);
         
         return materialCount;        
     }
