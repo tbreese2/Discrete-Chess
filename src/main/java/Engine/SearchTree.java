@@ -6,9 +6,9 @@ package Engine;
  */
 public class SearchTree {
     
-    private int depth = 0;
+    private int depth = -1;
     private int[][] layerData = new int[30][2];
-    private int[][] moves = new int[30][218];
+    private int[][] moves = new int[100][218];
     private int[] scores = new int[218];
     
     private final int GENERATED = 0;
