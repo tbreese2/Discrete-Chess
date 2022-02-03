@@ -19,7 +19,7 @@ public class BishopMoveGen {
             long moves = MagicUtil.getBishopMoves(fromIndex, board.allPieces) & emptySpaces;
             while (moves != 0) {
                 final int toIndex = Long.numberOfTrailingZeros(moves);
-                tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, BISHOP, board.pieceIndexes[toIndex]));
+                tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, BISHOP, board.pieceIndexes[toIndex]));
                 moves &= moves - 1;
             }
             bishops &= bishops - 1;
@@ -31,7 +31,7 @@ public class BishopMoveGen {
             final int fromIndex = Long.numberOfTrailingZeros(bishops);
             long moves = MagicUtil.getBishopMoves(fromIndex, allPieces) & emptySpaces;
             while (moves != 0) {
-                tree.addMove(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), BISHOP));
+                tree.addNode(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), BISHOP));
                 moves &= moves - 1;
             }
 

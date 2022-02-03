@@ -19,7 +19,7 @@ public class RookMoveGen {
             long moves = MagicUtil.getRookMoves(fromIndex, board.allPieces) & emptySpaces;
             while (moves != 0) {
                 final int toIndex = Long.numberOfTrailingZeros(moves);
-                tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, ROOK, board.pieceIndexes[toIndex]));
+                tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, ROOK, board.pieceIndexes[toIndex]));
                 moves &= moves - 1;
             }
             rooks &= rooks - 1;
@@ -31,7 +31,7 @@ public class RookMoveGen {
             final int fromIndex = Long.numberOfTrailingZeros(rooks);
             long moves = MagicUtil.getRookMoves(fromIndex, allPieces) & emptySpaces;
             while (moves != 0) {
-                tree.addMove(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), ROOK));
+                tree.addNode(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), ROOK));
                 moves &= moves - 1;
             }
             rooks &= rooks - 1;

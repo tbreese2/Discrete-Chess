@@ -16,7 +16,7 @@ import Engine.SearchTree;
  */
 class qPerfT {
     public static ChessBoard board = ChessBoardUtil.getNewCB();
-    public static SearchTree tree = new SearchTree(2);
+    public static SearchTree tree = new SearchTree();
     
     public static void main(String[] args) {
        
@@ -36,22 +36,22 @@ class qPerfT {
     public static final int BLACK = 1;   
 
     public static long qPerfT(final int depth, final ChessBoard boardTest) {
-        tree.startPly();
+        tree.newLayer();
         MoveGen.generateMoves(tree, boardTest);
         MoveGen.generateCaptures(tree, boardTest);
 
         long counter = 0;
         if (depth == 1) {
-            while (tree.hasNext()) {
+            while (tree.isLayerNotEmpty()) {
                 if (boardTest.isLegal(tree.next())) {
                     counter++;
                 }
             }
-            tree.endPly();
+            tree.endLayer();
             return counter;
         }
 
-        while (tree.hasNext()) {
+        while (tree.isLayerNotEmpty()) {
             final int move = tree.next();
             if (!boardTest.isLegal(move)) {
                 continue;
@@ -61,7 +61,7 @@ class qPerfT {
             boardTest.undoMove(move);
         }
 
-        tree.endPly();
+        tree.endLayer();
         return counter;
 
     }

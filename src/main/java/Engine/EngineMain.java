@@ -72,10 +72,10 @@ public class EngineMain {
         
         //check if en passant
         int enPassantMove = 0;
-        SearchTree checkEnPassantCastle = new SearchTree(1);
-        checkEnPassantCastle.startPly();
+        SearchTree checkEnPassantCastle = new SearchTree();
+        checkEnPassantCastle.newLayer();
         MoveGen.addEpAttacks(checkEnPassantCastle, board);
-        if(checkEnPassantCastle.hasNext()) {
+        if(checkEnPassantCastle.isLayerNotEmpty()) {
            int tempMove = checkEnPassantCastle.next();
            if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
            && MoveUtil.getToIndex(tempMove) == Long.numberOfTrailingZeros(toLocaion)) { 
@@ -84,14 +84,14 @@ public class EngineMain {
                return enPassantMove;
            }
         }
-        checkEnPassantCastle.endPly();
+        checkEnPassantCastle.endLayer();
         
         //next, check if it is a castling move
         int castleMove = 0;
-        checkEnPassantCastle = new SearchTree(1);
-        checkEnPassantCastle.startPly();
+        checkEnPassantCastle = new SearchTree();
+        checkEnPassantCastle.newLayer();
         KingMoveGen.addKingCastlingMoves(checkEnPassantCastle, board);
-        if(checkEnPassantCastle.hasNext()) {
+        if(checkEnPassantCastle.isLayerNotEmpty()) {
            int tempMove = checkEnPassantCastle.next();
            if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
            && MoveUtil.getToIndex(tempMove) == Long.numberOfTrailingZeros(toLocaion)) { 
@@ -100,7 +100,7 @@ public class EngineMain {
                return castleMove;
            }
         }
-        checkEnPassantCastle.endPly();
+        checkEnPassantCastle.endLayer();
         
         //check if it is an capture move
         if(getPieceIndex(toLocaion, board.colorToMoveInverse) != -1) {

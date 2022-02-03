@@ -5,73 +5,48 @@ package Engine;
  * @author tylerbreese
  */
 public class SearchTree {
-
-    private int ply = 0;
-
-    public int[] pv;
-    public int bestScore;
-    public int depth;
-
+    
+    private int depth = 0;
+    private int[][] layerData = new int[30][2];
+    private int[][] moves = new int[30][218];
+    private int[] scores = new int[218];
+    
+    private final int GENERATED = 0;
+    private final int USED = 1;
     private int threadNum;
-
-    private final int[] nextToGenerate = new int[64 * 2];
-    private final int[] nextToMove = new int[64 * 2];
-
-    private final int[] moves = new int[1500];
-    private final int[] moveScores = new int[1500];
-
-    public SearchTree(int threadNumber) {
-        this.threadNum = threadNumber;
-        if (threadNumber == 0) {
-            pv = new int[12];
-        }
+    
+    public static int threadCount = 0;
+    
+    
+    public SearchTree() {
+        threadCount++;
+        threadNum = threadCount;
     }
 
-    public void startPly() {
-        nextToGenerate[ply + 1] = nextToGenerate[ply];
-        nextToMove[ply + 1] = nextToGenerate[ply];
-        ply++;
+    public void newLayer() {
+      depth++;
     }
 
-    public void endPly() {
-        ply--;
+    public void endLayer() {
+      layerData[depth][GENERATED] = 0;
+      layerData[depth][USED] = 0;
+      depth--;
     }
 
     public int next() {
-        return moves[nextToMove[ply]++];
+       return moves[depth][layerData[depth][USED]++];
     }
 
-    public int getMoveScore() {
-        return moveScores[nextToMove[ply] - 1];
+    public boolean isLayerNotEmpty() {
+        return layerData[depth][GENERATED] != layerData[depth][USED];
     }
 
-    public int previous() {
-        return moves[nextToMove[ply] - 1];
-    }
-
-    public boolean hasNext() {
-        return nextToGenerate[ply] != nextToMove[ply];
-    }
-
-    public void addMove(final int move) {
-        moves[nextToGenerate[ply]++] = move;
+    public void addNode(final int move) {
+        moves[depth][layerData[depth][GENERATED]++] = move;
     }
     
     public void sort() {
-        final int left = nextToMove[ply];
-        for (int i = left, j = i; i < nextToGenerate[ply] - 1; j = ++i) {
-            final int score = moveScores[i + 1];
-            final int move = moves[i + 1];
-            while (score > moveScores[j]) {
-                moveScores[j + 1] = moveScores[j];
-                moves[j + 1] = moves[j];
-                if (j-- == left) {
-                    break;
-                }
-            }
-            moveScores[j + 1] = score;
-            moves[j + 1] = move;
-        }
+        
     }
 
 }

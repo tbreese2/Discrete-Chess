@@ -156,7 +156,7 @@ public class MoveGen {
         long piece = board.pieces[board.colorToMove][PAWN] & StaticMoves.PAWN_ATTACKS[board.colorToMoveInverse][board.epIndex];
         while (piece != 0) {
             if (board.isLegalEPMove(Long.numberOfTrailingZeros(piece))) {
-                tree.addMove(MoveUtil.createEPMove(Long.numberOfTrailingZeros(piece), board.epIndex));
+                tree.addNode(MoveUtil.createEPMove(Long.numberOfTrailingZeros(piece), board.epIndex));
             }
             piece &= piece - 1;
         }

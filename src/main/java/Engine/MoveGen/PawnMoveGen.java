@@ -32,7 +32,7 @@ public class PawnMoveGen {
                 long moves = StaticMoves.PAWN_ATTACKS[WHITE][fromIndex] & enemies;
                 while (moves != 0) {
                     final int toIndex = Long.numberOfTrailingZeros(moves);
-                    tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
+                    tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
                     moves &= moves - 1;
                 }
                 piece &= piece - 1;
@@ -61,7 +61,7 @@ public class PawnMoveGen {
                 long moves = StaticMoves.PAWN_ATTACKS[BLACK][fromIndex] & enemies;
                 while (moves != 0) {
                     final int toIndex = Long.numberOfTrailingZeros(moves);
-                    tree.addMove(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
+                    tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, PAWN, board.pieceIndexes[toIndex]));
                     moves &= moves - 1;
                 }
                 piece &= piece - 1;
@@ -86,22 +86,22 @@ public class PawnMoveGen {
     }
     
     private static void addPromotionMove(final SearchTree tree, final int fromIndex, final int toIndex) {
-        tree.addMove(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_Q, fromIndex, toIndex));
-        tree.addMove(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_N, fromIndex, toIndex));
+        tree.addNode(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_Q, fromIndex, toIndex));
+        tree.addNode(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_N, fromIndex, toIndex));
         if (GENERATE_BR_PROMOTIONS) {
-            tree.addMove(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_B, fromIndex, toIndex));
-            tree.addMove(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_R, fromIndex, toIndex));
+            tree.addNode(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_B, fromIndex, toIndex));
+            tree.addNode(MoveUtil.createPromotionMove(MoveUtil.TYPE_PROMOTION_R, fromIndex, toIndex));
         }
     }
     
     private static void addPromotionCaptures(final SearchTree tree, long moves, final int fromIndex, final int[] indexes) {
         while (moves != 0) {
             final int toIndex = Long.numberOfTrailingZeros(moves);
-            tree.addMove(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_Q, fromIndex, toIndex, indexes[toIndex]));
-            tree.addMove(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_N, fromIndex, toIndex, indexes[toIndex]));
+            tree.addNode(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_Q, fromIndex, toIndex, indexes[toIndex]));
+            tree.addNode(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_N, fromIndex, toIndex, indexes[toIndex]));
             if (GENERATE_BR_PROMOTIONS) {
-                tree.addMove(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_B, fromIndex, toIndex, indexes[toIndex]));
-                tree.addMove(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_R, fromIndex, toIndex, indexes[toIndex]));
+                tree.addNode(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_B, fromIndex, toIndex, indexes[toIndex]));
+                tree.addNode(MoveUtil.createPromotionAttack(MoveUtil.TYPE_PROMOTION_R, fromIndex, toIndex, indexes[toIndex]));
             }
             moves &= moves - 1;
         }
@@ -117,14 +117,14 @@ public class PawnMoveGen {
 
             long piece = pawns & (emptySpaces >>> 8) & Bitboard.RANK_23456;
             while (piece != 0) {
-                tree.addMove(MoveUtil.createWhitePawnMove(Long.numberOfTrailingZeros(piece)));
+                tree.addNode(MoveUtil.createWhitePawnMove(Long.numberOfTrailingZeros(piece)));
                 piece &= piece - 1;
             }
 
             piece = pawns & (emptySpaces >>> 16) & Bitboard.RANK_2;
             while (piece != 0) {
                 if ((board.emptySpaces & (Long.lowestOneBit(piece) << 8)) != 0) {
-                    tree.addMove(MoveUtil.createWhitePawn2Move(Long.numberOfTrailingZeros(piece)));
+                    tree.addNode(MoveUtil.createWhitePawn2Move(Long.numberOfTrailingZeros(piece)));
                 }
                 piece &= piece - 1;
             }
@@ -132,14 +132,14 @@ public class PawnMoveGen {
 
             long piece = pawns & (emptySpaces << 8) & Bitboard.RANK_34567;
             while (piece != 0) {
-                tree.addMove(MoveUtil.createBlackPawnMove(Long.numberOfTrailingZeros(piece)));
+                tree.addNode(MoveUtil.createBlackPawnMove(Long.numberOfTrailingZeros(piece)));
                 piece &= piece - 1;
             }
 
             piece = pawns & (emptySpaces << 16) & Bitboard.RANK_7;
             while (piece != 0) {
                 if ((board.emptySpaces & (Long.lowestOneBit(piece) >>> 8)) != 0) {
-                    tree.addMove(MoveUtil.createBlackPawn2Move(Long.numberOfTrailingZeros(piece)));
+                    tree.addNode(MoveUtil.createBlackPawn2Move(Long.numberOfTrailingZeros(piece)));
                 }
                 piece &= piece - 1;
             }

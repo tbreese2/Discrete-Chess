@@ -17,7 +17,7 @@ public class Negamax {
     public static final int maxInt = 2147483647;
 
     public static int bestMove(ChessBoard board, int depth) {
-        SearchTree tree = new SearchTree(1);
+        SearchTree tree = new SearchTree();
         int bestMove = 0;
         double bestMoveValue = minInt;
         int tempScore;
@@ -29,11 +29,11 @@ public class Negamax {
             color = -1;
         }
 
-        tree.startPly();
+        tree.newLayer();
         MoveGen.generateMoves(tree, board);
         MoveGen.generateCaptures(tree, board);
 
-        while (tree.hasNext()) {
+        while (tree.isLayerNotEmpty()) {
             final int move = tree.next();
             if (!board.isLegal(move)) {
                 continue;
@@ -48,7 +48,7 @@ public class Negamax {
             board.undoMove(move);
         }
 
-        tree.endPly();
+        tree.endLayer();
         return bestMove;
     }
 
@@ -59,13 +59,13 @@ public class Negamax {
         if (depth == 0) {
             return -Quiescence(board, tree, -beta, -alpha, -color);
         } else {
-            tree.startPly();
+            tree.newLayer();
             MoveGen.generateMoves(tree, board);
             MoveGen.generateCaptures(tree, board);
 
             bestMoveValue = minInt;
 
-            while (tree.hasNext()) {
+            while (tree.isLayerNotEmpty()) {
                 final int move = tree.next();
                 if (!board.isLegal(move)) {
                     continue;
@@ -86,7 +86,7 @@ public class Negamax {
                     break;
                 }
             }
-            tree.endPly();
+            tree.endLayer();
             return bestMoveValue;
         }
     }
@@ -101,11 +101,11 @@ public class Negamax {
             alpha = bestValue;
         }
 
-        tree.startPly();
+        tree.newLayer();
         MoveGen.generateCaptures(tree, board);
 
 
-        while (tree.hasNext()) {
+        while (tree.isLayerNotEmpty()) {
             final int move = tree.next();
             if (!board.isLegal(move)) {
                 continue;
@@ -115,7 +115,7 @@ public class Negamax {
             board.undoMove(move);
 
             if (value >= beta) {
-                tree.endPly();
+                tree.endLayer();
                 return beta;
             }
             if(value > alpha) {
@@ -123,7 +123,7 @@ public class Negamax {
             }
         }
 
-        tree.endPly();
+        tree.endLayer();
         return alpha;
     }
 
