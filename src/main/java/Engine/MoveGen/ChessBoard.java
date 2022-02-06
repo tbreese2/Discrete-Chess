@@ -546,4 +546,11 @@ public final class ChessBoard {
             return count;
         }
     }
+    
+    public int getColor() {
+        if(colorToMove == WHITE) {
+            return 1;
+        }
+        return -1;
+    }
 }

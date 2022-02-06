@@ -13,112 +13,107 @@ import static Engine.EngineValues.WHITE;
 import Engine.MoveGen.ChessBoardUtil;
 
 public class Negamax {
-    public static final int minInt = -2147483647;
-    public static final int maxInt = 2147483647;
 
-    public static int bestMove(ChessBoard board, int depth) {
-        SearchTree tree = new SearchTree();
-        int bestMove = 0;
-        double bestMoveValue = minInt;
-        int tempScore;
-        int color;
+    public static final int maxScore = 1147483647;
 
-        if (board.colorToMove == WHITE) {
-            color = 1;
-        } else {
-            color = -1;
-        }
-
-        tree.newLayer();
-        MoveGen.generateMoves(tree, board);
-        MoveGen.generateCaptures(tree, board);
-
-        while (tree.isLayerNotEmpty()) {
-            final int move = tree.next();
-            if (!board.isLegal(move)) {
-                continue;
-            }
-            board.doMove(move);
-            tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, minInt, maxInt);
-
-            if (tempScore > bestMoveValue) {
-                bestMove = move;
-                bestMoveValue = tempScore;
-            }
-            board.undoMove(move);
-        }
-
-        tree.endLayer();
-        return bestMove;
-    }
-
-    public static int calcBestMoveNegamax(ChessBoard board, int depth, int color, SearchTree tree, int alpha, int beta) {
-        int bestMoveValue = 0;
-        int tempScore;
+    public static int calcBestMoveNegamax(ChessBoard board, int depth, SearchTree tree, int alpha, int beta) {
+        int bestMoveValue = -maxScore;
 
         if (depth == 0) {
-            return -Quiescence(board, tree, -beta, -alpha, -color);
+            return Quiescence(board, tree, alpha, beta);
         } else {
             tree.newLayer();
             MoveGen.generateMoves(tree, board);
             MoveGen.generateCaptures(tree, board);
 
-            bestMoveValue = minInt;
+            bestMoveValue = -maxScore;
+            
+            //check if is not top layer, then must
+            //return move value instead of move
+            if (!tree.isTop()) {
+                while (tree.isLayerNotEmpty()) {
+                    final int move = tree.next();
+                    if (!board.isLegal(move)) {
+                        continue;
+                    }
+                    board.doMove(move);
+                    bestMoveValue = Math.max(bestMoveValue, -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha));
 
-            while (tree.isLayerNotEmpty()) {
-                final int move = tree.next();
-                if (!board.isLegal(move)) {
-                    continue;
-                }
-                board.doMove(move);
-                tempScore = -calcBestMoveNegamax(board, depth - 1, -color, tree, -beta, -alpha);
+                    board.undoMove(move);
 
-                if (tempScore > bestMoveValue) {
-                    bestMoveValue = tempScore;
+                    if (bestMoveValue > alpha) {
+                        alpha = bestMoveValue;
+                    }
+
+                    if (alpha >= beta) {
+                        break;
+                    }
                 }
-                board.undoMove(move);
+                tree.endLayer();
+                return bestMoveValue;
+            } 
+            
+            else {
+                int bestMove = tree.getFirstMove();
                 
-                if(bestMoveValue > alpha) {
-                    alpha = bestMoveValue;
+                while (tree.isLayerNotEmpty()) {
+                    final int move = tree.next();
+                    if (!board.isLegal(move)) {
+                        continue;
+                    }
+                    board.doMove(move);
+                    final int value = -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha);
+                    
+                    if(value > bestMoveValue) {
+                        bestMoveValue = value;
+                        bestMove = move;
+                    }
+                    
+                    board.undoMove(move);
+
+                    if (bestMoveValue > alpha) {
+                        alpha = bestMoveValue;
+                    }
+
+                    if (alpha >= beta) {
+                        break;
+                    }
                 }
+                tree.endLayer();
                 
-                if(alpha >= beta) {
-                    break;
-                }
+                return bestMove;
             }
-            tree.endLayer();
-            return bestMoveValue;
+
         }
     }
 
-    public static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta, int color) {
-        int bestValue = color * Eval.boardEval(board);
+    public static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta) {
+        int bestValue = Eval.boardEval(board) * board.getColor();
 
         if (bestValue >= beta) {
             return beta;
         }
-        if(alpha < bestValue) {
+        if (alpha < bestValue) {
             alpha = bestValue;
         }
 
         tree.newLayer();
         MoveGen.generateCaptures(tree, board);
 
-
         while (tree.isLayerNotEmpty()) {
             final int move = tree.next();
             if (!board.isLegal(move)) {
                 continue;
             }
             board.doMove(move);
-            final int value = -1 * Quiescence(board, tree, -beta, -alpha, -color);
+            final int value = -1 * Quiescence(board, tree, -beta, -alpha);
             board.undoMove(move);
 
             if (value >= beta) {
                 tree.endLayer();
                 return beta;
             }
-            if(value > alpha) {
+            if (value > alpha) {
                 alpha = value;
             }
         }

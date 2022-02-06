@@ -141,11 +141,11 @@ public class EngineMain {
     }
     
     public String generateMove() {
-        int depth = 5;
-        boolean isWhite = board.colorToMove == WHITE;
-        int result = Negamax.bestMove(board, depth);
+        int depth = 4;
+        SearchTree tree = new SearchTree();
+        int result = Negamax.calcBestMoveNegamax(board, depth, tree, -Negamax.maxScore, Negamax.maxScore);
         board.doMove(result);
-        System.out.println(ChessBoardUtil.toString(board, isWhite));
+        System.out.println(ChessBoardUtil.toString(board, false));
         String move = moveToString(result);
         return move;
     }

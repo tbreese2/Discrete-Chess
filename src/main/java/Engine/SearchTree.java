@@ -7,7 +7,7 @@ package Engine;
 public class SearchTree {
     
     private int depth = -1;
-    private int[][] layerData = new int[30][2];
+    private int[][] layerData = new int[100][2];
     private int[][] moves = new int[100][218];
     private int[] scores = new int[218];
     
@@ -31,6 +31,14 @@ public class SearchTree {
       layerData[depth][GENERATED] = 0;
       layerData[depth][USED] = 0;
       depth--;
+    }
+    
+    public boolean isTop() {
+        return depth == 0;
+    }
+    
+    public int getFirstMove() {
+        return moves[depth][layerData[depth][USED]];
     }
 
     public int next() {

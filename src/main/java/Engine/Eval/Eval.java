@@ -29,16 +29,17 @@ public class Eval {
     }
     
     private static int Material(final ChessBoard board) {
-        return (Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
+        return ((Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
                         + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * pieceValues[KNIGHT - 1])
                         + (Long.bitCount(board.pieces[WHITE][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[WHITE][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * pieceValues[QUEEN - 1]) -
-                (Long.bitCount(board.pieces[BLACK][PAWN]) * pieceValues[PAWN - 1])
+                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * pieceValues[QUEEN - 1])) -
+                
+                ((Long.bitCount(board.pieces[BLACK][PAWN]) * pieceValues[PAWN - 1])
                         + (Long.bitCount(board.pieces[BLACK][KNIGHT]) * pieceValues[KNIGHT - 1])
                         + (Long.bitCount(board.pieces[BLACK][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[BLACK][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]);
+                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]));
     }
     
     private static int Mobility(final ChessBoard board) {
@@ -46,13 +47,13 @@ public class Eval {
         //calculate mobility of each piece type
         
         //white pawn moves
-         long piece = board.pieces[WHITE][PAWN] & ~board.pinnedPieces & (board.emptySpaces  >>> 8) & Bitboard.RANK_23456;
+         long piece = board.pieces[WHITE][PAWN] & (board.emptySpaces  >>> 8) & Bitboard.RANK_23456;
          while (piece != 0) {
             mobilityScore++;
             piece &= piece - 1;
         }
 
-        piece = board.pieces[WHITE][PAWN] & ~board.pinnedPieces & (board.emptySpaces >>> 16) & Bitboard.RANK_2;
+        piece = board.pieces[WHITE][PAWN] & (board.emptySpaces >>> 16) & Bitboard.RANK_2;
         while (piece != 0) {
             if ((board.emptySpaces & (Long.lowestOneBit(piece) << 8)) != 0) {
                 mobilityScore++;
@@ -61,17 +62,16 @@ public class Eval {
         }
         
         //black pawn moves
-        //white pawn moves
-         piece = board.pieces[BLACK][PAWN] & ~board.pinnedPieces & (board.emptySpaces  >>> 8) & Bitboard.RANK_23456;
+         piece = board.pieces[BLACK][PAWN] & (board.emptySpaces  >>> 8) & Bitboard.RANK_23456;
          while (piece != 0) {
-            mobilityScore++;
+            mobilityScore--;
             piece &= piece - 1;
         }
 
-        piece = board.pieces[BLACK][PAWN] & ~board.pinnedPieces & (board.emptySpaces >>> 16) & Bitboard.RANK_2;
+        piece = board.pieces[BLACK][PAWN] & (board.emptySpaces >>> 16) & Bitboard.RANK_2;
         while (piece != 0) {
             if ((board.emptySpaces & (Long.lowestOneBit(piece) << 8)) != 0) {
-                mobilityScore++;
+                mobilityScore--;
             }
             piece &= piece - 1;
         }
