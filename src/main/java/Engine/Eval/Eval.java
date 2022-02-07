@@ -44,6 +44,32 @@ public class Eval {
     
     private static int Mobility(final ChessBoard board) {
         int mobilityScore = 0;
+        final long pinnedWhite;
+        final long nonPinnedWhite;
+        final long pinnedBlack;
+        final long nonPinnedBlack;
+        
+        //set pinned peices
+        if(board.colorToMove == WHITE) {
+            pinnedWhite = board.pinnedPieces;
+            nonPinnedWhite = ~pinnedWhite;
+            board.changeSideToMove();
+            board.setPinnedAndDiscoPieces();
+            pinnedBlack = board.pinnedPieces;
+            nonPinnedBlack = ~pinnedBlack;
+            board.changeSideToMove();
+            board.setPinnedAndDiscoPieces();
+        } else {
+            pinnedBlack = board.pinnedPieces;
+            nonPinnedBlack = ~pinnedBlack;
+            board.changeSideToMove();
+            board.setPinnedAndDiscoPieces();
+            pinnedWhite = board.pinnedPieces;
+            nonPinnedWhite = ~pinnedWhite;
+            board.changeSideToMove();
+            board.setPinnedAndDiscoPieces();
+        }
+        
         //calculate mobility of each piece type
         
         //white pawn moves
