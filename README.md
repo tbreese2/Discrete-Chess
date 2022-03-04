@@ -21,41 +21,7 @@ A UCI chess engine written in Java
 
 ## Building
 
-To build on *nix:
-
-```
-make
-```
-
-You can build with debugging symbols and no optimizations using:
-
-```
-make debug
-```
-
-If you have Mingw-w64 installed, you can cross compile for Windows on Linux with:
-
-```
-./build_windows.sh
-```
-
-## Tests
-
-[Catch](https://github.com/philsquared/Catch) unit tests are located in the `test` directory.
-
-To build and run the unit tests, use:
-
-```
-make test
-./shallowbluetest
-```
-
-To build and run the unit tests, skipping perft tests (these take a while to run), use:
-
-```
-make test
-./shallowbluetest exclude:[perft]
-```
+Main Class located in UCI.java
 
 ## Future Improvements
 
