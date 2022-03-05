@@ -15,7 +15,7 @@ public class Position {
         public byte depth;
         public byte type;
         
-        public Position(long key, int move, short value, byte depth, byte type) {
+        public void edit(long key, int move, short value, byte depth, byte type) {
             this.zobrist = key;
             this.move = move;
             this.value = value;
