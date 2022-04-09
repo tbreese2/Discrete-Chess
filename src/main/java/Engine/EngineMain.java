@@ -19,11 +19,12 @@ import static Engine.EngineValues.WHITE;
 import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.Bitboard;
+import Engine.MoveGen.CastlingUtil;
 import Engine.MoveGen.MoveUtil;
 import Engine.Search.Negamax;
 import Engine.MoveGen.MoveGen;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
-import Engine.MoveGen.KingMoveGen;
+import Engine.MoveGen.StaticMoves;
 
 //main engine class
 //able to read in moves in UCI formated String
@@ -95,7 +96,16 @@ public class EngineMain {
         int enPassantMove = 0;
         SearchTree checkEnPassantCastle = new SearchTree();
         checkEnPassantCastle.newLayer();
-        MoveGen.addEpAttacks(checkEnPassantCastle, board);
+        if (board.epIndex == 0) {
+        } else {
+            long piece = board.pieces[board.colorToMove][PAWN] & StaticMoves.PAWN_ATTACKS[board.colorToMoveInverse][board.epIndex];
+            while (piece != 0) {
+                if (board.isLegalEPMove(Long.numberOfTrailingZeros(piece))) {
+                    checkEnPassantCastle.addNode(MoveUtil.createEPMove(Long.numberOfTrailingZeros(piece), board.epIndex));
+                }
+                piece &= piece - 1;
+            }
+        }
         if(checkEnPassantCastle.isLayerNotEmpty()) {
            int tempMove = checkEnPassantCastle.next();
            if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
@@ -111,7 +121,21 @@ public class EngineMain {
         int castleMove = 0;
         checkEnPassantCastle = new SearchTree();
         checkEnPassantCastle.newLayer();
-        KingMoveGen.addKingCastlingMoves(checkEnPassantCastle, board);
+        final int fromIndex = board.kingIndex[board.colorToMove];
+        long moves = StaticMoves.KING_MOVES[fromIndex] & board.emptySpaces;
+        while (moves != 0) {
+            moves &= moves - 1;
+        }
+        if (board.checkingPieces == 0) {
+            long castlingIndexes = CastlingUtil.getCastlingIndexes(board);
+            while (castlingIndexes != 0) {
+                final int castlingIndex = Long.numberOfTrailingZeros(castlingIndexes);
+                if (CastlingUtil.isValidCastlingMove(board, fromIndex, castlingIndex)) {
+                    checkEnPassantCastle.addNode(MoveUtil.createCastlingMove(fromIndex, castlingIndex));
+                }
+                castlingIndexes &= castlingIndexes - 1;
+            }
+        }
         if(checkEnPassantCastle.isLayerNotEmpty()) {
            int tempMove = checkEnPassantCastle.next();
            if(MoveUtil.getFromIndex(tempMove) == Long.numberOfTrailingZeros(originalLocation) 
