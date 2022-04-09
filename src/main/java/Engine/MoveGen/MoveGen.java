@@ -18,10 +18,18 @@ import java.util.Random;
 import Engine.SearchTree;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
 
+//main move generation class
+//just a note to anyone unfortunate enough to be reading this
+//i know its really ugly
+//im sorry, it has to be this way for maximum speed
 public class MoveGen {
-
+    
+    //setting for engine move gen, might change with later engine variations
     public static final boolean GENERATE_BR_PROMOTIONS = true;
 
+    //MODIFIES: moves
+    //EFFECTS: calculates all non capture moves
+    //for a given position
     public static void generateMoves(final SearchTree moves, final ChessBoard board) {
         if (board.checkingPieces == 0) {
             generateNotInCheckMoves(moves, board);
@@ -50,7 +58,18 @@ public class MoveGen {
         final long nonPinned = ~board.pinnedPieces;
         final long[] pieces = board.pieces[board.colorToMove];
         KnightMoveGen.addKnightMoves(tree, pieces[KNIGHT] & nonPinned, board.emptySpaces);
-        BishopMoveGen.addBishopMoves(tree, pieces[BISHOP] & nonPinned, board.allPieces, board.emptySpaces);
+        
+        //nonpinned bishop moves
+        long pieceList = pieces[BISHOP] & nonPinned;
+        while (pieceList != 0) {
+            final int fromIndex = Long.numberOfTrailingZeros(pieces[BISHOP] & nonPinned);
+            long moves = MagicUtil.getBishopMoves(fromIndex, board.allPieces) & board.emptySpaces;
+            while (moves != 0) {
+                tree.addNode(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), BISHOP));
+                moves &= moves - 1;
+            }
+            pieceList &= pieceList - 1;
+        }
         RookMoveGen.addRookMoves(tree, pieces[ROOK] & nonPinned, board.allPieces, board.emptySpaces);
         QueenMoveGen.addQueenMoves(tree, pieces[QUEEN] & nonPinned, board.allPieces, board.emptySpaces);
         PawnMoveGen.addPawnMoves(tree, pieces[PAWN] & nonPinned, board, board.emptySpaces);
@@ -65,8 +84,16 @@ public class MoveGen {
                             board.emptySpaces & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]]);
                     break;
                 case BISHOP:
-                    BishopMoveGen.addBishopMoves(tree, Long.lowestOneBit(piece), board.allPieces,
-                            board.emptySpaces & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]]);
+                    pieceList = Long.lowestOneBit(piece);
+                    while (pieceList != 0) {
+                        final int fromIndex1 = Long.numberOfTrailingZeros(Long.lowestOneBit(piece));
+                        long moves1 = MagicUtil.getBishopMoves(fromIndex1, board.allPieces) & board.emptySpaces & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]];
+                        while (moves1 != 0) {
+                            tree.addNode(MoveUtil.createMove(fromIndex1, Long.numberOfTrailingZeros(moves1), BISHOP));
+                            moves1 &= moves1 - 1;
+                        }
+                        pieceList &= pieceList - 1;
+                    }
                     break;
                 case ROOK:
                     RookMoveGen.addRookMoves(tree, Long.lowestOneBit(piece), board.allPieces,
@@ -88,7 +115,18 @@ public class MoveGen {
             final long[] pieces = board.pieces[board.colorToMove];
             PawnMoveGen.addPawnMoves(tree, pieces[PAWN] & nonPinned, board, inBetween);
             KnightMoveGen.addKnightMoves(tree, pieces[KNIGHT] & nonPinned, inBetween);
-            BishopMoveGen.addBishopMoves(tree, pieces[BISHOP] & nonPinned, board.allPieces, inBetween);
+            
+            //bishop moves
+            long pieceList = pieces[BISHOP] & nonPinned;
+            while (pieceList != 0) {
+                final int fromIndex = Long.numberOfTrailingZeros(pieces[BISHOP] & nonPinned);
+                long moves = MagicUtil.getBishopMoves(fromIndex, board.allPieces) & inBetween;
+                while (moves != 0) {
+                    tree.addNode(MoveUtil.createMove(fromIndex, Long.numberOfTrailingZeros(moves), BISHOP));
+                    moves &= moves - 1;
+                }
+                pieceList &= pieceList - 1;
+            }
             RookMoveGen.addRookMoves(tree, pieces[ROOK] & nonPinned, board.allPieces, inBetween);
             QueenMoveGen.addQueenMoves(tree, pieces[QUEEN] & nonPinned, board.allPieces, inBetween);
         }
@@ -105,7 +143,17 @@ public class MoveGen {
         final long[] pieces = board.pieces[board.colorToMove];
         PawnMoveGen.addPawnCapturesAndPromotions(tree, pieces[PAWN] & nonPinned, board, enemies, board.emptySpaces);
         KnightMoveGen.addKnightCaptures(tree, pieces[KNIGHT] & nonPinned, board.pieceIndexes, enemies);
-        BishopMoveGen.addBishopCaptures(tree, pieces[BISHOP] & nonPinned, board, enemies);
+        long pieceList = pieces[BISHOP] & nonPinned;
+        while (pieceList != 0) {
+            final int fromIndex = Long.numberOfTrailingZeros(pieces[BISHOP] & nonPinned);
+            long moves = MagicUtil.getBishopMoves(fromIndex, board.allPieces) & enemies;
+            while (moves != 0) {
+                final int toIndex = Long.numberOfTrailingZeros(moves);
+                tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, BISHOP, board.pieceIndexes[toIndex]));
+                moves &= moves - 1;
+            }
+            pieceList &= pieceList - 1;
+        }
         RookMoveGen.addRookCaptures(tree, pieces[ROOK] & nonPinned, board, enemies);
         QueenMoveGen.addQueenCaptures(tree, pieces[QUEEN] & nonPinned, board, enemies);
         KingMoveGen.addKingCaptures(tree, board);
@@ -119,8 +167,17 @@ public class MoveGen {
                             enemies & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]], 0);
                     break;
                 case BISHOP:
-                    BishopMoveGen.addBishopCaptures(tree, Long.lowestOneBit(piece), board,
-                            enemies & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]]);
+                pieceList = Long.lowestOneBit(piece);
+                while (pieceList != 0) {
+                    final int fromIndex1 = Long.numberOfTrailingZeros(Long.lowestOneBit(piece));
+                    long moves1 = MagicUtil.getBishopMoves(fromIndex1, board.allPieces) & enemies & ChessConstants.PINNED_MOVEMENT[Long.numberOfTrailingZeros(piece)][board.kingIndex[board.colorToMove]];
+                    while (moves1 != 0) {
+                        final int toIndex1 = Long.numberOfTrailingZeros(moves1);
+                        tree.addNode(MoveUtil.createCaptureMove(fromIndex1, toIndex1, BISHOP, board.pieceIndexes[toIndex1]));
+                        moves1 &= moves1 - 1;
+                    }
+                    pieceList &= pieceList - 1;
+                }
                     break;
                 case ROOK:
                     RookMoveGen.addRookCaptures(tree, Long.lowestOneBit(piece), board,
@@ -137,13 +194,25 @@ public class MoveGen {
 
     private static void generateOutOfCheckAttacks(final SearchTree tree, final ChessBoard board) {
         // attack attacker
+        long pieceList;
         final long nonPinned = ~board.pinnedPieces;
         final long[] pieces = board.pieces[board.colorToMove];
         addEpAttacks(tree, board);
         PawnMoveGen.addPawnCapturesAndPromotions(tree, pieces[PAWN] & nonPinned, board, board.checkingPieces,
                 ChessConstants.IN_BETWEEN[board.kingIndex[board.colorToMove]][Long.numberOfTrailingZeros(board.checkingPieces)]);
         KnightMoveGen.addKnightCaptures(tree, pieces[KNIGHT] & nonPinned, board.pieceIndexes, board.checkingPieces);
-        BishopMoveGen.addBishopCaptures(tree, pieces[BISHOP] & nonPinned, board, board.checkingPieces);
+        
+        pieceList = pieces[BISHOP] & nonPinned;
+        while (pieceList != 0) {
+            final int fromIndex = Long.numberOfTrailingZeros(pieces[BISHOP] & nonPinned);
+            long moves = MagicUtil.getBishopMoves(fromIndex, board.allPieces) & board.checkingPieces;
+            while (moves != 0) {
+                final int toIndex = Long.numberOfTrailingZeros(moves);
+                tree.addNode(MoveUtil.createCaptureMove(fromIndex, toIndex, BISHOP, board.pieceIndexes[toIndex]));
+                moves &= moves - 1;
+            }
+            pieceList &= pieceList - 1;
+        }
         RookMoveGen.addRookCaptures(tree, pieces[ROOK] & nonPinned, board, board.checkingPieces);
         QueenMoveGen.addQueenCaptures(tree, pieces[QUEEN] & nonPinned, board, board.checkingPieces);
         KingMoveGen.addKingCaptures(tree, board);
