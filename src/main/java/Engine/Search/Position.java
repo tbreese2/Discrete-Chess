@@ -26,7 +26,7 @@ public class Position {
             this.zobrist = 0;
             this.move = 0;
             this.value = 0;
-            this.depth = '0';
-            this.type = '0';
+            this.depth = 0;
+            this.type = 0;
         }
 }

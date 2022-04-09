@@ -10,32 +10,44 @@
 import java.util.*;
 import Engine.EngineMain;
 
+//Main UCI interface
+//Set as main class for UCI compatible compiled engine
 public class UCI {
+    //engine and input reading classes
     EngineMain engine;
     Scanner inputReader;
     
+    //MODIFIES: UCI
+    //EFFECTS: creates a new UCI interface unit
     public UCI() {
+        //initilize engine and scannenr
         inputReader = new Scanner(System.in);
         engine = new EngineMain();
-        uciInitialization();
     }
- 
+    
+    //EFFECTS: reads in uci command
     public void uciInitialization() {
         String nextLine = inputReader.nextLine();
         
+        //check for uci command
         while(!nextLine.equals("uci")) {
             nextLine = inputReader.nextLine();
         }
+        
+        //engine and author infor
         System.out.println("id name Discrete Chess");
         System.out.println("id author Tyler B");
+        
+        //set engine options
         sendOptions();
-        mainGameLoop();
     }
     
-    public void mainGameLoop() {
+    //MODIFIES: engine
+    //EFFECTS: reads moves until quit command is specified
+    public void run() {
         String nextLine = inputReader.nextLine();
         
-        while(!nextLine.equals("quite")) {
+        while(!nextLine.equals("quit")) {
             if(nextLine.equals("isready")){
                System.out.println("readyok"); 
             } else if(nextLine.equals("ucinewgame")) {
@@ -69,10 +81,22 @@ public class UCI {
         
     }
     
+    //MODIFIES: engine
+    //EFFECTS: sets engine options based on uci input
     public void sendOptions() {
         //non game loop
     }
+    
+    //EFFECTS: creates engine opject,
+    //reads options, then runs
     public static void main(String[] args) {
        UCI EngineCommunicaiton = new UCI();
+       
+       //initilizes UCI communication and 
+       //reads in engine options
+       EngineCommunicaiton.uciInitialization();
+       
+       //runs engine main loop
+       EngineCommunicaiton.run();
     }
 }
