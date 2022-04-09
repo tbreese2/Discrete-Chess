@@ -18,16 +18,21 @@ import Engine.MoveGen.Bitboard;
 import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.MoveUtil;
 
+//main eval function for engine
 public class Eval {
+    
     //eval constants
     //pawn, knight, bishop rook, queen, king
-    public final static int[] pieceValues = {100, 325, 325, 500, 1050, 40000};
+    private final static int[] pieceValues = {100, 325, 325, 500, 1050, 40000};
     
-    //using basic eval right now
+    //EFFECTS: given chess board
+    //returns the engines evaluation of the board
     public static int boardEval(final ChessBoard board) {
         return Material(board);
     }
     
+    //EFFECTS: helper function
+    //returns piece count evaltion of the board
     private static int Material(final ChessBoard board) {
         return ((Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
                         + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * pieceValues[KNIGHT - 1])
@@ -42,6 +47,9 @@ public class Eval {
                         + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]));
     }
     
+    //TODO: finish black mobility calculations
+    //then integrat into overal mobility calculation
+    //EFFECTS: return mobility factor for position
     private static int Mobility(final ChessBoard board) {
         int mobilityScore = 0;
         final long pinnedWhite;

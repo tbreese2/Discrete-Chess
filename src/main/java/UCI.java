@@ -17,7 +17,7 @@ public class UCI {
     EngineMain engine;
     Scanner inputReader;
     
-    //MODIFIES: UCI
+    //MODIFIES: this
     //EFFECTS: creates a new UCI interface unit
     public UCI() {
         //initilize engine and scannenr
@@ -26,7 +26,7 @@ public class UCI {
     }
     
     //EFFECTS: reads in uci command
-    public void uciInitialization() {
+    private void uciInitialization() {
         String nextLine = inputReader.nextLine();
         
         //check for uci command
@@ -42,17 +42,26 @@ public class UCI {
         sendOptions();
     }
     
-    //MODIFIES: engine
+    //MODIFIES: this
     //EFFECTS: reads moves until quit command is specified
-    public void run() {
+    private void run() {
         String nextLine = inputReader.nextLine();
         
+        //check if quitcommand is given
         while(!nextLine.equals("quit")) {
+            
+            //don't run until board compatible is ready
             if(nextLine.equals("isready")){
                System.out.println("readyok"); 
-            } else if(nextLine.equals("ucinewgame")) {
+            } 
+            
+            //resents board to FIDE default
+            else if(nextLine.equals("ucinewgame")) {
                 engine.resetBoard();
-            } else if(nextLine.split("\\s+")[0].equals("position")) {
+            } 
+            
+            //new inputed position check
+            else if(nextLine.split("\\s+")[0].equals("position")) {
                 String[] args = nextLine.split("\\s+");
                 if(args[1].equals("startpos")) {
                     engine.resetBoard();
@@ -66,7 +75,10 @@ public class UCI {
                         }
                     }
                 }
-            } else if(nextLine.split("\\s+")[0].equals("go")) {
+            } 
+            
+            //check for move request
+            else if(nextLine.split("\\s+")[0].equals("go")) {
                 String[] args = nextLine.split("\\s+");
                 if(args[1].equals("infinite")) {
                     engine.setMode("infinite");
@@ -81,9 +93,9 @@ public class UCI {
         
     }
     
-    //MODIFIES: engine
+    //MODIFIES: this
     //EFFECTS: sets engine options based on uci input
-    public void sendOptions() {
+    private void sendOptions() {
         //non game loop
     }
     

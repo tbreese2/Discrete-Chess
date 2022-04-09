@@ -12,9 +12,12 @@ import Engine.MoveGen.MoveGen;
 import Engine.MoveGen.MoveUtil;
 import java.lang.Math;
 
+//helper class
+//basically stored move constants so they can be standardized
+//across all classes
 public class EngineValues {
 
-    //constants for accessing
+    //constants for piece type
     public static final int ALL = 0;
     public static final int EMPTY = 0;
     public static final int PAWN = 1;
@@ -24,7 +27,7 @@ public class EngineValues {
     public static final int QUEEN = 5;
     public static final int KING = 6;
 
+    //constants for playing color
     public static final int WHITE = 0;
     public static final int BLACK = 1;
-
 }

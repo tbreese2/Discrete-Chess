@@ -25,35 +25,56 @@ import Engine.MoveGen.MoveGen;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
 import Engine.MoveGen.KingMoveGen;
 
+//main engine class
+//able to read in moves in UCI formated String
+//return best moves in UCI formated string
 public class EngineMain {
+    
+    //strings to convert UCI board positions to indexes
     private final String fileArray = "hgfedcba";
     private final String rankArray = "12345678";
     private final String peiceArray = "  NBRQK";
     private final String peiceArrayLowerCase = "  nbrqk";
     
+    //class to represent chess board and 
+    //all bitboard information
     private ChessBoard board;
-    private int depth;
-    //modes: infinite, movetime
+    
+    //modes: infinite, movetime, more to come
     private String mode;
     private double moveTime;
     
+    //MODIFIES: this
+    //EFFECTS: creates new chessboard
+    //by defualt set with FIDE board
+    //position
     public EngineMain() {
         board = ChessBoardUtil.getNewCB();
     }
     
+    //MODIFIES: this
+    //EFFECTS: creates board with costume fen
     public void setBoardFen(String fen) {
         board = ChessBoardUtil.getNewCB(fen);
     }
     
+    //MODIFIES: this
+    //EFFECTS: resets board to default
+    //FIDE board state
     public void resetBoard() {
         board = ChessBoardUtil.getNewCB();
     }
     
+    //MODIFIES: EngineMain
+    //EFFECTS: Plays move
+    //most be UCI formated string
     public void doUCIMove(String move) {
         board.doMove(stringToMove(move));
     }
     
-    public int stringToMove(String move) {
+    //EFFECTS: helper function
+    //to convert UCI formated string to move
+    private int stringToMove(String move) {
         char[] moveArray = move.toCharArray();
         long originalLocation = getBitBoard(moveArray[0], moveArray[1]);
         long toLocaion = getBitBoard(moveArray[2], moveArray[3]);
@@ -111,7 +132,13 @@ public class EngineMain {
         return MoveUtil.createMove(Long.numberOfTrailingZeros(originalLocation), Long.numberOfTrailingZeros(toLocaion), getPieceIndex(originalLocation, board.colorToMove));
     }
     
-    public int getPieceIndex(final long location, int color) {
+    //EFFECTS: helper function 
+    //given location and piece color
+    //tries to find piece and return type
+    //if piece can't be found, returns -1
+    private int getPieceIndex(final long location, int color) {
+        
+        //this hurts to look at, but it works
         if((board.pieces[color][PAWN] & location) != 0) {
             return PAWN;
         } else if((board.pieces[color][KNIGHT] & location) != 0) {
@@ -128,29 +155,49 @@ public class EngineMain {
         return -1;
     }
     
+    //EFFECTS: helper function
+    //returns bitboard with piece
+    //at rank, file
     private long getBitBoard(char file, char rank) {
        return Bitboard.FILES[fileArray.indexOf(file)] & Bitboard.RANKS[rankArray.indexOf(rank)];
     }
     
+    //MODIFIES: this
+    //EFFECTS: sets engine mode
     public void setMode(String mode) {
         this.mode = mode;
     }
     
+    //MODIFIES: this
+    //EFFECTS: sets engine move time
     public void setMoveTime(double time) {
         moveTime = time;
     }
     
+    //MODIFIES: this
+    //Effects: generates move for current board,
+    //applys move to current board and then returns move in UCI formated string
     public String generateMove() {
+        //defualt depth
         int depth = 4;
+        
+        //create new search tree
         SearchTree tree = new SearchTree();
-        int result = Negamax.calcBestMoveNegamax(board, depth, tree, -Negamax.maxScore, Negamax.maxScore);
+        
+        //run negamax search
+        int result = Negamax.calcBestMoveNegamax(board, depth, tree, depth, depth);
+        
+        //do move and return
         board.doMove(result);
-        System.out.println(ChessBoardUtil.toString(board, false));
         String move = moveToString(result);
         return move;
     }
     
-    public String moveToString(int move) {
+    //EFFECTS: helper function
+    //given a move formated based on moveUtil
+    //returns UCI formated string of move
+    private String moveToString(int move) {
+        //get all essential information from the move
         int toIndex = MoveUtil.getToIndex(move);
         int fromIndex = MoveUtil.getFromIndex(move);
         int type = MoveUtil.getMoveType(move);
@@ -160,6 +207,7 @@ public class EngineMain {
         int fromIndexFile = fromIndex - 8 * fromIndexRank;
         int piece = MoveUtil.getSourcePieceIndex(move);
         
+        //convert to string
         String temp = "";
         temp = String.valueOf(peiceArray.charAt(piece)) +
                String.valueOf(fileArray.charAt(fromIndexFile)) +
@@ -167,6 +215,7 @@ public class EngineMain {
                String.valueOf(fileArray.charAt(toIndexFile)) +
                String.valueOf(rankArray.charAt(toIndexRank));
         
+        //add promotion information
         if(type == MoveUtil.TYPE_PROMOTION_N) {
             temp += "n";
         }
@@ -183,6 +232,7 @@ public class EngineMain {
             temp += "q";
         }
         
+        //return final move
         return temp;
     }
 }
