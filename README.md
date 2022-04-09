@@ -13,6 +13,7 @@ A UCI chess engine written in Java
     - [Piece square tables](https://www.chessprogramming.org/Piece-Square_Tables)
     - [Mobility](https://www.chessprogramming.org/Mobility)
     - [Evaluation tapering](https://www.chessprogramming.org/Tapered_Eval)
+    - [Efficiently Updatable Neural Network](https://www.chessprogramming.org/NNUE)
   - Move ordering
     - [Hash move](https://www.chessprogramming.org/Hash_Move)
     - [MVV/LVA](https://www.chessprogramming.org/MVV-LVA)
