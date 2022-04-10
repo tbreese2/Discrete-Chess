@@ -12,39 +12,60 @@ import static Engine.EngineValues.BLACK;
 import static Engine.EngineValues.WHITE;
 import Engine.MoveGen.ChessBoardUtil;
 
+//negamax search class
 public class Negamax {
 
+    //standadardized max score
+    //public because other functions may
+    //find it useful
     public static final int maxScore = 1147483647;
 
+    //MODIFIES: tree
+    //EFFECTS: searches for the best
+    //move to given depth
+    //returns move as an int
     public static int calcBestMoveNegamax(ChessBoard board, int depth, SearchTree tree, int alpha, int beta) {
         int bestMoveValue = -maxScore;
-
+        
+        //end search
         if (depth == 0) {
             return Quiescence(board, tree, alpha, beta);
-        } else {
+        } 
+        //conduct branch and bound search
+        else {
+            //create new layer and populate
             tree.newLayer();
             MoveGen.generateMoves(tree, board);
             MoveGen.generateCaptures(tree, board);
 
+            //best move for layer will be highest, so set
+            //to negative max score
             bestMoveValue = -maxScore;
             
             //check if is not top layer, then must
             //return move value instead of move
             if (!tree.isTop()) {
+                
+                //loop through every move
                 while (tree.isLayerNotEmpty()) {
                     final int move = tree.next();
+                    
+                    //check if move is illegal
                     if (!board.isLegal(move)) {
                         continue;
                     }
+                    
                     board.doMove(move);
+                    
+                    //recursive call to find move strength at next depth
                     bestMoveValue = Math.max(bestMoveValue, -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha));
 
                     board.undoMove(move);
 
+                    //alpha beta pruning
                     if (bestMoveValue > alpha) {
                         alpha = bestMoveValue;
                     }
-
                     if (alpha >= beta) {
                         break;
                     }
@@ -54,16 +75,22 @@ public class Negamax {
             } 
             
             else {
+                //if its not the top layer, then we return the best move
+                //instead of its score
                 int bestMove = tree.getFirstMove();
                 
+                //loop through every move
                 while (tree.isLayerNotEmpty()) {
                     final int move = tree.next();
                     if (!board.isLegal(move)) {
                         continue;
                     }
                     board.doMove(move);
+                    
+                    //recursive call
                     final int value = -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha);
                     
+                    //update max move values for particular layer
                     if(value > bestMoveValue) {
                         bestMoveValue = value;
                         bestMove = move;
@@ -71,10 +98,10 @@ public class Negamax {
                     
                     board.undoMove(move);
 
+                    //alpha beta pruning
                     if (bestMoveValue > alpha) {
                         alpha = bestMoveValue;
                     }
-
                     if (alpha >= beta) {
                         break;
                     }
@@ -87,9 +114,15 @@ public class Negamax {
         }
     }
 
-    public static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta) {
+    //EFFECTS: helper function
+    //quiescence is a way to verify search accuracy
+    //goes to a static position before evaluating board
+    private static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta) {
+        
+        //stand pat
         int bestValue = Eval.boardEval(board) * board.getColor();
 
+        //alpha beta pruning
         if (bestValue >= beta) {
             return beta;
         }
@@ -100,15 +133,22 @@ public class Negamax {
         tree.newLayer();
         MoveGen.generateCaptures(tree, board);
 
+        //go through disruptive moves
         while (tree.isLayerNotEmpty()) {
             final int move = tree.next();
+            
+            //check if legal
             if (!board.isLegal(move)) {
                 continue;
             }
             board.doMove(move);
+            
+            //recursive call
             final int value = -1 * Quiescence(board, tree, -beta, -alpha);
+            
             board.undoMove(move);
 
+            //stand pat/alpha beta
             if (value >= beta) {
                 tree.endLayer();
                 return beta;
@@ -117,8 +157,10 @@ public class Negamax {
                 alpha = value;
             }
         }
-
+        
         tree.endLayer();
+        
+        //stand pat
         return alpha;
     }
 

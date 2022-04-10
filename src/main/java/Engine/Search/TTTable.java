@@ -31,10 +31,26 @@ public class TTTable {
         voidTable();
     }
     
+    public int tableSize() {
+        return tableSize;
+    }
+    
     public void voidTable() {
         for(int i = 0; i < hashtable.length; i++) {
             hashtable[i] = new Position();
         }
+    }
+    
+    public double percentFull() {
+        double used = 0;
+        
+        for (int i = 0; i < 100; i++) {
+            if (hashtable[i].zobrist != 0) {
+                used++;
+            }
+        }
+
+        return used / 100;
     }
     
     public Position transpositionTableLookup(final long key) {
@@ -42,12 +58,23 @@ public class TTTable {
         return hashtable[(int)iKey];
     }
     
-    public void transpositionTableStore(final long key, final int move, final short value, final byte depth, final byte type){
+    public boolean transpositionTableStore(final long key, final int move, final short value, final byte depth, final byte type){
         final long iKey = key & tableMask;
         Position ent = hashtable[(int)iKey];
         final int lKey = (int)(key >> 32);
         if (ent.zobrist == 0) {
-            
+            ent.edit(lKey, move, value, depth, type, age);
+            return true;
+        } else {
+            if (   enP->getAge() != m_currentAge
+                || type == PV_NODE
+                || (enP->type    != PV_NODE && enP->depth <= depth)
+                || (enP->zobrist == key     && enP->depth <= depth * 2)) {
+                enP->set(key, score, move, type, depth, eval);
+                enP->setAge(m_currentAge);
+                return true;
+            }
+            return false;
         }
     }
 }
