@@ -9,18 +9,20 @@ package Engine.Search;
  * @author Tyler
  */
 public class Position {
-    public long zobrist;
+    public int zobrist;
     public int move;
     public short value;
     public byte depth;
     public byte type;
-        
-    public void edit(long key, int move, short value, byte depth, byte type) {
-        this.zobrist = key;
+    public short age;
+ 
+    public void edit(final int z, final int move, final short value, final byte depth, final byte type, final short age) {
+        this.zobrist = z;
         this.move = move;
         this.value = value;
         this.depth = depth;
         this.type = type;
+        this.age = age;
     }
     
     public Position() {

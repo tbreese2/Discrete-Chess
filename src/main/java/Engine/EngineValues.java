@@ -30,4 +30,10 @@ public class EngineValues {
     //constants for playing color
     public static final int WHITE = 0;
     public static final int BLACK = 1;
+    
+    //node type constants
+    public static final int PV_NODE = 0;
+    public static final int CUT_NODE = 1;
+    public static final int FORCED_ALL_NODE = 2;
+    public static final int ALL_NODE = 3;
 }

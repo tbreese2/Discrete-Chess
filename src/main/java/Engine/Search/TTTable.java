@@ -10,12 +10,13 @@ package Engine.Search;
  */
 import java.util.*;
 import java.lang.instrument.Instrumentation;
+import Engine.EngineValues;
 
 public class TTTable { 
     private Position hashtable[];
     private int tableSize;
     private long tableMask;
-    private byte age;
+    private byte age = -128;
     
     public TTTable (final long mb) {
         final long maxNum = (mb * 1024 * 1024) / ObjectSizeFetcher.getObjectSize(new Position());
@@ -58,23 +59,27 @@ public class TTTable {
         return hashtable[(int)iKey];
     }
     
-    public boolean transpositionTableStore(final long key, final int move, final short value, final byte depth, final byte type){
+    public boolean transpositionTableStore(final long key, final int move, final short value, final byte depth, final byte nodeType){
         final long iKey = key & tableMask;
         Position ent = hashtable[(int)iKey];
         final int lKey = (int)(key >> 32);
         if (ent.zobrist == 0) {
-            ent.edit(lKey, move, value, depth, type, age);
+            ent.edit(lKey, move, value, depth, nodeType, age);
             return true;
         } else {
-            if (   enP->getAge() != m_currentAge
-                || type == PV_NODE
-                || (enP->type    != PV_NODE && enP->depth <= depth)
-                || (enP->zobrist == key     && enP->depth <= depth * 2)) {
-                enP->set(key, score, move, type, depth, eval);
-                enP->setAge(m_currentAge);
+            if ( ent.age != age || nodeType == EngineValues.PV_NODE || (ent.type  != EngineValues.PV_NODE && ent.depth <= depth) || (ent.zobrist == key && ent.depth <= depth * 2)) {
+                ent.edit(lKey, move, value, depth, nodeType, age);
                 return true;
             }
             return false;
+        }
+    }
+    
+    public void nextAge() {
+        if(age == 127) {
+            age = -128;
+        } else {
+            age++;
         }
     }
 }
