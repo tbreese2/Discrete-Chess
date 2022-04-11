@@ -130,7 +130,7 @@ public class EngineMain {
             long castlingIndexes = CastlingUtil.getCastlingIndexes(board);
             while (castlingIndexes != 0) {
                 final int castlingIndex = Long.numberOfTrailingZeros(castlingIndexes);
-                if (CastlingUtil.isValidCastlingMove(board, fromIndex, castlingIndex)) {
+                if (CastlingUtil.isValidCMove(board, fromIndex, castlingIndex)) {
                     checkEnPassantCastle.addNode(MoveUtil.createCastlingMove(fromIndex, castlingIndex));
                 }
                 castlingIndexes &= castlingIndexes - 1;
@@ -218,8 +218,7 @@ public class EngineMain {
     }
     
     //EFFECTS: helper function
-    //given a move formated based on moveUtil
-    //returns UCI formated string of move
+    //given a move formated based on moveUtil returns UCI formated string of move
     private String moveToString(int move) {
         //get all essential information from the move
         int toIndex = MoveUtil.getToIndex(move);

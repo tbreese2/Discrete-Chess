@@ -47,8 +47,6 @@ public class MinMaxTest {
         System.out.println(ChessBoardUtil.toString(instance, false));
         instance.doMove(result);
         System.out.println(ChessBoardUtil.toString(instance, false));
-        
-        
         // TODO review the generated test code and remove the default call to fail.
 
     }

@@ -33,7 +33,7 @@ public class qPerfTTest {
      * Test of main method, of class qPerfT.
      */
     //@Test
-    /*public void testMain() {
+    public void testMain() {
          System.out.println("generateAllMoves");
         ChessBoard board = ChessBoardUtil.getNewCB("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ");
         final long startTime = System.currentTimeMillis();
@@ -44,6 +44,6 @@ public class qPerfTTest {
         System.out.println("Total moves generated: " + count);
         double nodesPerSecond = count / ((endTime - startTime) / (double) 1000);
         System.out.println("Total nodes per second: " + String.format("%.0f", nodesPerSecond));
-    }*/
+    }
 
 }

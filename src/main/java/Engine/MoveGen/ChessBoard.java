@@ -499,7 +499,7 @@ public final class ChessBoard {
                     long castlingIndexes = CastlingUtil.getCastlingIndexes(this);
                     while (castlingIndexes != 0) {
                         if (toIndex == Long.numberOfTrailingZeros(castlingIndexes)) {
-                            return CastlingUtil.isValidCastlingMove(this, fromIndex, toIndex);
+                            return CastlingUtil.isValidCMove(this, fromIndex, toIndex);
                         }
                         castlingIndexes &= castlingIndexes - 1;
                     }

@@ -116,7 +116,7 @@ public class MoveGen {
                 long castlingIndexes = CastlingUtil.getCastlingIndexes(board);
                 while (castlingIndexes != 0) {
                     final int castlingIndex = Long.numberOfTrailingZeros(castlingIndexes);
-                    if (CastlingUtil.isValidCastlingMove(board, fromIndex4, castlingIndex)) {
+                    if (CastlingUtil.isValidCMove(board, fromIndex4, castlingIndex)) {
                         moves.addNode(MoveUtil.createCastlingMove(fromIndex4, castlingIndex));
                     }
                     castlingIndexes &= castlingIndexes - 1;
@@ -285,7 +285,7 @@ public class MoveGen {
                 long castlingIndexes = CastlingUtil.getCastlingIndexes(board);
                 while (castlingIndexes != 0) {
                     final int castlingIndex = Long.numberOfTrailingZeros(castlingIndexes);
-                    if (CastlingUtil.isValidCastlingMove(board, fromIndex4, castlingIndex)) {
+                    if (CastlingUtil.isValidCMove(board, fromIndex4, castlingIndex)) {
                         moves.addNode(MoveUtil.createCastlingMove(fromIndex4, castlingIndex));
                     }
                     castlingIndexes &= castlingIndexes - 1;
@@ -303,7 +303,7 @@ public class MoveGen {
                 long castlingIndexes = CastlingUtil.getCastlingIndexes(board);
                 while (castlingIndexes != 0) {
                     final int castlingIndex = Long.numberOfTrailingZeros(castlingIndexes);
-                    if (CastlingUtil.isValidCastlingMove(board, fromIndex, castlingIndex)) {
+                    if (CastlingUtil.isValidCMove(board, fromIndex, castlingIndex)) {
                         moves.addNode(MoveUtil.createCastlingMove(fromIndex, castlingIndex));
                     }
                     castlingIndexes &= castlingIndexes - 1;

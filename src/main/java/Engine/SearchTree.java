@@ -8,7 +8,7 @@ package Engine;
 //helping class to facilitate bound and branching of negamax
 //relativly limits memory hogging of deep search depth
 public class SearchTree {
-    //layer metadaa
+    //layer metadata
     private int depth = -1;
     private final int GENERATED = 0;
     private final int USED = 1;
