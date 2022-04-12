@@ -19,14 +19,14 @@ import static Engine.EngineValues.ROOK;
 import static Engine.EngineValues.WHITE;
 
 
+//class to handle all and minupulate all bitboards
+//and transposition tables
 public final class ChessBoard {
     
-    public static final int MAX_MOVES = 768;
+    //number of moves to base move history arrays off of
+    public static final int mMoves = 768;
 
-    public ChessBoard() {
-
-    }
-
+    //helper variable for multithreading
     private static ChessBoard[] instances;
 
     static {
@@ -52,69 +52,66 @@ public final class ChessBoard {
         }
     }
 
-    /**
-     * color, piece
-     */
+    //bitboards for pieces
+    //take format color, piece
     public final long[][] pieces = new long[2][7];
     public final long[] friendlyPieces = new long[2];
 
-    /**
-     * 4 bits: white-king,white-queen,black-king,black-queen
-     */
+    //metadata
     public int castlingRights;
     public int colorToMove, colorToMoveInverse;
     public int epIndex;
     public int materialKey;
-
     public long allPieces, emptySpaces;
     public long zobristKey, pawnZobristKey;
     public long checkingPieces, pinnedPieces, discoveredPieces;
 
-    /**
-     * which piece is on which square
-     */
+
+    //which piece is on which square
     public final int[] pieceIndexes = new int[64];
     public final int[] kingIndex = new int[2];
     public final long[] kingArea = new long[2];
 
+    //move history
     public int moveCounter = 0;
-    public final int[] castlingHistory = new int[MAX_MOVES];
-    public final int[] epIndexHistory = new int[MAX_MOVES];
-    public final long[] zobristKeyHistory = new long[MAX_MOVES];
-    public final long[] checkingPiecesHistory = new long[MAX_MOVES];
-    public final long[] pinnedPiecesHistory = new long[MAX_MOVES];
-    public final long[] discoveredPiecesHistory = new long[MAX_MOVES];
-    public final int[] lastCaptureOrPawnMoveBeforeHistory = new int[MAX_MOVES];
-
+    public final int[] castlingHistory = new int[mMoves];
+    public final int[] epIndexHistory = new int[mMoves];
+    public final long[] zobristKeyHistory = new long[mMoves];
+    public final long[] checkingPiecesHistory = new long[mMoves];
+    public final long[] pinnedPiecesHistory = new long[mMoves];
+    public final long[] discoveredPiecesHistory = new long[mMoves];
+    public final int[] lastCaptureOrPawnMoveBeforeHistory = new int[mMoves];
     public int[] playedMoves = new int[2048];
     public int playedMovesCount = 0;
-
     public int lastCaptureOrPawnMoveBefore = 0;
 
-    public StackLongInt playedBoardStates = new StackLongInt(9631);//MUST BE PRIME NUMBER
+    //for quick zobrist rehashing
+    public StackLongInt playedBoardStates = new StackLongInt(9631);
 
 
-    public boolean isDrawishByMaterial(final int color) {
-        // no pawns or queens
-        //if (MaterialUtil.hasPawnsOrQueens(materialKey, color)) {
+    //EFFECTS: returns true if game is a draw by material
+    public boolean isDrawByMaterial() {
+        //TODO
         return false;
-        //}
-
-        // material difference bigger than bishop + 50
-        // TODO do not include pawn score (why...?)
-        //return EvalUtil.getImbalances(this) * ChessConstants.COLOR_FACTOR[color] < EvalConstants.MATERIAL[BISHOP]
-        //	+ EvalConstants.OTHER_SCORES[EvalConstants.IX_DRAWISH];
+        
     }
 
+    //MODIFIES: this
+    //EFFECTS: changes the turn of player to move
     public void changeSideToMove() {
         colorToMove = colorToMoveInverse;
         colorToMoveInverse = 1 - colorToMove;
     }
 
+    //EFFECTS: given a piece index of the current color to play piece
+    //returns true if moving piece causing discovery check on king
     public boolean isDiscoveredMove(final int fromIndex) {
         return (discoveredPieces & (1L << fromIndex)) != 0;
     }
 
+    //MODIFIES: this
+    //EFFECTS: helper function
+    //pushes given move onto end of move history and stores all associated data
     private void pushHistoryValues(int move) {
         castlingHistory[moveCounter] = castlingRights;
         epIndexHistory[moveCounter] = epIndex;
@@ -128,6 +125,10 @@ public final class ChessBoard {
         playedMovesCount++;
     }
 
+    //MODIFIES: this
+    //EFFECTS: helper function
+    //pops current end move off move history and restores assciated
+    //data with previous move
     private void popHistoryValues() {
         playedMovesCount--;
         moveCounter--;
@@ -140,6 +141,8 @@ public final class ChessBoard {
         lastCaptureOrPawnMoveBefore = lastCaptureOrPawnMoveBeforeHistory[moveCounter];
     }
 
+    //MODIFIES: this
+    //EFFECTS: performes a null move on the given cb
     public void doNullMove() {
         pushHistoryValues(0);
 
@@ -154,6 +157,9 @@ public final class ChessBoard {
         playedBoardStates.inc(zobristKey);
     }
 
+    //MODIFIES: this
+    //EFFECTS: given that a null move has just been done
+    //un does null move
     public void undoNullMove() {
 
         playedBoardStates.dec(zobristKey);
@@ -163,8 +169,11 @@ public final class ChessBoard {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: given a valid move, plays it on the board
     public void doMove(int move) {
 
+        //gather all important information from the move
         final int fromIndex = MoveUtil.getFromIndex(move);
         int toIndex = MoveUtil.getToIndex(move);
         long toMask = 1L << toIndex;
@@ -172,25 +181,30 @@ public final class ChessBoard {
         final int sourcePieceIndex = MoveUtil.getSourcePieceIndex(move);
         final int attackedPieceIndex = MoveUtil.getAttackedPieceIndex(move);
 
+        //push move onto history
         pushHistoryValues(move);
 
+        //update metadata
         if (attackedPieceIndex != 0 || sourcePieceIndex == ChessConstants.PAWN) {
             lastCaptureOrPawnMoveBefore = 0;
         } else {
             lastCaptureOrPawnMoveBefore++;
         }
 
+        //update hash
         zobristKey ^= Zobrist.piece[fromIndex][colorToMove][sourcePieceIndex] ^ Zobrist.piece[toIndex][colorToMove][sourcePieceIndex] ^ Zobrist.sideToMove;
         if (epIndex != 0) {
             zobristKey ^= Zobrist.epIndex[epIndex];
             epIndex = 0;
         }
 
+        //erase piece from bitboats
         friendlyPieces[colorToMove] ^= fromToMask;
         pieceIndexes[fromIndex] = EMPTY;
         pieceIndexes[toIndex] = sourcePieceIndex;
         pieces[colorToMove][sourcePieceIndex] ^= fromToMask;
 
+        //place new piece
         switch (sourcePieceIndex) {
             case PAWN:
                 pawnZobristKey ^= Zobrist.piece[fromIndex][colorToMove][PAWN];
@@ -280,12 +294,13 @@ public final class ChessBoard {
             }
         }
 
-        // TODO can this be done incrementally?
+        //reset more metadata
         setPinnedAndDiscoPieces();
-
         playedBoardStates.inc(zobristKey);
     }
-
+    
+    //MODIFIES: this
+    //EFFECTS: updates metadata on pinned and discovered pieces
     public void setPinnedAndDiscoPieces() {
 
         pinnedPieces = 0;
@@ -313,6 +328,7 @@ public final class ChessBoard {
         }
     }
 
+    
     public void undoMove(int move) {
 
         playedBoardStates.dec(zobristKey);
