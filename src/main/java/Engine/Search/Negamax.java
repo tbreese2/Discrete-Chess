@@ -11,6 +11,10 @@ import Engine.SearchTree;
 import static Engine.EngineValues.BLACK;
 import static Engine.EngineValues.WHITE;
 import Engine.MoveGen.ChessBoardUtil;
+import static Engine.EngineValues.ALL_NODE;
+import static Engine.EngineValues.PV_NODE;
+import static Engine.EngineValues.FORCED_ALL_NODE;
+import static Engine.EngineValues.CUT_NODE;
 
 //negamax search class
 public class Negamax {
@@ -19,13 +23,35 @@ public class Negamax {
     //public because other functions may
     //find it useful
     public static final int maxScore = 1147483647;
+    
+    //transposition table for dynamic programming
+    //by default creates a 32 mb table
+    public static final TTTable table = new TTTable(32);
 
     //MODIFIES: tree
-    //EFFECTS: searches for the best
-    //move to given depth
+    //EFFECTS: searches for the best move to given depth
     //returns move as an int
     public static int calcBestMoveNegamax(ChessBoard board, int depth, SearchTree tree, int alpha, int beta) {
         int bestMoveValue = -maxScore;
+        
+        //check if entry has already been evaluated before
+        table.nextAge();
+        Position get = table.transpositionTableLookup(board.zobristKey);
+        
+        //check if position is a hit
+        if(get.zobrist == board.zobristKey >> 32) {
+            if (get.type == PV_NODE) {
+                return get.value;
+            } else if (get.type == CUT_NODE) {
+                if (get.value >= beta) {
+                    return get.value;
+                }
+            } else if ((get.type & ALL_NODE) != 0) {
+                if (get.value <= alpha) {
+                    return get.value;
+                }
+            }
+        }
         
         //end search
         if (depth == 0) {
@@ -62,10 +88,12 @@ public class Negamax {
 
                     board.undoMove(move);
 
-                    //alpha beta pruning
+                    //set new alpha
                     if (bestMoveValue > alpha) {
                         alpha = bestMoveValue;
                     }
+                    
+                    //alpha beta pruning condition
                     if (alpha >= beta) {
                         break;
                     }
