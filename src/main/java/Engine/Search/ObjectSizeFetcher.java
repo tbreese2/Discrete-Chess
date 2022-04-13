@@ -4,18 +4,16 @@
  */
 package Engine.Search;
 import java.lang.instrument.Instrumentation;
+import java.io.*;
 /**
  *
  * @author Tyler
  */
 public class ObjectSizeFetcher {
-    private static Instrumentation instrumentation;
-
-    public static void premain(String args, Instrumentation inst) {
-        instrumentation = inst;
-    }
-
-    public static long getObjectSize(Object o) {
-        return instrumentation.getObjectSize(o);
+    public static byte[] serialize(Object obj) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(obj);
+        return baos.toByteArray();
     }
 }

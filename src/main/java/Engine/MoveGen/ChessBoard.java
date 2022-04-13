@@ -328,7 +328,9 @@ public final class ChessBoard {
         }
     }
 
-    
+    //MODIFIES: this
+    //EFFECTS: given moveutil formatted move move,
+    //undoes the move on the board
     public void undoMove(int move) {
 
         playedBoardStates.dec(zobristKey);
@@ -397,6 +399,9 @@ public final class ChessBoard {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: given valid king metadata,
+    //updates king metadata for board
     public void updateKingValues(final int kingColor, final int index) {
         if (index == 64) {//If there is no king return
             return;
@@ -425,6 +430,8 @@ public final class ChessBoard {
         return true;
     }
 
+    //EFFECTS: given valid pawn index
+    //checks if pawn has valid ep
     public boolean isLegalEPMove(final int fromIndex) {
 
         // do move, check if in check, undo move. slow but also not called very often
@@ -448,6 +455,8 @@ public final class ChessBoard {
 
     }
 
+    //EFFECTS: given a moveutil formated move
+    //returns whether the move is valid or not
     public boolean isValidMove(final int move) {
 
         // check piece at from square
@@ -544,11 +553,14 @@ public final class ChessBoard {
         return true;
     }
 
+    //EFFECTS: given a valid moveutil king move move
+    //returns whether the king move is legal
     private boolean isLegalKingMove(final int move) {
         return !CheckUtil.isInCheckIncludingKing(MoveUtil.getToIndex(move), colorToMove, pieces[colorToMoveInverse],
                 allPieces ^ Util.POWER_LOOKUP[MoveUtil.getFromIndex(move)]);
     }
 
+    
     private boolean isLegalNonKingMove(final int move) {
         return !CheckUtil.isInCheck(kingIndex[colorToMove], colorToMove, pieces[colorToMoveInverse],
                 allPieces ^ Util.POWER_LOOKUP[MoveUtil.getFromIndex(move)] ^ Util.POWER_LOOKUP[MoveUtil.getToIndex(move)]);
