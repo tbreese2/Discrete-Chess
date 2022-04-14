@@ -35,7 +35,7 @@ public class Negamax {
         int bestMoveValue = -maxScore;
         
         //check if entry has already been evaluated before
-        /*table.nextAge();
+        table.nextAge();
         Position get = table.transpositionTableLookup(board.zobristKey);
         
         //check if position is a hit
@@ -51,7 +51,7 @@ public class Negamax {
                     return get.value;
                 }
             }
-        }*/
+        }
         
         //end search
         if (depth == 0) {

@@ -15,19 +15,14 @@ import static Engine.EngineValues.WHITE;
 
 import java.util.Arrays;
 
-//helps with handling UCI formatting as well as FEN formating
-//also contains zobrist hashing utilities
 public class ChessBoardUtil {
 
-    //UCI names for every chess board square
     public static final String ALL_FIELD_NAMES[] = new String[]{"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3", "a4", "b4", "c4", "d4", "e4", "f4", "g4", "h4", "a5", "b5", "c5", "d5", "e5", "f5", "g5", "h5", "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6", "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7", "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",};
 
-    //EFFECTS: returns a new chessboard with FIDE default start position
     public static ChessBoard getNewCB() {
         return getNewCB(ChessConstants.FEN_START);
     }
 
-    //EFFECTS: returns a new chessboard with given fen start position
     public static ChessBoard getNewCB(String fen) {
         ChessBoard cb = new ChessBoard();
         setFenValues(fen, cb);
@@ -35,8 +30,6 @@ public class ChessBoardUtil {
         return cb;
     }
 
-    //MODIFIES: cb
-    //EFFECTS: sets all pieces in chessboard according to given fen
     public static void setFenValues(String fen, ChessBoard cb) {
         cb.moveCounter = 0;
 
@@ -103,12 +96,9 @@ public class ChessBoardUtil {
         }
     }
 
-    //MODIFIES: cd
-    //EFFECTS: updats cb's zobrist key
     public static void calculateZobristKeys(ChessBoard cb) {
         cb.zobristKey = 0;
 
-        //add all pieces to zobrist key
         for (int color = 0; color < 2; color++) {
             for (int piece = PAWN; piece <= KING; piece++) {
                 long pieces = cb.pieces[color][piece];
@@ -119,7 +109,6 @@ public class ChessBoardUtil {
             }
         }
 
-        //update niche zobrist keys
         cb.zobristKey ^= Zobrist.castling[cb.castlingRights];
         if (cb.colorToMove == WHITE) {
             cb.zobristKey ^= Zobrist.sideToMove;
@@ -127,8 +116,6 @@ public class ChessBoardUtil {
         cb.zobristKey ^= Zobrist.epIndex[cb.epIndex];
     }
 
-    //MODIFIES: cd
-    //EFFECTS: updats cb's pawn zobrist keys
     public static void calculatePawnZobristKeys(ChessBoard cb) {
         cb.pawnZobristKey = 0;
 
@@ -144,9 +131,8 @@ public class ChessBoardUtil {
         }
     }
 
-    //EFFECTS: helper function
-    //helps set pieces
-    private static void setPieces(final ChessBoard cb, final String fenPieces) {
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+    public static void setPieces(final ChessBoard cb, final String fenPieces) {
 
         // clear pieces
         for (int color = 0; color < 2; color++) {
@@ -212,7 +198,6 @@ public class ChessBoardUtil {
         }
     }
 
-    //
     public static void init(ChessBoard cb) {
 
         calculateMaterialZobrist(cb);

@@ -4,10 +4,12 @@
  */
 package Engine.MoveGen;
 
-//helper util from chess22k
+/**
+ *
+ * chess util
+ */
 public class Bitboard {
 
-    //constants for bit values for every square, row, column, etc..
     // rank 1
     public static final long H1 = 1L;
     public static final long G1 = H1 << 1;
@@ -184,27 +186,21 @@ public class Bitboard {
         FILE_C | FILE_A, //
         FILE_B};
 
-    //EFFECTS: given Bitboard formated long of pawns
-    //returns bitboard of potential pawn attacks for black
     public static long getWhitePawnAttacks(final long pawns) {
         return pawns << 9 & Bitboard.NOT_FILE_H | pawns << 7 & Bitboard.NOT_FILE_A;
     }
 
-    //EFFECTS: given Bitboard formated long of pawns
-    //returns bitboard of potential pawn attacks for white
     public static long getBlackPawnAttacks(final long pawns) {
         return pawns >>> 9 & Bitboard.NOT_FILE_A | pawns >>> 7 & Bitboard.NOT_FILE_H;
     }
 
-    //EFFECTS: given Bitboard formated long of pawns
-    //returns bitboard of pawn neihbors
     public static long getPawnNeighbours(final long pawns) {
         return pawns << 1 & Bitboard.NOT_FILE_H | pawns >>> 1 & Bitboard.NOT_FILE_A;
     }
 
-    //@author Gerd Isenberg
-    //EFFECTS: fizbo function
-    //given moveutil formated move, returns center distance
+    /**
+     * @author Gerd Isenberg
+     */
     public static int manhattanCenterDistance(int sq) {
         int file = sq & 7;
         int rank = sq >>> 3;
@@ -213,17 +209,13 @@ public class Bitboard {
         return (file + rank) & 7;
     }
 
-    //EFFECTS: given formated piece index
-    //returns passed pawn mask for white
     public static long getWhitePassedPawnMask(final int index) {
         if (index > 55) {
             return 0;
         }
         return (FILES[index & 7] | FILES_ADJACENT[index & 7]) << ((index >>> 3 << 3) + 8);
     }
-    
-    //EFFECTS: given formated piece index
-    //returns passed pawn mask for black
+
     public static long getBlackPassedPawnMask(final int index) {
         if (index < 8) {
             return 0;
@@ -231,24 +223,18 @@ public class Bitboard {
         return (FILES[index & 7] | FILES_ADJACENT[index & 7]) >>> ((71 - index) >>> 3 << 3);
     }
 
-    //EFFECTS: given moveutil formated piece index
-    //returns adjacent pawn mask for white
     public static long getWhiteAdjacentMask(final int index) {
         return getWhitePassedPawnMask(index) & ~FILES[index & 7];
     }
 
-    //EFFECTS: given moveutil formated piece index
-    //returns adjacent pawn mask for black
     public static long getBlackAdjacentMask(final int index) {
         return getBlackPassedPawnMask(index) & ~FILES[index & 7];
     }
 
-    //EFFECTS: given bitboard of single piece, returns file
     public static long getFile(final long square) {
         return FILES[Long.numberOfTrailingZeros(square) & 7];
     }
 
-    //EFFECTS: given bitboard of single piece, returns rank
     public static long getRank(final long square) {
         return RANKS[Long.numberOfTrailingZeros(square) / 8];
     }

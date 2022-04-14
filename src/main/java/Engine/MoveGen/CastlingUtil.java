@@ -9,11 +9,9 @@ import static Engine.EngineValues.EMPTY;
 import static Engine.EngineValues.ROOK;
 import static Engine.EngineValues.WHITE;
 
-//helper class to deal with casltling of ChessBoard
 public final class CastlingUtil {
 
     // 4 bits: white-king,white-queen,black-king,black-queen
-    //EFFECTS: given chessboard cb, returns formated bitboard of potential king moves
     public static long getCastlingIndexes(final ChessBoard cb) {
         if (cb.castlingRights == 0) {
             return 0;
@@ -68,8 +66,6 @@ public final class CastlingUtil {
         throw new RuntimeException("Unknown castling-right: " + cb.castlingRights);
     }
 
-    //EFFECTS: given chessboard cb, returns castling rights 
-    //if rook has been attacked or moved
     public static int getRookMovedOrAttackedCastlingRights(final int castlingRights, final int rookIndex) {
         switch (rookIndex) {
             case 0:
@@ -84,8 +80,6 @@ public final class CastlingUtil {
         return castlingRights;
     }
 
-    //EFFECTS: given chessboard cb, returns castling rights 
-    //if king has alread been moved
     public static int getKingMovedCastlingRights(final int castlingRights, final int kingIndex) {
         switch (kingIndex) {
             case 3:
@@ -96,9 +90,6 @@ public final class CastlingUtil {
         return castlingRights;
     }
 
-    //EFFECTS: giben castling index
-    //returns the final location of the rook
-    //after a castle has been performed
     public static long getRookInBetweenIndex(final int castlingIndex) {
         switch (castlingIndex) {
             case 1:
@@ -113,9 +104,6 @@ public final class CastlingUtil {
         throw new RuntimeException("Incorrect castling-index: " + castlingIndex);
     }
 
-    //MODIFIES: chessboard
-    //EFFECTS: undoes castle of rook
-    //given the index of where the king is moving to
     public static void uncastleRookUpdate(final ChessBoard cb, final int kingToIndex) {
         switch (kingToIndex) {
             case 1:
@@ -150,9 +138,6 @@ public final class CastlingUtil {
         throw new RuntimeException("Incorrect king castling to-index: " + kingToIndex);
     }
 
-    //MODIFIES: chessboard
-    //EFFECTS: undoes castle of rook and updates zobrist hash
-    //given the index of where the king is moving to
     public static void castleRookUpdateKey(final ChessBoard cb, final int kingToIndex) {
         switch (kingToIndex) {
             case 1:
@@ -192,8 +177,6 @@ public final class CastlingUtil {
 
     }
 
-    //EFFECTS: given chessboard, valid from and to king index
-    //returns whether move is a valid castling move
     public static boolean isValidCMove(final ChessBoard cb, final int fromIndex, final int toIndex) {
         if (cb.checkingPieces != 0) {
             return false;
