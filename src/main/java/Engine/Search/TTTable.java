@@ -19,19 +19,20 @@ public class TTTable {
     private byte age = -128;
     
     public TTTable (final long mb) {
+        
         try {
-            byte[] size = ObjectSizeFetcher.serialize(new Position());
-            final long maxNum = (mb * 1024 * 1024) / size.length;
+            int size = 2*SizeOf.serialize(int.class) + 2*SizeOf.serialize(short.class) + 2*SizeOf.serialize(byte.class);
+            final long maxNum = (mb * 1024 * 1024) / size;
             tableSize = 1;
             while (tableSize <= maxNum) {
                 tableSize *= 2;
             }
-
             tableSize /= 2;
             tableMask = tableSize - 1;
             age = 0;
             hashtable = new Position[tableSize];
             voidTable();
+            
         } catch(Exception e) {
             
         }
