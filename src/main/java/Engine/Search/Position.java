@@ -11,12 +11,12 @@ package Engine.Search;
 public class Position {
     public int zobrist;
     public int move;
-    public short value;
+    public int value;
     public byte depth;
     public byte type;
     public short age;
  
-    public void edit(final int z, final int move, final short value, final byte depth, final byte type, final short age) {
+    public void edit(final int z, final int move, final int value, final byte depth, final byte type, final short age) {
         this.zobrist = z;
         this.move = move;
         this.value = value;

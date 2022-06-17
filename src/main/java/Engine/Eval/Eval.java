@@ -20,21 +20,21 @@ import Engine.MoveGen.MoveUtil;
 
 //main eval function for engine
 public class Eval {
-    
-    //eval constants
-    //pawn, knight, bishop rook, queen, king
-    private final static int[] pieceValues = {100, 325, 325, 500, 1050, 40000};
+    //
+    private final static int[] pieceValues = {100, 315, 325, 515, 1000, 40000};
     
     //EFFECTS: given chess board
     //returns the engines evaluation of the board
     public static int boardEval(final ChessBoard board) {
+        //todo:
+        //passed pawns, mobility and king safety
         return Material(board);
     }
     
     //EFFECTS: helper function
     //returns piece count evaltion of the board
     private static int Material(final ChessBoard board) {
-        return ((Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
+       int materialCount = ((Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
                         + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * pieceValues[KNIGHT - 1])
                         + (Long.bitCount(board.pieces[WHITE][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[WHITE][ROOK]) * pieceValues[ROOK - 1])
@@ -45,6 +45,25 @@ public class Eval {
                         + (Long.bitCount(board.pieces[BLACK][BISHOP]) * pieceValues[BISHOP - 1])
                         + (Long.bitCount(board.pieces[BLACK][ROOK]) * pieceValues[ROOK - 1])
                         + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]));
+       
+       //check for bishop pair black
+       if (Long.bitCount(board.pieces[BLACK][BISHOP]) == 2) {
+           materialCount -= 50;
+           //if white has no minor pieces, add 25 extra
+           if(Long.bitCount(board.pieces[WHITE][BISHOP]) == 0 && Long.bitCount(board.pieces[WHITE][KNIGHT]) == 0) {
+               materialCount -= 25;
+           }
+       }
+       
+       //check for white bishop pair
+       if (Long.bitCount(board.pieces[WHITE][BISHOP]) == 2) {
+           materialCount += 50;
+           //if black has no minor pieces, add 25 extra
+           if(Long.bitCount(board.pieces[BLACK][BISHOP]) == 0 && Long.bitCount(board.pieces[BLACK][KNIGHT]) == 0) {
+               materialCount += 25;
+           }
+       }
+       return materialCount;
     }
     
     //TODO: finish black mobility calculations

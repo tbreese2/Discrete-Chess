@@ -16,12 +16,12 @@ public class TTTable {
     private Position hashtable[];
     private int tableSize;
     private long tableMask;
-    private byte age = -128;
+    public byte age = -128;
     
     public TTTable (final long mb) {
         
         try {
-            int size = 2*SizeOf.serialize(int.class) + 2*SizeOf.serialize(short.class) + 2*SizeOf.serialize(byte.class);
+            int size = 3*SizeOf.serialize(int.class) + SizeOf.serialize(short.class) + 2*SizeOf.serialize(byte.class);
             final long maxNum = (mb * 1024 * 1024) / size;
             tableSize = 1;
             while (tableSize <= maxNum) {
@@ -65,7 +65,7 @@ public class TTTable {
         return hashtable[(int)iKey];
     }
     
-    public boolean transpositionTableStore(final long key, final int move, final short value, final byte depth, final byte nodeType){
+    public boolean transpositionTableStore(final long key, final int move, final int value, final byte depth, final byte nodeType){
         final long iKey = key & tableMask;
         Position ent = hashtable[(int)iKey];
         final int lKey = (int)(key >> 32);

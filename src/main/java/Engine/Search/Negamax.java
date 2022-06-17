@@ -26,13 +26,14 @@ public class Negamax {
     
     //transposition table for dynamic programming
     //by default creates a 32 mb table
-    public static final TTTable table = new TTTable(32);
+    public static final TTTable table = new TTTable(100);
 
     //MODIFIES: tree
     //EFFECTS: searches for the best move to given depth
     //returns move as an int
-    public static int calcBestMoveNegamax(ChessBoard board, int depth, SearchTree tree, int alpha, int beta) {
+    public static int calcBestMoveNegamax(ChessBoard board, byte depth, SearchTree tree, int alpha, int beta) {
         int bestMoveValue = -maxScore;
+        final int oAlpha = alpha;
         
         //check if entry has already been evaluated before
         table.nextAge();
@@ -71,7 +72,7 @@ public class Negamax {
             //check if is not top layer, then must
             //return move value instead of move
             if (!tree.isTop()) {
-                
+                int bestMove = tree.getFirstMove();
                 //loop through every move
                 while (tree.isLayerNotEmpty()) {
                     final int move = tree.next();
@@ -83,8 +84,13 @@ public class Negamax {
                     
                     board.doMove(move);
                     
-                    //recursive call to find move strength at next depth
-                    bestMoveValue = Math.max(bestMoveValue, -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha));
+                    final int value = -calcBestMoveNegamax(board, (byte)(depth - 1), tree, -beta, -alpha);
+                    
+                    //update max move values for particular layer
+                    if(value > bestMoveValue) {
+                        bestMoveValue = value;
+                        bestMove = move;
+                    }
 
                     board.undoMove(move);
 
@@ -95,10 +101,19 @@ public class Negamax {
                     
                     //alpha beta pruning condition
                     if (alpha >= beta) {
+                        table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)CUT_NODE);
                         break;
                     }
                 }
                 tree.endLayer();
+                
+                //write node to ttable
+                if (alpha > oAlpha) {
+                    table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)PV_NODE);
+                } else {
+                    table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)ALL_NODE);
+                }
+                
                 return bestMoveValue;
             } 
             
@@ -116,7 +131,7 @@ public class Negamax {
                     board.doMove(move);
                     
                     //recursive call
-                    final int value = -calcBestMoveNegamax(board, depth - 1, tree, -beta, -alpha);
+                    final int value = -calcBestMoveNegamax(board, (byte)(depth - 1), tree, -beta, -alpha);
                     
                     //update max move values for particular layer
                     if(value > bestMoveValue) {
@@ -131,11 +146,18 @@ public class Negamax {
                         alpha = bestMoveValue;
                     }
                     if (alpha >= beta) {
+                        table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)CUT_NODE);
                         break;
                     }
                 }
                 tree.endLayer();
                 
+                //write node to ttable
+                if (alpha > oAlpha) {
+                    table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)PV_NODE);
+                } else {
+                    table.transpositionTableStore(board.zobristKey, bestMove, bestMoveValue, depth, (byte)ALL_NODE);
+                }
                 return bestMove;
             }
 

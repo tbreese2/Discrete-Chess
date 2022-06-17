@@ -39,9 +39,9 @@ public class MinMaxTest {
         System.out.println("bestMove");
         //new EngineBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
         //rnbqkbnr/ppppp1p1/5p1p/4P3/3P4/3B1N2/PPP2PPP/RNBQK2R b KQq - 0 5
-        ChessBoard instance = ChessBoardUtil.getNewCB("rnbqkbnr/ppppp1p1/5p1p/4P3/3P4/3B1N2/PPP2PPP/RNBQK2R b KQq - 0 5");
+        ChessBoard instance = ChessBoardUtil.getNewCB("r1bqkb1r/pppp4/2n1pp1p/8/3PP1P1/2NB1N2/PPP4P/R2QK2R b KQq - 1 2");
         System.out.println(ChessBoardUtil.toString(instance, false));
-        int depth = 4;
+        byte depth = 6;
         SearchTree tree = new SearchTree();
         int result = Negamax.calcBestMoveNegamax(instance, depth, tree, -Negamax.maxScore, Negamax.maxScore);
         System.out.println(ChessBoardUtil.toString(instance, false));
