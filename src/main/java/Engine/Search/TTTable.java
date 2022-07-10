@@ -65,20 +65,29 @@ public class TTTable {
         return hashtable[(int)iKey];
     }
     
-    public boolean transpositionTableStore(final long key, final int move, final int value, final byte depth, final byte nodeType){
-        final long iKey = key & tableMask;
-        Position ent = hashtable[(int)iKey];
-        final int lKey = (int)(key >> 32);
+    public boolean transpositionTableStore(final long zobrist, final int move, final int value, final byte depth, final byte nodeType){
+        final long index = zobrist & tableMask;
+        Position ent = hashtable[(int)index];
+        final int key = (int)(zobrist >> 32);
+        
         if (ent.zobrist == 0) {
-            ent.edit(lKey, move, value, depth, nodeType, age);
+            ent.edit(key, move, value, depth, nodeType, age);
+            hashtable[(int)index] = ent;
             return true;
         } else {
-            if ( ent.age != age || nodeType == EngineValues.PV_NODE || (ent.type  != EngineValues.PV_NODE && ent.depth <= depth) || (ent.zobrist == key && ent.depth <= depth * 2)) {
-                ent.edit(lKey, move, value, depth, nodeType, age);
+            //right now, move type will be ignored
+            //if ( ent.age != age || nodeType == EngineValues.PV_NODE || (ent.type  != EngineValues.PV_NODE && ent.depth <= depth) || (ent.zobrist == key && ent.depth <= depth * 2)) {
+                //ent.edit(lKey, move, value, depth, nodeType, age);
+                //return true;
+            //}
+            if (ent.age != age || (ent.zobrist == key && ent.depth <= depth * 2)) {
+                ent.edit(key, move, value, depth, nodeType, age);
+                hashtable[(int)index] = ent;
                 return true;
             }
-            return false;
+            
         }
+        return false;
     }
     
     public void nextAge() {
