@@ -553,4 +553,8 @@ public final class ChessBoard {
         }
         return -1;
     }
+    
+    public int getPreviousMove() {
+        return playedMoves[playedMovesCount - 1];
+    }
 }

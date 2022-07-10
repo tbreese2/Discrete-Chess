@@ -9,7 +9,7 @@ package Engine;
 //relativly limits memory hogging of deep search depth
 public class SearchTree {
     //layer metadata
-    private int depth = -1;
+    public int depth = -1;
     private final int GENERATED = 0;
     private final int USED = 1;
     

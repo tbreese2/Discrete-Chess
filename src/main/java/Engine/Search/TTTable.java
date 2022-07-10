@@ -21,7 +21,7 @@ public class TTTable {
     public TTTable (final long mb) {
         
         try {
-            int size = 3*SizeOf.serialize(int.class) + SizeOf.serialize(short.class) + 2*SizeOf.serialize(byte.class);
+            int size = 4*SizeOf.serialize(int.class) + 3*SizeOf.serialize(byte.class);
             final long maxNum = (mb * 1024 * 1024) / size;
             tableSize = 1;
             while (tableSize <= maxNum) {
@@ -65,27 +65,21 @@ public class TTTable {
         return hashtable[(int)iKey];
     }
     
-    public boolean transpositionTableStore(final long zobrist, final int move, final int value, final byte depth, final byte nodeType){
+    public boolean transpositionTableStore(final long zobrist, final int score, final int move, final byte nodeType, final byte depth, final int eval){
         final long index = zobrist & tableMask;
         Position ent = hashtable[(int)index];
         final int key = (int)(zobrist >> 32);
         
         if (ent.zobrist == 0) {
-            ent.edit(key, move, value, depth, nodeType, age);
+            ent.edit(key, move, depth, nodeType, age, eval, score);
             hashtable[(int)index] = ent;
             return true;
         } else {
-            //right now, move type will be ignored
-            //if ( ent.age != age || nodeType == EngineValues.PV_NODE || (ent.type  != EngineValues.PV_NODE && ent.depth <= depth) || (ent.zobrist == key && ent.depth <= depth * 2)) {
-                //ent.edit(lKey, move, value, depth, nodeType, age);
-                //return true;
-            //}
-            if (ent.age != age || (ent.zobrist == key && ent.depth <= depth * 2)) {
-                ent.edit(key, move, value, depth, nodeType, age);
+            if (ent.age != age || ent.type == Negamax.PV_NODE || (ent.type != Negamax.PV_NODE && ent.type <= depth) || (ent.zobrist == key && ent.depth <= depth * 2))  {
+                ent.edit(key, move, depth, nodeType, age, eval, score);
                 hashtable[(int)index] = ent;
                 return true;
             }
-            
         }
         return false;
     }
