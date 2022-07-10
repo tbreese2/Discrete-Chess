@@ -75,7 +75,7 @@ public class TTTable {
             hashtable[(int)index] = ent;
             return true;
         } else {
-            if (ent.age != age || ent.type == Negamax.PV_NODE || (ent.type != Negamax.PV_NODE && ent.type <= depth) || (ent.zobrist == key && ent.depth <= depth * 2))  {
+            if (ent.age != age || ent.type == EngineValues.PV_NODE || (ent.type != EngineValues.PV_NODE && ent.type <= depth) || (ent.zobrist == key && ent.depth <= depth * 2))  {
                 ent.edit(key, move, depth, nodeType, age, eval, score);
                 hashtable[(int)index] = ent;
                 return true;

@@ -30,4 +30,25 @@ public class EngineValues {
     //constants for playing color
     public static final int WHITE = 0;
     public static final int BLACK = 1;
+    
+    //flags for move types
+    public static final byte PV_NODE = 0;
+    public static final byte CUT_NODE = 1;
+    public static final byte FORCED_ALL_NODE = 2;
+    public static final byte ALL_NODE = 3;
+    
+    //standadardized max score
+    //public because other functions may
+    //find it useful
+    public static final int MAX_MATE_SCORE = 16383;
+    public static final int ONE_PLY = 1;
+    public static final int MAX_PLY = 128;
+    public static final int MAX_PVSEARCH_PLY = 235;
+    public static final int MAX_INTERNAL_PLY = 255;
+    public static final int TB_CURSED_SCORE = 1;
+    public static final int TB_WIN_SCORE = 7937;
+    public static final int MIN_MATE_SCORE  = 16383 - 255;
+    
+    //margin for razoring
+    public static final int RAZOR_MARGIN = 190;
 }

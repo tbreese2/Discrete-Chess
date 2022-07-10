@@ -22,7 +22,7 @@ import Engine.MoveGen.MoveUtil;
 //main eval function for engine
 public class Eval {
     //
-    private final static int[] pieceValues = {100, 315, 325, 515, 1000, 40000};
+    private final static int[] pieceValues = {100, 315, 325, 515, 1000};
     
     //EFFECTS: given chess board
     //returns the engines evaluation of the board
