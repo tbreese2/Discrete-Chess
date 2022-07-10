@@ -56,7 +56,7 @@ public class Negamax {
         
         //check if position is a hit, currently only using cut node
         //or all node
-        if (get.zobrist == board.zobristKey >> 32) {
+        if (false && get.zobrist == board.zobristKey >> 32) {
             hashMove = get.move;
 
             staticEval = get.eval;
@@ -77,14 +77,14 @@ public class Negamax {
             }
         } else {
             if (board.checkingPieces != 0)
-                staticEval = -maxScore + 100 - depth;
+                staticEval = -maxScore + tree.depth;
             else {
                 staticEval = Eval.boardEval(board) * board.getColor();
             }
         }
         
         // razoring
-        if (depth <= 3 && staticEval + RAZOR_MARGIN * depth < beta) {
+        if (false && depth <= 3 && staticEval + RAZOR_MARGIN * depth < beta) {
             score = Quiescence(board, tree, alpha, beta);
             if (score < beta) {
                 return score;
@@ -113,6 +113,7 @@ public class Negamax {
             if (!board.isLegal(move)) {
                 continue;
             }
+            
             board.doMove(move);
                     
             //recursive call
@@ -131,7 +132,7 @@ public class Negamax {
                 alpha = bestMoveValue;
             }
             
-            if (alpha >= beta) {
+            if (value >= beta) {
                 table.transpositionTableStore(board.zobristKey, value, bestMove, CUT_NODE, (byte)(depth - 3), bestMoveValue);
                 if (!tree.isTop()) {
                     tree.endLayer();
@@ -173,8 +174,8 @@ public class Negamax {
     //goes to a static position before evaluating board
     private static int Quiescence(ChessBoard board, SearchTree tree, int alpha, int beta) {
         //check if entry has already been evaluated before
-
-        //stand pat
+        return Eval.boardEval(board) * board.getColor();
+        /*//stand pat
         int bestMove = 0;
         
         // extract information like search data (history tables), zobrist etc
@@ -186,7 +187,7 @@ public class Negamax {
         int bestScore = -maxScore;
 
         // transposition table probing:
-        if (en.zobrist == key >> 32) {
+        if (false && en.zobrist == key >> 32) {
             if (en.type == PV_NODE) {
                 return en.score;
             } else if (en.type == CUT_NODE) {
@@ -273,7 +274,7 @@ public class Negamax {
         }
         
         tree.endLayer();
-        return bestScore;
+        return bestScore;*/
     }
 
 }

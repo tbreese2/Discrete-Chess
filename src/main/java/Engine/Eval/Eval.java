@@ -16,6 +16,7 @@ import static Engine.EngineValues.WHITE;
 import Engine.MoveGen.Bitboard;
 
 import Engine.MoveGen.ChessBoard;
+import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.MoveUtil;
 
 //main eval function for engine
@@ -63,6 +64,7 @@ public class Eval {
                materialCount += 25;
            }
        }
+
        return materialCount;
     }
     
