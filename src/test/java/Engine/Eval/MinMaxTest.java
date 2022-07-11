@@ -39,7 +39,7 @@ public class MinMaxTest {
         System.out.println("bestMove");
         //new EngineBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
         //rnbqkbnr/ppppp1p1/5p1p/4P3/3P4/3B1N2/PPP2PPP/RNBQK2R b KQq - 0 5
-        ChessBoard instance = ChessBoardUtil.getNewCB("rnbqkb1r/pppppppp/8/4P3/4n3/5P2/PPPP2PP/RNBQKBNR b KQkq - 0 2");
+        ChessBoard instance = ChessBoardUtil.getNewCB("rnbqkbnr/p1pppppp/8/1p6/6P1/8/PPPPPP1P/RNBQKBNR w KQkq b6 0 2");
         System.out.println(ChessBoardUtil.toString(instance, false));
         byte depth = 6;
         SearchTree tree = new SearchTree();

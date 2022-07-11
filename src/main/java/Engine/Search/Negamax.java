@@ -93,16 +93,16 @@ public class Negamax {
         tree.setHistoricEval(staticEval, board.colorToMove, tree.ply);
         
         // razoring
-        if (depth <= 3 && staticEval + RAZOR_MARGIN * depth < beta) {
-            score = Quiescence(board, tree, alpha, beta);
-            if (score < beta) {
-                tree.endLayer();
-                return score;
-            } else if (depth == 1) {
-                tree.endLayer();
-                return beta;
-            }
-        }
+        //if (depth <= 3 && staticEval + RAZOR_MARGIN * depth < beta) {
+            //score = Quiescence(board, tree, alpha, beta);
+            //if (score < beta) {
+                //tree.endLayer();
+                //return score;
+            //} else if (depth == 1) {
+                //tree.endLayer();
+                //return beta;
+            //}
+        //}
         
         //create new layer and populate
         MoveGen.generateMoves(tree, board);
@@ -156,9 +156,9 @@ public class Negamax {
         } else {
             if (hashMove != 0 && get.type == CUT_NODE) {
                 bestMove = get.move;
-            } else if (bestScore == alpha){ //TODO: implement same move function && !sameMove(hashMove, bestMove)) {
-                bestMove = 0;
-            }
+            } //else if (bestScore == alpha){ //TODO: implement same move function && !sameMove(hashMove, bestMove)) {
+                //bestMove = 0;
+            //}
 
             if (depth > 7 && bestMove != 0){ //TODO: implement thread node count functions && (td->nodes - prevNodeCount) / 2 < bestNodeCount) {
                 table.transpositionTableStore(board.zobristKey, bestScore, bestMove, FORCED_ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.ply));

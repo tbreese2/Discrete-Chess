@@ -203,7 +203,7 @@ public class EngineMain {
     //applys move to current board and then returns move in UCI formated string
     public String generateMove() {
         //defualt depth
-        byte depth = 5;
+        byte depth = 4;
         
         //create new search tree
         SearchTree tree = new SearchTree();

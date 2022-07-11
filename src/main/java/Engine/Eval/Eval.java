@@ -22,30 +22,57 @@ import Engine.MoveGen.MoveUtil;
 //main eval function for engine
 public class Eval {
     //
-    private final static int[] pieceValues = {100, 315, 325, 515, 1000};
+
     
     //EFFECTS: given chess board
     //returns the engines evaluation of the board
     public static int boardEval(final ChessBoard board) {
         //todo:
         //passed pawns, mobility and king safety
-        return Material(board);
+        int score = Material(board);
+        
+        score += PSQT(board);
+        
+        return score;
+    }
+    
+    private static int PSQT(final ChessBoard board) {
+        int score = 0;
+        int color = WHITE;
+        for (int pieceType = PAWN; pieceType <= KING; pieceType++) {
+            long piece = board.pieces[color][pieceType];
+            while (piece != 0) {
+                score += EvalConstants.pst[pieceType - 1][63 - Long.numberOfTrailingZeros(piece)];
+                piece &= piece - 1;
+            }
+        }
+        color = BLACK;
+        for (int pieceType = PAWN; pieceType <= KING; pieceType++) {
+            long piece = board.pieces[color][pieceType];
+            while (piece != 0) {
+                int index = Long.numberOfTrailingZeros(piece);
+                index = (index - 2*(index % 8)) + 7;
+                score -= EvalConstants.pst[pieceType - 1][index];
+                piece &= piece - 1;
+            }
+        }
+	return score;
     }
     
     //EFFECTS: helper function
     //returns piece count evaltion of the board
     private static int Material(final ChessBoard board) {
-       int materialCount = ((Long.bitCount(board.pieces[WHITE][PAWN]) * pieceValues[PAWN - 1])
-                        + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * pieceValues[KNIGHT - 1])
-                        + (Long.bitCount(board.pieces[WHITE][BISHOP]) * pieceValues[BISHOP - 1])
-                        + (Long.bitCount(board.pieces[WHITE][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * pieceValues[QUEEN - 1])) -
+       int materialCount = ((Long.bitCount(board.pieces[WHITE][PAWN]) * EvalConstants.pieceValues[PAWN - 1])
+                        + (Long.bitCount(board.pieces[WHITE][KNIGHT]) * EvalConstants.pieceValues[KNIGHT - 1])
+                        + (Long.bitCount(board.pieces[WHITE][BISHOP]) * EvalConstants.pieceValues[BISHOP - 1])
+                        + (Long.bitCount(board.pieces[WHITE][ROOK]) * EvalConstants.pieceValues[ROOK - 1])
+                        + (Long.bitCount(board.pieces[WHITE][QUEEN]) * EvalConstants.pieceValues[QUEEN - 1])) -
                 
-                ((Long.bitCount(board.pieces[BLACK][PAWN]) * pieceValues[PAWN - 1])
-                        + (Long.bitCount(board.pieces[BLACK][KNIGHT]) * pieceValues[KNIGHT - 1])
-                        + (Long.bitCount(board.pieces[BLACK][BISHOP]) * pieceValues[BISHOP - 1])
-                        + (Long.bitCount(board.pieces[BLACK][ROOK]) * pieceValues[ROOK - 1])
-                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * pieceValues[QUEEN - 1]));
+                ((Long.bitCount(board.pieces[BLACK][PAWN]) * EvalConstants.pieceValues[PAWN - 1])
+                        + (Long.bitCount(board.pieces[BLACK][KNIGHT]) * EvalConstants.pieceValues[KNIGHT - 1])
+                        + (Long.bitCount(board.pieces[BLACK][BISHOP]) * EvalConstants.pieceValues[BISHOP - 1])
+                        + (Long.bitCount(board.pieces[BLACK][ROOK]) * EvalConstants.pieceValues[ROOK - 1])
+                        + (Long.bitCount(board.pieces[BLACK][QUEEN]) * EvalConstants.pieceValues[QUEEN - 1]));
        
        //check for bishop pair black
        if (Long.bitCount(board.pieces[BLACK][BISHOP]) == 2) {
