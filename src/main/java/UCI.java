@@ -41,60 +41,35 @@ public class UCI {
         System.out.println("uciok");
     }
     
-    //MODIFIES: this
-    //EFFECTS: reads moves until quit command is specified
-    private void run() {
-        String nextLine = inputReader.nextLine();
-        
-        //check if quitcommand is given
-        while(!nextLine.equals("quit")) {
-            
-            //don't run until board compatible is ready
-            if(nextLine.equals("isready")){
-               System.out.println("readyok"); 
-            } 
-            
-            //resents board to FIDE default
-            else if(nextLine.equals("ucinewgame")) {
-                engine.resetBoard();
-            } 
-            
-            //new inputed position check
-            else if(nextLine.split("\\s+")[0].equals("position")) {
-                String[] args = nextLine.split("\\s+");
-                if(args[1].equals("startpos")) {
-                    engine.resetBoard();
-                } else {
-                    engine.setBoardFen(args[1]);
-                }
-                if(args.length > 2) {
-                    if(args[2].equals("moves")) {
-                        for(int i = 3; i < args.length; i++) {
-                            engine.doUCIMove(args[i]);
-                        }
-                    }
-                }
-            } 
-            
-            //check for move request
-            else if(nextLine.split("\\s+")[0].equals("go")) {
-                String[] args = nextLine.split("\\s+");
-                if(args[1].equals("infinite")) {
-                    engine.setMode("infinite");
-                } else if (args[1].equals("movetime")) {
-                    engine.setMode("movetime");
-                    engine.setMoveTime(Double.valueOf(args[2]));
-                }
-                System.out.println("bestmove " + engine.generateMove());
-            }
-            nextLine = inputReader.nextLine();
-        }
-        
-    }
-    
     //MODIFIES: board stored in engine main
     //EFFECTS: applys moves in line to board stored by engine
     private void ParsePosition(String line) {
+        String[] args = line.split("\\s+");
+        int i = 1;
+        if(args[1].equals("startpos")) {
+            engine.resetBoard();
+        } else {
+            String fen = "";
+            
+            while(!args[i].equals("moves") && args.length > i) {
+                fen += args[i];
+                i++;
+            }
+            
+            engine.setBoardFen(fen);
+            i--;
+        }
+        i++;
+        if(args.length > i) {
+            if(args[i].equals("moves")) {
+                for(int j = i + 1; j < args.length; j++) {
+                    engine.doUCIMove(args[j]);
+                }
+            }
+        }
+    }
+    
+    private void ParseGo(String line) {
         
     }
     
@@ -108,24 +83,45 @@ public class UCI {
             if(nextLine.substring(0, 1).equals('\n')) continue;
             
             //don't run until board compatible is ready
-            else if(nextLine.equals("isready")){
+            else if(nextLine.substring(0,7).equals("isready")){
                System.out.println("readyok"); 
             }
             
-            else if(nextLine.split("\\s+")[0].equals("position")) {
+            else if(nextLine.substring(0,8).equals("position")) {
                 ParsePosition(nextLine);
             }
             
-            else if(nextLine.equals("ucinewgame")) {
-                
+            else if(nextLine.substring(0,10).equals("ucinewgame")) {
+                engine.resetBoard();
+            }
+            
+            else if (nextLine.substring(0,2).equals("go")) {
+                System.out.println("Seen Go..");
+                ParseGo(nextLine);
+            }
+            
+            else if (nextLine.substring(0,4).equals("quit")) {
+                break;
+            }
+            
+            else if (nextLine.substring(0,3).equals("uci")) {
+                System.out.println("id name Discrete Chess");
+                System.out.println("id author Tyler B");
+                System.out.println("uciok");
+            }
+            
+            else if (nextLine.substring(0,3).equals("debug")) {
+                break;
+            }
+            
+            else if (nextLine.substring(0,26).equals("setoption name Hash value ")) {
+                UCIOptions.hashSize = Integer.parseInt(nextLine.substring(26));
+                if(UCIOptions.hashSize < 4) UCIOptions.hashSize = 4;
+		if(UCIOptions.hashSize > UCIOptions.MAX_HASH) UCIOptions.hashSize = UCIOptions.MAX_HASH;
+		System.out.println("Set Hash to " + UCIOptions.hashSize + " MB");
             }
             
         }
-    }
-    
-    
-    private void sendOptions() {
-        //non game loop
     }
     
     //EFFECTS: creates engine opject,
