@@ -51,4 +51,8 @@ public class EngineValues {
     
     //margin for razoring
     public static final int RAZOR_MARGIN = 190;
+    
+    //min and max short values
+    public static final int SHORT_MIN = -32767;
+    public static final int SHORT_MAX = 32767;
 }

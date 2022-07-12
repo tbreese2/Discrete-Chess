@@ -87,5 +87,10 @@ public class SearchTree {
         return historicalData[color][ply];
     }
     
+    //RETURNS: current ply
+    public byte getPly() {
+        return (byte)(ply + 1);
+    }
+    
     //TODO: add MLA and HLA move ordering
 }

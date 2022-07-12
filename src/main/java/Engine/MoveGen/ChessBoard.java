@@ -547,6 +547,10 @@ public final class ChessBoard {
         }
     }
     
+    public boolean drawByRules() {
+        return getRepetition() >= 2 || lastCaptureOrPawnMoveBefore >= 48;
+    }
+    
     public int getColor() {
         if(colorToMove == WHITE) {
             return 1;

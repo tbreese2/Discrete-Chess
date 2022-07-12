@@ -209,7 +209,7 @@ public class EngineMain {
         SearchTree tree = new SearchTree();
         
         //run negamax search
-        int result = Negamax.calcBestMoveNegamax(board, depth, tree, -EngineValues.MAX_MATE_SCORE, EngineValues.MAX_MATE_SCORE);
+        int result = Negamax.calcBestMoveNegamax(board, depth, tree, EngineValues.SHORT_MIN, EngineValues.SHORT_MAX);
         
         //do move and return
         board.doMove(result);

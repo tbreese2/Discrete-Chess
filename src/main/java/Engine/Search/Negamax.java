@@ -14,15 +14,16 @@ import static Engine.EngineValues.PV_NODE;
 import static Engine.EngineValues.CUT_NODE;
 import static Engine.EngineValues.FORCED_ALL_NODE;
 import static Engine.EngineValues.ALL_NODE;
-import static Engine.EngineValues.MAX_MATE_SCORE;
 import static Engine.EngineValues.ONE_PLY;
 import static Engine.EngineValues.MAX_PLY;
 import static Engine.EngineValues.MAX_PVSEARCH_PLY;
 import static Engine.EngineValues.MAX_INTERNAL_PLY;
 import static Engine.EngineValues.TB_WIN_SCORE;
-import static Engine.EngineValues.MIN_MATE_SCORE;
 import static Engine.EngineValues.RAZOR_MARGIN;
+import static Engine.EngineValues.SHORT_MIN;
+import static Engine.EngineValues.SHORT_MAX;
 import Engine.MoveGen.ChessBoardUtil;
+import Engine.MoveGen.MaterialUtil;
 
 //negamax search class
 public class Negamax {
@@ -33,19 +34,41 @@ public class Negamax {
     //transposition table for dynamic programming
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
+    
+    //for outside control of negamax call
+    public static boolean isRunning = true;
+
 
     //MODIFIES: tree
     //EFFECTS: searches for the best move to given depth
     //returns move as an int
     public static int calcBestMoveNegamax(ChessBoard board, byte depth, SearchTree tree, int alpha, int beta) {
         tree.newLayer();
-        int bestScore = -MAX_MATE_SCORE;
-        int score  = -MAX_MATE_SCORE;
+        int bestScore = SHORT_MIN - 1;
+        int score = 0; //TODO: look at koi and change this
+        int bestMove = 0;
         final int oAlpha = alpha;
         int staticEval = 0;
         int hashMove = 0;
         boolean pv = (beta - alpha) != 1;
+        int legal = 0;
         
+        if (!isRunning) {
+            tree.endLayer();
+            return 0;
+	}
+        
+        depth += extensions(board);
+        
+        /* mate-distance pruning */
+	if (true) {
+            alpha = Math.max(alpha, SHORT_MIN + tree.getPly());
+            beta = Math.min(beta, SHORT_MAX - tree.getPly() - 1);
+            if (alpha >= beta) {
+                tree.endLayer();
+		return alpha;
+            }
+	}
         
         //begin q search
         if (depth == 0) {
@@ -84,13 +107,13 @@ public class Negamax {
             }
         } else {
             if (board.checkingPieces != 0)
-                staticEval = -MAX_MATE_SCORE + tree.ply;
+                staticEval = SHORT_MIN + tree.getPly();
             else {
                 staticEval = Eval.boardEval(board) * board.getColor();
             }
         }
         
-        tree.setHistoricEval(staticEval, board.colorToMove, tree.ply);
+        tree.setHistoricEval(staticEval, board.colorToMove, (byte)tree.getPly());
         
         // razoring
         //if (depth <= 3 && staticEval + RAZOR_MARGIN * depth < beta) {
@@ -107,10 +130,6 @@ public class Negamax {
         //create new layer and populate
         MoveGen.generateMoves(tree, board);
         MoveGen.generateCaptures(tree, board);
-            
-        //if its not the top layer, then we return the best move
-        //instead of its score
-        int bestMove = tree.getFirstMove();
                 
         //loop through every move
         while (tree.isLayerNotEmpty()) {
@@ -123,7 +142,11 @@ public class Negamax {
             board.doMove(move);
                     
             //recursive call
-            score = -calcBestMoveNegamax(board, (byte)(depth - 1), tree, -beta, -alpha);
+            if (board.drawByRules() || MaterialUtil.isDrawByMaterial(board)) {
+                score = 0;
+            } else {
+                score = -calcBestMoveNegamax(board, (byte)(depth - 1), tree, -beta, -alpha);
+            }
                     
             //update max move values for particular layer
             if(score > bestScore) {
@@ -132,6 +155,8 @@ public class Negamax {
             }
                     
             board.undoMove(move);
+            
+            legal++;
 
             //alpha beta pruning
              if (score > alpha) {
@@ -140,7 +165,7 @@ public class Negamax {
             }
             
             if (score >= beta) {
-                table.transpositionTableStore(board.zobristKey, score, move, CUT_NODE, (byte)(depth - 3), tree.getHistoricEval(board.colorToMove, tree.ply));
+                table.transpositionTableStore(board.zobristKey, score, move, CUT_NODE, (byte)(depth - 3), tree.getHistoricEval(board.colorToMove, tree.getPly()));
                 if (!tree.isTop()) {
                     tree.endLayer();
                     return bestScore;
@@ -151,22 +176,35 @@ public class Negamax {
             }
         }
         
-        if (alpha > oAlpha) {
-            table.transpositionTableStore(board.zobristKey, bestScore, bestMove, PV_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.ply));
-        } else {
-            if (hashMove != 0 && get.type == CUT_NODE) {
-                bestMove = get.move;
-            } //else if (bestScore == alpha){ //TODO: implement same move function && !sameMove(hashMove, bestMove)) {
-                //bestMove = 0;
-            //}
-
-            if (depth > 7 && bestMove != 0){ //TODO: implement thread node count functions && (td->nodes - prevNodeCount) / 2 < bestNodeCount) {
-                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, FORCED_ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.ply));
+        /* checkmate or stalemate */
+	if (legal == 0) {
+            if (board.checkingPieces == 0) {
+                bestScore = 0;
+                bestMove = 0;
             } else {
-                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.ply));
+                bestScore = SHORT_MIN + tree.getPly();
+                bestMove = 0;
+            }
+	}
+        else {
+            if (alpha > oAlpha) {
+                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, PV_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
+            } else {
+                if (hashMove != 0 && get.type == CUT_NODE) {
+                    bestMove = get.move;
+                } //else if (bestScore == alpha){ //TODO: implement same move function && !sameMove(hashMove, bestMove)) {
+                    //bestMove = 0;
+                //}
+
+                //if (depth > 7 && bestMove != 0){ //TODO: implement thread node count functions && (td->nodes - prevNodeCount) / 2 < bestNodeCount) {
+                    //table.transpositionTableStore(board.zobristKey, bestScore, bestMove, FORCED_ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
+                //} else {
+                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
+                //}
             }
         }
-                
+        
+                 
         if (!tree.isTop()) {
             tree.endLayer();
             return bestScore;
@@ -191,7 +229,7 @@ public class Negamax {
         byte ttNodeType = ALL_NODE;
 
         int stand_pat;
-        int bestScore = -MAX_MATE_SCORE;
+        int bestScore = SHORT_MIN;
 
         // transposition table probing:
         if (en.zobrist == key >> 32) {
@@ -211,7 +249,7 @@ public class Negamax {
             }
             stand_pat = bestScore = en.eval;
         } else {
-            stand_pat = bestScore = board.checkingPieces != 0 ? -MAX_MATE_SCORE + tree.ply : Eval.boardEval(board) * board.getColor();
+            stand_pat = bestScore = board.checkingPieces != 0 ? -SHORT_MAX + tree.getPly() : Eval.boardEval(board) * board.getColor();
         }
 
         // we can also use the tt entry to adjust the evaluation.
@@ -225,7 +263,7 @@ public class Negamax {
             }
         }
 
-        if (bestScore >= beta || tree.ply >= 100) {
+        if (bestScore >= beta || tree.getPly() >= 100) {
             tree.endLayer();
             return bestScore;
         }
@@ -287,6 +325,14 @@ public class Negamax {
         
         tree.endLayer();
         return bestScore;
+    }
+    
+    private static int extensions(final ChessBoard cb) {
+	/* check-extension */
+	if (cb.checkingPieces != 0) {
+            return 1;
+	}
+	return 0;
     }
 
 }
