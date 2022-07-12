@@ -39,7 +39,7 @@ public class EngineMain {
     
     //class to represent chess board and 
     //all bitboard information
-    private ChessBoard board;
+    public static ChessBoard board;
     
     //modes: infinite, movetime, more to come
     private String mode;

@@ -28,9 +28,6 @@ import Engine.MoveGen.MaterialUtil;
 //negamax search class
 public class Negamax {
 
-    
-
-    
     //transposition table for dynamic programming
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
@@ -199,7 +196,7 @@ public class Negamax {
                 //if (depth > 7 && bestMove != 0){ //TODO: implement thread node count functions && (td->nodes - prevNodeCount) / 2 < bestNodeCount) {
                     //table.transpositionTableStore(board.zobristKey, bestScore, bestMove, FORCED_ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
                 //} else {
-                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
+                    table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
                 //}
             }
         }

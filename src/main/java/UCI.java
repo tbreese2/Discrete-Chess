@@ -37,9 +37,8 @@ public class UCI {
         //engine and author infor
         System.out.println("id name Discrete Chess");
         System.out.println("id author Tyler B");
-        
-        //set engine options
-        sendOptions();
+        System.out.println("option name Hash type spin default 64 min 4 max " + UCIOptions.MAX_HASH);
+        System.out.println("uciok");
     }
     
     //MODIFIES: this
@@ -93,8 +92,38 @@ public class UCI {
         
     }
     
+    //MODIFIES: board stored in engine main
+    //EFFECTS: applys moves in line to board stored by engine
+    private void ParsePosition(String line) {
+        
+    }
+    
     //MODIFIES: this
-    //EFFECTS: sets engine options based on uci input
+    //EFFECTS: handles all none time related uci inputs
+    //and also serves as main loop for engine
+    private void uciLoop() {
+        while(true) {
+            String nextLine = inputReader.nextLine();
+        
+            if(nextLine.substring(0, 1).equals('\n')) continue;
+            
+            //don't run until board compatible is ready
+            else if(nextLine.equals("isready")){
+               System.out.println("readyok"); 
+            }
+            
+            else if(nextLine.split("\\s+")[0].equals("position")) {
+                ParsePosition(nextLine);
+            }
+            
+            else if(nextLine.equals("ucinewgame")) {
+                
+            }
+            
+        }
+    }
+    
+    
     private void sendOptions() {
         //non game loop
     }
@@ -104,11 +133,7 @@ public class UCI {
     public static void main(String[] args) {
        UCI EngineCommunicaiton = new UCI();
        
-       //initilizes UCI communication and 
-       //reads in engine options
+       //initilizes UCI communication
        EngineCommunicaiton.uciInitialization();
-       
-       //runs engine main loop
-       EngineCommunicaiton.run();
     }
 }
