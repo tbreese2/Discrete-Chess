@@ -64,6 +64,7 @@ public class EngineMain {
     //FIDE board state
     public void resetBoard() {
         board = ChessBoardUtil.getNewCB();
+        Negamax.table.voidTable();
     }
     
     //MODIFIES: EngineMain

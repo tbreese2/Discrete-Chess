@@ -9,6 +9,7 @@
  */
 import java.util.*;
 import Engine.EngineMain;
+import Engine.MoveGen.ChessBoardUtil;
 
 //Main UCI interface
 //Set as main class for UCI compatible compiled engine
@@ -39,6 +40,9 @@ public class UCI {
         System.out.println("id author Tyler B");
         System.out.println("option name Hash type spin default 64 min 4 max " + UCIOptions.MAX_HASH);
         System.out.println("uciok");
+        
+        //start main uci loop
+        uciLoop();
     }
     
     //MODIFIES: board stored in engine main
@@ -51,11 +55,12 @@ public class UCI {
         } else {
             String fen = "";
             
-            while(!args[i].equals("moves") && args.length > i) {
-                fen += args[i];
+            while(args.length > i && !args[i].equals("moves")) {
+                fen += args[i] + " ";
                 i++;
             }
-            
+            fen = fen.substring(0, fen.length() - 1);
+            System.out.println(fen);
             engine.setBoardFen(fen);
             i--;
         }
@@ -79,7 +84,6 @@ public class UCI {
     private void uciLoop() {
         while(true) {
             String nextLine = inputReader.nextLine();
-        
             if(nextLine.substring(0, 1).equals('\n')) continue;
             
             //don't run until board compatible is ready
@@ -89,10 +93,12 @@ public class UCI {
             
             else if(nextLine.substring(0,8).equals("position")) {
                 ParsePosition(nextLine);
+                System.out.println("Set board to: " + ChessBoardUtil.toString(EngineMain.board, false));
             }
             
             else if(nextLine.substring(0,10).equals("ucinewgame")) {
                 engine.resetBoard();
+                System.out.println("Board and Transposition tables reset");
             }
             
             else if (nextLine.substring(0,2).equals("go")) {
@@ -101,6 +107,7 @@ public class UCI {
             }
             
             else if (nextLine.substring(0,4).equals("quit")) {
+                System.out.println("quiting");
                 break;
             }
             
@@ -115,7 +122,7 @@ public class UCI {
             }
             
             else if (nextLine.substring(0,26).equals("setoption name Hash value ")) {
-                UCIOptions.hashSize = Integer.parseInt(nextLine.substring(26));
+                System.out.println(UCIOptions.hashSize);
                 if(UCIOptions.hashSize < 4) UCIOptions.hashSize = 4;
 		if(UCIOptions.hashSize > UCIOptions.MAX_HASH) UCIOptions.hashSize = UCIOptions.MAX_HASH;
 		System.out.println("Set Hash to " + UCIOptions.hashSize + " MB");
