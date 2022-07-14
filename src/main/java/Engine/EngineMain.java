@@ -205,6 +205,8 @@ public class EngineMain {
         //defualt depth
         byte depth = 4;
         
+        Negamax.table.voidTable();
+        
         //create new search tree
         SearchTree tree = new SearchTree();
         

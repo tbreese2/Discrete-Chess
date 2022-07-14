@@ -28,6 +28,9 @@ import Engine.MoveGen.MaterialUtil;
 //negamax search class
 public class Negamax {
 
+    
+
+    
     //transposition table for dynamic programming
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
@@ -58,14 +61,14 @@ public class Negamax {
         depth += extensions(board);
         
         /* mate-distance pruning */
-	if (true) {
-            alpha = Math.max(alpha, SHORT_MIN + tree.getPly());
-            beta = Math.min(beta, SHORT_MAX - tree.getPly() - 1);
-            if (alpha >= beta) {
-                tree.endLayer();
-		return alpha;
-            }
-	}
+	//if (true) {
+            //alpha = Math.max(alpha, SHORT_MIN + tree.getPly());
+            //beta = Math.min(beta, SHORT_MAX - tree.getPly() - 1);
+            //if (alpha >= beta) {
+                //tree.endLayer();
+		//return alpha;
+            //}
+	//}
         
         //begin q search
         if (depth == 0) {
@@ -75,7 +78,6 @@ public class Negamax {
         } 
         
         //check if entry has already been evaluated before
-        table.nextAge();
         Position get = table.transpositionTableLookup(board.zobristKey);
         
         //check if position is a hit, currently only using cut node
@@ -196,7 +198,7 @@ public class Negamax {
                 //if (depth > 7 && bestMove != 0){ //TODO: implement thread node count functions && (td->nodes - prevNodeCount) / 2 < bestNodeCount) {
                     //table.transpositionTableStore(board.zobristKey, bestScore, bestMove, FORCED_ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
                 //} else {
-                    table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
+                table.transpositionTableStore(board.zobristKey, bestScore, bestMove, ALL_NODE, depth, tree.getHistoricEval(board.colorToMove, tree.getPly()));
                 //}
             }
         }
