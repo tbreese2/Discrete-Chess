@@ -41,6 +41,9 @@ public class EngineMain {
     //all bitboard information
     public static ChessBoard board;
     
+    //class that manages time
+    public static Time tMan;
+    
     //modes: infinite, movetime, more to come
     private String mode;
     private double moveTime;
