@@ -62,6 +62,7 @@ public class TTTable {
     
     public Position transpositionTableLookup(final long key) {
         final long iKey = key & tableMask;
+        if(!Negamax.isRunning) return new Position();
         return hashtable[(int)iKey];
     }
     

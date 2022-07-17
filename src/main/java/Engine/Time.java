@@ -17,9 +17,9 @@ public class Time {
     private long incI;
     
     //values needed by search algo
-    private long starttime;
-    private byte depth;
-    private long stoptime;
+    private long starttime = -1;
+    private byte depth = -1;
+    private long stoptime = -1;
     
     //EFFECTS: given that move information is allready set
     //will go through and set the data up for the desired search
@@ -53,6 +53,9 @@ public class Time {
         movetimeI = -1;
         timeI = -1;
         incI = 0;
+        starttime = -1;
+        depth = -1;
+        stoptime = -1;
     }
     
     public long getStopTime() {

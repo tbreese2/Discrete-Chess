@@ -32,7 +32,7 @@ public class Negamax {
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
     
-               public static EngineMain temp = new EngineMain();
+    public static int startingColor;
     
     //for outside control of negamax call
     public static boolean isRunning = true;
@@ -61,7 +61,12 @@ public class Negamax {
         if (!isRunning) {
             tree.endLayer();
             //data is unusable, so return lowest possible value
-            return SHORT_MAX * board.getColor();
+            if(startingColor == BLACK) {
+                return SHORT_MAX * board.getColor();
+            } else {
+                return SHORT_MIN * board.getColor();
+            }
+            
 	}
         
         depth += extensions(board);
@@ -236,7 +241,11 @@ public class Negamax {
         if (!isRunning) {
             tree.endLayer();
             //data is unusable, so return lowest possible value
-            return SHORT_MAX * board.getColor();
+            if(startingColor == BLACK) {
+                return SHORT_MAX * board.getColor();
+            } else {
+                return SHORT_MIN * board.getColor();
+            }
 	}
         
         // extract information like search data (history tables), zobrist etc

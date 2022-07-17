@@ -22,6 +22,8 @@ public class IterativeDeepening {
     public static int searchMain(ChessBoard board, SearchTree tree, Time tMan) {
         tMan.processMoveInformation();
         
+        Negamax.startingColor = board.colorToMove;
+        
         stopTime = tMan.getStopTime();
         maxDepth = tMan.getDepth();
         

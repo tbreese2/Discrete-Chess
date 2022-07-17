@@ -56,7 +56,7 @@ public class MinMaxTest {
         instance.uciProc("isready");
 
         instance.uciProc("position startpos moves e2e4 g8f6 e4e5");
-        instance.uciProc("go movetime 9000");
+        instance.uciProc("go depth 6");
     
     }
 
