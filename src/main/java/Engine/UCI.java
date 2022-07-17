@@ -10,9 +10,7 @@ package Engine;
  * @author tylerbreese
  */
 import java.util.*;
-import Engine.EngineMain;
-import Engine.MoveGen.ChessBoardUtil;
-import Engine.*;
+import Engine.MoveGen.*;
 
 //Main UCI interface
 //Set as main class for UCI compatible compiled engine
@@ -79,6 +77,8 @@ public class UCI {
     
     public void ParseGo(String line) {
         String[] args = line.split("\\s+");
+        EngineMain.tMan.resetTimeMan();
+        
         if(args[1].equals("infinite"));
         
         if(Arrays.asList(args).indexOf("binc") != -1 && EngineMain.board.colorToMove == EngineValues.BLACK) {

@@ -21,7 +21,7 @@ import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.Bitboard;
 import Engine.MoveGen.CastlingUtil;
 import Engine.MoveGen.MoveUtil;
-import Engine.Search.Negamax;
+import Engine.Search.IterativeDeepening;
 import Engine.MoveGen.MoveGen;
 import static Engine.MoveGen.ChessConstants.KNIGHT;
 import Engine.MoveGen.StaticMoves;
@@ -68,7 +68,6 @@ public class EngineMain {
     //FIDE board state
     public void resetBoard() {
         board = ChessBoardUtil.getNewCB();
-        Negamax.table.voidTable();
     }
     
     //MODIFIES: EngineMain
@@ -207,17 +206,12 @@ public class EngineMain {
     //Effects: generates move for current board,
     //applys move to current board and then returns move in UCI formated string
     public String generateMove() {
-        //defualt depth
-        byte depth = 4;
-        
-        Negamax.table.voidTable();
-        
         //create new search tree
         SearchTree tree = new SearchTree();
         
-        //run negamax search
-        int result = Negamax.calcBestMoveNegamax(board, depth, tree, EngineValues.SHORT_MIN, EngineValues.SHORT_MAX);
-        
+        //run iterative deepening
+        int result = IterativeDeepening.searchMain(board, tree, tMan);
+       
         //do move and return
         board.doMove(result);
         String move = moveToString(result);

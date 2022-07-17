@@ -52,7 +52,7 @@ public class MinMaxTest {
 //        // TODO review the generated test code and remove the default call to fail.
         ChessBoard b = ChessBoardUtil.getNewCB("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         UCI instance = new UCI();
-        instance.ParseGo("go wtime 320000 btime 300000 winc 20000 binc 20000");
+        instance.ParseGo("go movetime 5000");
     }
 
 

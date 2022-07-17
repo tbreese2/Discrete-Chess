@@ -10,17 +10,16 @@ package Engine;
  */
 public class Time {
     //values needed to calculate time for search algo
-    private byte depthI = -1;
-    private int movestogoI = -1;
-    private long movetimeI = -1;
-    private long timeI = -1;
-    private long incI = -1;
+    private byte depthI;
+    private int movestogoI;
+    private long movetimeI;
+    private long timeI;
+    private long incI;
     
     //values needed by search algo
-    private boolean timeset = false;
-    private long starttime = -1;
-    private byte depth = -1;
-    private long stoptime = -1;
+    private long starttime;
+    private byte depth;
+    private long stoptime;
     
     //EFFECTS: given that move information is allready set
     //will go through and set the data up for the desired search
@@ -36,7 +35,6 @@ public class Time {
 	depth = depthI;
 
 	if(timeI != -1) {
-            timeset = true;
             timeI /= movestogoI;
             timeI -= 50;	
             stoptime = starttime + timeI + incI;
@@ -44,6 +42,17 @@ public class Time {
 
 	if(depth == -1)
 		depth = EngineValues.MAX_PLY / 2;
+        
+        if(stoptime == -1) 
+            stoptime = Long.MAX_VALUE;
+    }
+    
+    public void resetTimeMan() {
+        depthI = -1;
+        movestogoI = 35;
+        movetimeI = -1;
+        timeI = -1;
+        incI = 0;
     }
     
     public long getStopTime() {

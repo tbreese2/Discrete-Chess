@@ -27,10 +27,6 @@ import Engine.MoveGen.MaterialUtil;
 
 //negamax search class
 public class Negamax {
-
-    
-
-    
     //transposition table for dynamic programming
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
@@ -52,6 +48,12 @@ public class Negamax {
         int hashMove = 0;
         boolean pv = (beta - alpha) != 1;
         int legal = 0;
+        
+        if((tree.getNodeCount() & 2047) == 0) {
+            if(!IterativeDeepening.timeLeft()) {
+                isRunning = false;
+            }
+        }
         
         if (!isRunning) {
             tree.endLayer();

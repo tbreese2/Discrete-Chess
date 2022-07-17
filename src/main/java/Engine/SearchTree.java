@@ -17,6 +17,7 @@ public class SearchTree {
     //ill get to this, don't you worry
     private int threadNum;
     private static int threadCount = 0;
+    private static long nodeCount;
     
     //data, as well as MLA move ordering and HLA heursitics data
     private int[][] layerData = new int[255][2];
@@ -30,12 +31,19 @@ public class SearchTree {
     public SearchTree() {
         threadCount++;
         threadNum = threadCount;
+        nodeCount = 0;
     }
 
     //MODIFIES: this
     //EFFECTS: creates a new layer in the search tree
     public void newLayer() {
       ply++;
+      nodeCount++;
+    }
+    
+    //EFFECTS: returns current node count of search
+    public long getNodeCount() {
+        return nodeCount;
     }
 
     //MODIFIES: this
