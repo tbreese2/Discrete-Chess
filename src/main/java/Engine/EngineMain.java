@@ -67,7 +67,7 @@ public class EngineMain {
     //EFFECTS: resets board to default
     //FIDE board state
     public void resetBoard() {
-        board = ChessBoardUtil.getNewCB();
+        board = ChessBoardUtil.getNewCB("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     }
     
     //MODIFIES: EngineMain
@@ -211,7 +211,7 @@ public class EngineMain {
         
         //run iterative deepening
         int result = IterativeDeepening.searchMain(board, tree, tMan);
-       
+
         //do move and return
         board.doMove(result);
         String move = moveToString(result);
@@ -220,7 +220,7 @@ public class EngineMain {
     
     //EFFECTS: helper function
     //given a move formated based on moveUtil returns UCI formated string of move
-    private String moveToString(int move) {
+    public String moveToString(int move) {
         //get all essential information from the move
         int toIndex = MoveUtil.getToIndex(move);
         int fromIndex = MoveUtil.getFromIndex(move);

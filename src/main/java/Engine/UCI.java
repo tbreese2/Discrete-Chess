@@ -17,7 +17,7 @@ import Engine.MoveGen.*;
 public class UCI {
     //engine and input reading classes
     EngineMain engine;
-    Scanner inputReader;
+    public static Scanner inputReader;
     
     //MODIFIES: this
     //EFFECTS: creates a new UCI interface unit
@@ -41,18 +41,15 @@ public class UCI {
         System.out.println("id author Tyler B");
         System.out.println("option name Hash type spin default 64 min 4 max " + UCIOptions.MAX_HASH);
         System.out.println("uciok");
-        
-        //start main uci loop
-        uciLoop();
     }
     
     //MODIFIES: board stored in engine main
     //EFFECTS: applys moves in line to board stored by engine
     private void ParsePosition(String line) {
+        engine.resetBoard();
         String[] args = line.split("\\s+");
         int i = 1;
         if(args[1].equals("startpos")) {
-            engine.resetBoard();
         } else {
             String fen = "";
             
@@ -116,10 +113,8 @@ public class UCI {
     //MODIFIES: this
     //EFFECTS: handles all none time related uci inputs
     //and also serves as main loop for engine
-    public void uciLoop() {
-        while(true) {
-            String nextLine = inputReader.nextLine();
-            if(nextLine.substring(0, 1).equals('\n')) continue;
+    public void uciProc(String nextLine) {
+            if(nextLine.substring(0, 1).equals('\n'));
             
             //don't run until board compatible is ready
             else if(nextLine.substring(0,7).equals("isready")){
@@ -143,7 +138,7 @@ public class UCI {
             
             else if (nextLine.substring(0,4).equals("quit")) {
                 System.out.println("quiting");
-                break;
+                System.exit(0);
             }
             
             else if (nextLine.substring(0,3).equals("uci")) {
@@ -153,7 +148,6 @@ public class UCI {
             }
             
             else if (nextLine.substring(0,3).equals("debug")) {
-                break;
             }
             
             else if (nextLine.substring(0,26).equals("setoption name Hash value ")) {
@@ -162,16 +156,24 @@ public class UCI {
 		if(UCIOptions.hashSize > UCIOptions.MAX_HASH) UCIOptions.hashSize = UCIOptions.MAX_HASH;
 		System.out.println("Set Hash to " + UCIOptions.hashSize + " MB");
             }
-            
-        }
     }
     
+    public void getLine() {
+        
+    }
     //EFFECTS: creates engine opject,
     //reads options, then runs
     public static void main(String[] args) {
        UCI EngineCommunicaiton = new UCI();
        
-       //initilizes UCI communication
        EngineCommunicaiton.uciInitialization();
+       
+       while (true) {
+           String nextLine = inputReader.nextLine();
+           EngineCommunicaiton.uciProc(nextLine);
+       }
+       
+       //initilizes UCI communication
+       
     }
 }

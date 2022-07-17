@@ -24,12 +24,15 @@ import static Engine.EngineValues.SHORT_MIN;
 import static Engine.EngineValues.SHORT_MAX;
 import Engine.MoveGen.ChessBoardUtil;
 import Engine.MoveGen.MaterialUtil;
+import Engine.*;
 
 //negamax search class
 public class Negamax {
     //transposition table for dynamic programming
     //by default creates a 32 mb table
     public static final TTTable table = new TTTable(100);
+    
+               public static EngineMain temp = new EngineMain();
     
     //for outside control of negamax call
     public static boolean isRunning = true;
@@ -57,7 +60,8 @@ public class Negamax {
         
         if (!isRunning) {
             tree.endLayer();
-            return 0;
+            //data is unusable, so return lowest possible value
+            return SHORT_MAX * board.getColor();
 	}
         
         depth += extensions(board);
@@ -131,6 +135,10 @@ public class Negamax {
         //create new layer and populate
         MoveGen.generateMoves(tree, board);
         MoveGen.generateCaptures(tree, board);
+        
+        if(tree.isTop()) {
+            tree.sortPV();
+        }
                 
         //loop through every move
         while (tree.isLayerNotEmpty()) {
@@ -210,6 +218,7 @@ public class Negamax {
             tree.endLayer();
             return bestScore;
         } else {
+            //System.out.println();
             tree.endLayer();
             return bestMove;
         }
@@ -223,6 +232,12 @@ public class Negamax {
         //stand pat
        tree.newLayer();
         int bestMove = 0;
+        
+        if (!isRunning) {
+            tree.endLayer();
+            //data is unusable, so return lowest possible value
+            return SHORT_MAX * board.getColor();
+	}
         
         // extract information like search data (history tables), zobrist etc
         long key = board.zobristKey;

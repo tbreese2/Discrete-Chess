@@ -4,9 +4,8 @@ package Engine.Search;
 import Engine.Eval.Eval;
 import Engine.MoveGen.MoveGen;
 import Engine.MoveGen.ChessBoard;
-import Engine.SearchTree;
-import Engine.Time;
-import Engine.EngineValues;
+import Engine.*;
+import static Engine.EngineValues.SHORT_MIN;
 
 public class IterativeDeepening {
     
@@ -26,14 +25,17 @@ public class IterativeDeepening {
         stopTime = tMan.getStopTime();
         maxDepth = tMan.getDepth();
         
-        int bestMove = 0;
+        Negamax.isRunning = true;
         
+        int bestMove = 0;
         for (byte depth = 1; depth <= maxDepth; depth++) {
-            Negamax.table.voidTable();
-            int value = Negamax.calcBestMoveNegamax(board, depth, tree, EngineValues.SHORT_MIN, EngineValues.SHORT_MAX);
-            
-        if(Negamax.isRunning == true) {
-                bestMove = value;
+            if(Negamax.isRunning) {
+                Negamax.table.voidTable();
+                
+                bestMove = Negamax.calcBestMoveNegamax(board, depth, tree, EngineValues.SHORT_MIN, EngineValues.SHORT_MAX);
+
+                if(depth > 1) 
+                    tree.setPV(bestMove);
             } else {
                 break;
             }

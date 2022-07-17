@@ -24,6 +24,7 @@ public class SearchTree {
     private int[][] moves = new int[255][218];
     private int[] scores = new int[218];
     private int[][] historicalData = new int[2][255];
+    private int pv;
 
     //MODIFIES: this
     //EFFECTS: creates a new search tree
@@ -32,6 +33,21 @@ public class SearchTree {
         threadCount++;
         threadNum = threadCount;
         nodeCount = 0;
+    }
+    
+    public void setPV(int p) {
+        pv = p;
+    }
+    
+    public void sortPV() {
+        for(int i = 0; i < layerData[ply][GENERATED]; i++) {
+            if(moves[ply][i] == pv) {
+                int temp = moves[ply][0];
+                moves[ply][0] = pv;
+                moves[ply][i] = temp;
+                break;
+            }
+        }
     }
 
     //MODIFIES: this

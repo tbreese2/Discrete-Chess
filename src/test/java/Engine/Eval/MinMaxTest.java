@@ -50,9 +50,14 @@ public class MinMaxTest {
 //        instance.doMove(result);
 //        System.out.println(ChessBoardUtil.toString(instance, false));
 //        // TODO review the generated test code and remove the default call to fail.
-        ChessBoard b = ChessBoardUtil.getNewCB("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         UCI instance = new UCI();
-        instance.ParseGo("go movetime 5000");
+        
+        instance.uciProc("ucinewgame");
+        instance.uciProc("isready");
+
+        instance.uciProc("position startpos moves e2e4 g8f6 e4e5");
+        instance.uciProc("go movetime 9000");
+    
     }
 
 
