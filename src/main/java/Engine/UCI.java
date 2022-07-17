@@ -1,3 +1,5 @@
+package Engine;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -10,6 +12,7 @@
 import java.util.*;
 import Engine.EngineMain;
 import Engine.MoveGen.ChessBoardUtil;
+import Engine.*;
 
 //Main UCI interface
 //Set as main class for UCI compatible compiled engine
@@ -74,14 +77,46 @@ public class UCI {
         }
     }
     
-    private void ParseGo(String line) {
+    public void ParseGo(String line) {
+        String[] args = line.split("\\s+");
+        if(args[1].equals("infinite"));
         
+        if(Arrays.asList(args).indexOf("binc") != -1 && EngineMain.board.colorToMove == EngineValues.BLACK) {
+            EngineMain.tMan.setIncTime(Integer.parseInt(args[Arrays.asList(args).indexOf("binc") + 1]));
+        }
+        
+        if(Arrays.asList(args).indexOf("winc") != -1 && EngineMain.board.colorToMove == EngineValues.WHITE) {
+            EngineMain.tMan.setIncTime(Integer.parseInt(args[Arrays.asList(args).indexOf("winc") + 1]));
+        }
+        
+        if(Arrays.asList(args).indexOf("wtime") != -1 && EngineMain.board.colorToMove == EngineValues.WHITE) {
+            EngineMain.tMan.setTimeOnClock(Integer.parseInt(args[Arrays.asList(args).indexOf("wtime") + 1]));
+        }
+        
+        if(Arrays.asList(args).indexOf("btime") != -1 && EngineMain.board.colorToMove == EngineValues.BLACK) {
+            EngineMain.tMan.setTimeOnClock(Integer.parseInt(args[Arrays.asList(args).indexOf("btime") + 1]));
+        }
+        
+	if(Arrays.asList(args).indexOf("movestogo") != -1) {
+            EngineMain.tMan.setMovesToGo(Integer.parseInt(args[Arrays.asList(args).indexOf("movestogo") + 1]));
+        }
+	
+        if(Arrays.asList(args).indexOf("movetime") != -1) {
+            EngineMain.tMan.setMoveTime(Integer.parseInt(args[Arrays.asList(args).indexOf("movetime") + 1]));
+        }
+        
+        if(Arrays.asList(args).indexOf("depth") != -1) {
+            System.out.println(Arrays.asList(args).indexOf("depth") + 1);
+            EngineMain.tMan.setDepth((byte)Integer.parseInt(args[Arrays.asList(args).indexOf("depth") + 1]));
+        }
+        
+        System.out.println("bestmove " + engine.generateMove());
     }
     
     //MODIFIES: this
     //EFFECTS: handles all none time related uci inputs
     //and also serves as main loop for engine
-    private void uciLoop() {
+    public void uciLoop() {
         while(true) {
             String nextLine = inputReader.nextLine();
             if(nextLine.substring(0, 1).equals('\n')) continue;

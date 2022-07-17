@@ -27,6 +27,11 @@ public class Time {
     //also starts the time managment, so should be called directly
     //before iterative deepening is called
     public void processMoveInformation() {
+        if(movetimeI != -1) {
+            timeI = movetimeI;
+            movestogoI = 1;
+	}
+        
 	starttime = System.currentTimeMillis();
 	depth = depthI;
 
@@ -41,15 +46,11 @@ public class Time {
 		depth = EngineValues.MAX_PLY / 2;
     }
     
-    public long getTimeLeft() {
-        return stoptime - starttime;
+    public long getStopTime() {
+        return stoptime;
     }
     
-    public void decDepth() {
-        depth--;
-    }
-    
-    public long getDepthLeft() {
+    public byte getDepth() {
         return depth;
     }
     

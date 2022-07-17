@@ -54,6 +54,7 @@ public class EngineMain {
     //position
     public EngineMain() {
         board = ChessBoardUtil.getNewCB();
+        tMan = new Time();
     }
     
     //MODIFIES: this
