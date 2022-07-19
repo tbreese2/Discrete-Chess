@@ -15,22 +15,29 @@ import static Engine.EngineValues.WHITE;
 import static Engine.EngineValues.BLACK;
 
 public class InputsUtil {
-    public static final int SIZE = 40992;
+    public static final int SIZE = 41024;
     
     static float[][] inputs = new float[2][SIZE];
     
     public static void setInputsArr(ChessBoard board) {
-        int color = WHITE;
-        int kingSquare = Long.numberOfTrailingZeros(board.pieces[color][KING]);
-        for(int type = PAWN; type <= QUEEN; type++) {
-            long pieces = board.pieces[color][type];
-            while (pieces != 0) {
-                int pieceSquare = Long.numberOfTrailingZeros(pieces);
-                inputs[color][getIndex(kingSquare, pieceSquare, type, color)] = 1;
-                pieces &= pieces - 1;
+        //will use differen't weights for differen't perspectives
+        for(int color = WHITE; color <= BLACK; color++) {
+            int kingSquare = Long.numberOfTrailingZeros(board.pieces[color][KING]);
+            for(int type = PAWN; type <= QUEEN; type++) {
+                long pieces = board.pieces[color][type];
+                while (pieces != 0) {
+                    int pieceSquare = Long.numberOfTrailingZeros(pieces);
+                    
+                    //rotate for black
+                    if(color == BLACK) {
+                        pieceSquare = 63 - pieceSquare;
+                    }
+                    inputs[color][getIndex(kingSquare, pieceSquare, type, color)] = 1;
+                    pieces &= pieces - 1;
+                }
             }
-            
         }
+        
     }
     
     public static void inputBitboard(int kingSquare) {
