@@ -22,7 +22,7 @@ public class InputsUtil {
     static float[][] inputs = new float[2][SIZE];
 
     public static void setInputsArr(ChessBoard board) {
-        //will use differen't weights for differen't perspectives
+        //will use same perspective for differen't weights
         int color = WHITE;
         int kingSquare = Long.numberOfTrailingZeros(board.pieces[color][KING]);
         for (int type = PAWN; type <= QUEEN; type++) {

@@ -13,8 +13,8 @@ import deepnetts.util.Tensor;
 public class NNUE {
     //important nnue values
     //using side to move first, then other side to move
-    //using same wieghts and will use rotate on board, 
-    //which stockfish used and is much easier to impliment
+    //using same wieghts for same perspective and will use rotate on board
+    //to adjust
     String nnueBin = "bin/nnue.bin";
     
     public static void evalPos(ChessBoard pos) {
