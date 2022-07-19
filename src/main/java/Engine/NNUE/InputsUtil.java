@@ -4,24 +4,45 @@
  */
 package Engine.NNUE;
 import Engine.MoveGen.*;
+import static Engine.EngineValues.PAWN;
+import static Engine.EngineValues.KNIGHT;
+import static Engine.EngineValues.BISHOP;
+import static Engine.EngineValues.ROOK;
+import static Engine.EngineValues.QUEEN;
+import static Engine.EngineValues.KING;
+
+import static Engine.EngineValues.WHITE;
+import static Engine.EngineValues.BLACK;
 
 public class InputsUtil {
-    public static final int SIZE = 768;
-    public static final int KING = 0;
-    public static final int PAWNS = 64;
-    public static final int KNIGHTS = 128;
-    public static final int BISHOP = 192;
-    public static final int ROOK = 256;
-    public static final int QUEEN = 320;
+    public static final int SIZE = 40992;
     
-    static float[] inputs = new float[SIZE];
+    static float[][] inputs = new float[2][SIZE];
     
-    public static void setInputs(ChessBoard board) {
+    public static void setInputsArr(ChessBoard board) {
+        int color = WHITE;
+        int kingSquare = Long.numberOfTrailingZeros(board.pieces[color][KING]);
+        for(int type = PAWN; type <= QUEEN; type++) {
+            long pieces = board.pieces[color][type];
+            while (pieces != 0) {
+                int pieceSquare = Long.numberOfTrailingZeros(pieces);
+                inputs[color][getIndex(kingSquare, pieceSquare, type, color)] = 1;
+                pieces &= pieces - 1;
+            }
+            
+        }
+    }
+    
+    public static void inputBitboard(int kingSquare) {
         
     }
     
-    public static float[] getInputs() {
-        return inputs;
+    
+    public static int getIndex(int kingSquare, int pieceSQ, int pieceType, int pieceColor) {
+        //adjust input as piece type starts at 1
+        pieceType--;
+        int index = pieceType * 2 + pieceColor;
+        return ((kingSquare * 10) * 64) + (index * 64) + pieceSQ;
     }
     
     public static void doMove(int move, ChessBoard board) {

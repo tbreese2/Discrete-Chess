@@ -55,8 +55,7 @@ public class MinMaxTest {
         instance.uciProc("ucinewgame");
         instance.uciProc("isready");
 
-        instance.uciProc("position startpos moves e2e4 g8f6 e4e5");
-        instance.uciProc("go depth 6");
+        instance.uciProc("position startpos moves f2f4");
     
     }
 
