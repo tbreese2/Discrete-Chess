@@ -16,10 +16,7 @@ import static Engine.EngineValues.WHITE;
 import static Engine.EngineValues.BLACK;
 
 public class InputsUtil {
-
-    public static final int SIZE = 41024;
-
-    static float[][] inputs = new float[2][SIZE];
+    static float[][] inputs = new float[2][NNUEConstants.SIZE];
 
     public static void setInputsArr(ChessBoard board) {
         //will use same perspective for differen't weights
