@@ -3,31 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Engine.NNUE;
-import Engine.MoveGen.*;
-import deepnetts.util.Tensor;
+import deepnetts.net.NeuralNetwork;
 
 /**
  *
  * @author tbreese
  */
 public class NNUE {
-    //important nnue values
-    //using side to move first, then other side to move
-    //using same wieghts for same perspective and will use rotate on board
-    //to adjust
-    //we will be using deepnetts for now, but later we may switch to another lib
-    //like deeplearning for java, im using deepnetts for now as it is simpiler
-    String nnueBin = "bin/nnue.bin";
+    //2 Feature Networks:
+    //L_0: Linear 41024->256
+    //C_0: Clipped ReLu of size 256
+    public NeuralNetwork<?> ft1;
+    public NeuralNetwork<?> ft2;
     
-    public static void evalPos(ChessBoard pos) {
-        
-    }
     
-    public static void trainOnData(String dataPath) {
-        
-    }
-    
-    public static void/*Tensor*/ createInputs(ChessBoard board) {
-        return;
-    }
+    //Main Network:
+    //L_1: Linear 256*2->32
+    //C_1: Clipped ReLu of size 32
+    //L_2: Linear 32->32
+    //C_2: Clipped ReLu of size 32
+    //L_3: Linear 32->1
+    //C_3: Clipped ReLu of size 32
+    //L_4: Linear 1
+    public NeuralNetwork<?> main;
 }

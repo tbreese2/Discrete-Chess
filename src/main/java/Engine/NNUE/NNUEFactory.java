@@ -27,19 +27,27 @@ public class NNUEFactory {
     //C_3: Clipped ReLu of size 32
     //L_4: Linear 1
     
-    private NeuralNetwork<?> network;  
-    
-    public static NeuralNetwork<?> getNewNetwork() {
-        NeuralNetwork<?> network;
+    public static NNUE getNewNetwork() {
+        NNUE net = new NNUE();
         
-        network = FeedForwardNetwork.builder()
+        //build feature networks
+        net.ft1 = FeedForwardNetwork.builder()
 	                .addInputLayer(NNUEConstants.SIZE)
-	                .addOutputLayer(1, ActivationType.RELU)
-	                .hiddenActivationFunction(ActivationType.RELU)
-	                .lossFunction(LossType.MEAN_SQUARED_ERROR)
+	                .addFullyConnectedLayer(256,ActivationType.RELU)
+	                .randomSeed(3244)
+	                .build();
+        net.ft2 = FeedForwardNetwork.builder()
+	                .addInputLayer(NNUEConstants.SIZE)
+	                .addFullyConnectedLayer(256,ActivationType.RELU)
+	                .randomSeed(3244)
+	                .build();
+        
+        net.main = FeedForwardNetwork.builder()
+	                .addInputLayer(NNUEConstants.SIZE)
+	                .addHiddenFullyConnectedLayers(ActivationType.RELU,256,32,32,1)
 	                .randomSeed(3244)
 	                .build();
                 
-        return network;
+        return net;
     }
 }
