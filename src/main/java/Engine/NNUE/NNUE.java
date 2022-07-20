@@ -15,7 +15,8 @@ public class NNUE {
     //using side to move first, then other side to move
     //using same wieghts for same perspective and will use rotate on board
     //to adjust
-    //we will be using deeplearning4j
+    //we will be using deepnetts for now, but later we may switch to another lib
+    //like deeplearning for java, im using deepnetts for now as it is simpiler
     String nnueBin = "bin/nnue.bin";
     
     public static void evalPos(ChessBoard pos) {

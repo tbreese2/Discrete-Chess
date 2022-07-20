@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import Engine.NNUE.*;
 
 /**
  *
@@ -57,6 +58,15 @@ public class MinMaxTest {
 
         instance.uciProc("position startpos moves f2f4");
     
+    }
+    
+     /**
+     * Test of bestMove method, of class MinMax.
+     */
+    @Test
+    public void NNUEEmptyFunction() {
+        //MultiLayerNetwork temp = NNUEFactory.getNewNetwork();
+        //System.out.println(temp);
     }
 
 
