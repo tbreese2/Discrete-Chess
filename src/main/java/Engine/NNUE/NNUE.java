@@ -4,7 +4,7 @@
  */
 package Engine.NNUE;
 import Engine.MoveGen.*;
-import deepnetts.util.Tensor;
+//import deepnetts.util.Tensor;
 
 /**
  *
