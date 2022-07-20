@@ -31,21 +31,15 @@ public class NNUEFactory {
         NNUE net = new NNUE();
         
         //build feature networks
-        net.ft1 = FeedForwardNetwork.builder()
-	                .addInputLayer(NNUEConstants.SIZE)
-	                .addFullyConnectedLayer(256,ActivationType.RELU)
-	                .randomSeed(3244)
-	                .build();
-        net.ft2 = FeedForwardNetwork.builder()
+        net.ft = FeedForwardNetwork.builder()
 	                .addInputLayer(NNUEConstants.SIZE)
 	                .addFullyConnectedLayer(256,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
         
         net.main = FeedForwardNetwork.builder()
-	                .addInputLayer(NNUEConstants.SIZE)
-	                .addFullyConnectedLayer(256,ActivationType.RELU)
-                        .addFullyConnectedLayer(32,ActivationType.RELU)
+	                .addInputLayer(256*2)
+	                .addFullyConnectedLayer(32,ActivationType.RELU)
                         .addFullyConnectedLayer(32,ActivationType.RELU)
                         .addFullyConnectedLayer(1,ActivationType.RELU)
 	                .randomSeed(3244)

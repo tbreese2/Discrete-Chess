@@ -10,11 +10,10 @@ import deepnetts.net.NeuralNetwork;
  * @author tbreese
  */
 public class NNUE {
-    //2 Feature Networks:
+    //Feature Network:
     //L_0: Linear 41024->256
     //C_0: Clipped ReLu of size 256
-    public NeuralNetwork<?> ft1;
-    public NeuralNetwork<?> ft2;
+    public NeuralNetwork<?> ft;
     
     
     //Main Network:
