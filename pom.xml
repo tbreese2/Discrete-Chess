@@ -5,6 +5,7 @@
     <artifactId>Discrete_Chess</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -32,9 +33,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.neuroph</groupId>
-            <artifactId>Neuroph</artifactId>
+            <artifactId>neuroph-imgrec</artifactId>
             <version>2.98</version>
-            <type>pom</type>
         </dependency>
     </dependencies>
     <properties>
@@ -66,4 +66,5 @@
    </plugin>
   </plugins>
 </build>
+
 </project>
