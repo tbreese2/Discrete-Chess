@@ -44,7 +44,10 @@ public class NNUEFactory {
         
         net.main = FeedForwardNetwork.builder()
 	                .addInputLayer(NNUEConstants.SIZE)
-	                .addHiddenFullyConnectedLayers(ActivationType.RELU,256,32,32,1)
+	                .addFullyConnectedLayer(256,ActivationType.RELU)
+                        .addFullyConnectedLayer(32,ActivationType.RELU)
+                        .addFullyConnectedLayer(32,ActivationType.RELU)
+                        .addFullyConnectedLayer(1,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
                 
