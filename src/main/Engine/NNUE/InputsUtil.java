@@ -20,23 +20,31 @@ public class InputsUtil {
 
     public static void setInputsArr(ChessBoard board) {
         //will use same perspective for differen't weights
-        int color = WHITE;
-        int kingSquare = Long.numberOfTrailingZeros(board.pieces[color][KING]);
-        for (int type = PAWN; type <= QUEEN; type++) {
-            long pieces = board.pieces[color][type];
-            while (pieces != 0) {
-                int pieceSquare = Long.numberOfTrailingZeros(pieces);
-                inputs[color][getIndex(kingSquare, pieceSquare, type, color)] = 1;
-                pieces &= pieces - 1;
+        //white king perspective features
+        int perspective = WHITE;
+        int kingSquare = Long.numberOfTrailingZeros(board.pieces[perspective][KING]);
+        for(int c = WHITE; c <= BLACK; c++) {
+            for (int type = PAWN; type <= QUEEN; type++) {
+                long pieces = board.pieces[c][type];
+                while (pieces != 0) {
+                    int pieceSquare = Long.numberOfTrailingZeros(pieces);
+                    inputs[perspective][getIndex(kingSquare, pieceSquare, type, c)] = 1;
+                    pieces &= pieces - 1;
+                }
             }
         }
-        color = BLACK;
-        for (int type = PAWN; type <= QUEEN; type++) {
-            long pieces = board.pieces[color][type];
-            while (pieces != 0) {
-                int pieceSquare = 63 - Long.numberOfTrailingZeros(pieces);
-                inputs[color][getIndex(kingSquare, pieceSquare, type, color)] = 1;
-                pieces &= pieces - 1;
+        
+        //black king perspective features
+        perspective = BLACK;
+        kingSquare = 63 - Long.numberOfTrailingZeros(board.pieces[perspective][KING]);
+        for(int c = WHITE; c <= BLACK; c++) {
+            for (int type = PAWN; type <= QUEEN; type++) {
+                long pieces = board.pieces[c][type];
+                while (pieces != 0) {
+                    int pieceSquare = 63 - Long.numberOfTrailingZeros(pieces);
+                    inputs[perspective][getIndex(kingSquare, pieceSquare, type, c)] = 1;
+                    pieces &= pieces - 1;
+                }
             }
         }
     }
