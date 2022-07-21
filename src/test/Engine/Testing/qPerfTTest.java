@@ -6,10 +6,8 @@ package Engine.Testing;
 
 import Engine.MoveGen.ChessBoard;
 import static Engine.Testing.qPerfT.qPerfT;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.tests.*;
+import org.junit.*;
 import Engine.MoveGen.*;
 
 /**
@@ -21,18 +19,11 @@ public class qPerfTTest {
     public qPerfTTest() {
     }
     
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
 
     /**
      * Test of main method, of class qPerfT.
      */
-    //@Test
+    @Test
     public void testMain() {
          System.out.println("generateAllMoves");
         ChessBoard board = ChessBoardUtil.getNewCB("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ");

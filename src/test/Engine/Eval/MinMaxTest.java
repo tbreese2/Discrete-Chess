@@ -11,10 +11,8 @@ import Engine.MoveGen.ChessBoard;
 import Engine.MoveGen.ChessBoardUtil;
 import Engine.SearchTree;
 import Engine.UCI;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.tests.*;
+import org.junit.*;
 import Engine.NNUE.*;
 
 /**
@@ -26,11 +24,11 @@ public class MinMaxTest {
     public MinMaxTest() {
     }
     
-    @BeforeAll
+    
     public static void setUpClass() {
     }
     
-    @AfterAll
+    
     public static void tearDownClass() {
     }
 
