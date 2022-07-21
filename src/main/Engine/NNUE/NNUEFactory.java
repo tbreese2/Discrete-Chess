@@ -6,45 +6,61 @@ package Engine.NNUE;
 
 
 import deepnetts.net.FeedForwardNetwork;
-import deepnetts.net.NeuralNetwork;
 import deepnetts.net.layers.activation.ActivationType;
-import deepnetts.net.loss.LossType;
-import deepnetts.net.train.BackpropagationTrainer;
-import deepnetts.net.train.TrainingEvent;
-import deepnetts.net.train.TrainingListener;
-import deepnetts.net.FeedForwardNetwork.*;
-import deepnetts.net.FeedForwardNetwork.Builder;
-import deepnetts.util.FileIO;
+
+import java.io.*;
 
 public class NNUEFactory {
-    //L_0: Linear 41024->256*2
-    //C_0: Clipped ReLu of size 256*2
-    //L_1: Linear 256*2->32
-    //C_1: Clipped ReLu of size 32
-    //L_2: Linear 32->32
-    //C_2: Clipped ReLu of size 32
-    //L_3: Linear 32->1
-    //C_3: Clipped ReLu of size 32
-    //L_4: Linear 1
+    
     
     public static NNUE getNewNetwork() {
         NNUE net = new NNUE();
         
         //build feature networks
         net.ft = FeedForwardNetwork.builder()
-	                .addInputLayer(NNUEConstants.SIZE)
-	                .addFullyConnectedLayer(256,ActivationType.RELU)
+	                .addInputLayer(NNUEConstants.ft)
+	                .addFullyConnectedLayer(NNUEConstants.L_0,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
         
         net.main = FeedForwardNetwork.builder()
-	                .addInputLayer(256*2)
-	                .addFullyConnectedLayer(32,ActivationType.RELU)
-                        .addFullyConnectedLayer(32,ActivationType.RELU)
-                        .addFullyConnectedLayer(1,ActivationType.RELU)
+	                .addInputLayer(NNUEConstants.L_0*2)
+	                .addFullyConnectedLayer(NNUEConstants.L_1,ActivationType.RELU)
+                        .addFullyConnectedLayer(NNUEConstants.L_2,ActivationType.RELU)
+                        .addFullyConnectedLayer(NNUEConstants.L_3,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
                 
         return net;
+    }
+    
+    public static void exportNet(NNUE network) {
+        try {
+            FileOutputStream fos = new FileOutputStream(NNUEConstants.netFile);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(network);
+            oos.close();
+            fos.close();
+        } catch(IOException e) {
+            System.out.println("Couldn't export net");
+        }
+    }
+    
+    public static NNUE fetchNet() {
+        FileInputStream inFile;
+        ObjectInputStream inStream;
+        NNUE nn = new NNUE(); 
+        try {
+            inFile = new FileInputStream(NNUEConstants.netFile);
+            inStream = new ObjectInputStream(inFile);     
+            try {
+                nn = (NNUE)inStream.readObject();  
+            } catch (ClassNotFoundException e) {
+                System.out.println("Class not found in net file");
+            }
+        } catch(IOException e) {
+            System.out.println("Couldn't export net");
+        }
+        return nn;
     }
 }

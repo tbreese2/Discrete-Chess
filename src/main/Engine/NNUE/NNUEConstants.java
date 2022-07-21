@@ -9,6 +9,13 @@ package Engine.NNUE;
  * @author tbreese
  */
 public class NNUEConstants {
-    
-    public static final int SIZE = 41024;
+    //network arch
+    public static final int ft = 41024;
+    public static final int L_0 = 256;
+    public static final int L_1 = 32;
+    public static final int L_2 = 32;
+    public static final int L_3 = 1;
+
+    //net file
+    public static final String netFile = "nn.bin";
 }

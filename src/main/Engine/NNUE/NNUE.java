@@ -4,6 +4,7 @@
  */
 package Engine.NNUE;
 import deepnetts.net.NeuralNetwork;
+import deepnetts.net.train.BackpropagationTrainer;
 
 /**
  *
@@ -13,7 +14,7 @@ public class NNUE {
     //Feature Network:
     //L_0: Linear 41024->256
     //C_0: Clipped ReLu of size 256
-    public NeuralNetwork<?> ft;
+    public NeuralNetwork<BackpropagationTrainer> ft;
     
     
     //Main Network:
@@ -24,5 +25,5 @@ public class NNUE {
     //L_3: Linear 32->1
     //C_3: Clipped ReLu of size 32
     //L_4: Linear 1
-    public NeuralNetwork<?> main;
+    public NeuralNetwork<BackpropagationTrainer> main;
 }

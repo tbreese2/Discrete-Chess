@@ -5,6 +5,9 @@
 package Engine.NNUE;
 import Engine.MoveGen.*;
 import deepnetts.util.Tensor;
+import Engine.*;
+import deepnetts.net.FeedForwardNetwork;
+import deepnetts.net.NeuralNetwork;
 
 /**
  *
@@ -19,15 +22,35 @@ public class NNUEMain {
     //like deeplearning for java, im using deepnetts for now as it is simpiler
     String nnueBin = "bin/nnue.bin";
     
-    public static void evalPos(ChessBoard pos) {
+    public static void evalPos(ChessBoard pos, NNUE net) {
+        //float arrs for player to move and other
+        int playerToMove;
+        int playerOther;
         
+        //TODO: add incremental updating so this call
+        //does not have to be made
+        InputsUtil.setInputsArr(pos);
+        float[][] features = InputsUtil.getFeatures();
+        
+        //get color to move
+        int color = pos.colorToMove;
+        
+        if(color == EngineValues.WHITE) {
+            playerToMove = 0;
+            playerOther = 1;
+        } else {
+            playerToMove = 1;
+            playerOther = 0;
+        }
+        
+        //do first feature evaluation
+        Tensor ft_0 = net.ft.predict(new Tensor(features[playerToMove]));
+        Tensor ft_1 = net.ft.predict(new Tensor(features[playerToMove]));
+        ft_0.add(ft_1);
     }
     
     public static void trainOnData(String dataPath) {
         
     }
-    
-    public static void/*Tensor*/ createInputs(ChessBoard board) {
-        return;
-    }
+  
 }
