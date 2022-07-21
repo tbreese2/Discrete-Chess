@@ -19,7 +19,7 @@ public class NNUEFactory {
         //build feature networks
         net.ft = FeedForwardNetwork.builder()
 	                .addInputLayer(NNUEConstants.ft)
-	                .addFullyConnectedLayer(NNUEConstants.L_0,ActivationType.RELU)
+	                .addOutputLayer(NNUEConstants.L_0,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
         
@@ -27,7 +27,7 @@ public class NNUEFactory {
 	                .addInputLayer(NNUEConstants.L_0*2)
 	                .addFullyConnectedLayer(NNUEConstants.L_1,ActivationType.RELU)
                         .addFullyConnectedLayer(NNUEConstants.L_2,ActivationType.RELU)
-                        .addFullyConnectedLayer(NNUEConstants.L_3,ActivationType.RELU)
+                        .addOutputLayer(NNUEConstants.L_3,ActivationType.RELU)
 	                .randomSeed(3244)
 	                .build();
                 

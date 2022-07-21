@@ -8,6 +8,8 @@ import deepnetts.util.Tensor;
 import Engine.*;
 import deepnetts.net.FeedForwardNetwork;
 import deepnetts.net.NeuralNetwork;
+import java.util.*;
+import org.apache.commons.lang3.*;
 
 /**
  *
@@ -22,7 +24,9 @@ public class NNUEMain {
     //like deeplearning for java, im using deepnetts for now as it is simpiler
     String nnueBin = "bin/nnue.bin";
     
-    public static void evalPos(ChessBoard pos, NNUE net) {
+    private static float[][] concat;
+    
+    public static Tensor evalPos(ChessBoard pos, NNUE net) {
         //float arrs for player to move and other
         int playerToMove;
         int playerOther;
@@ -43,10 +47,15 @@ public class NNUEMain {
             playerOther = 0;
         }
         
-        //do first feature evaluation
-        Tensor ft_0 = net.ft.predict(new Tensor(features[playerToMove]));
-        Tensor ft_1 = net.ft.predict(new Tensor(features[playerToMove]));
-        ft_0.add(ft_1);
+        //concatanate arrays and return network prediction
+        return net.main.predict(
+            new Tensor(
+                ArrayUtils.addAll(
+                    net.ft.predict(new Tensor(features[playerToMove])).getValues(), 
+                    net.ft.predict(new Tensor(features[playerOther])).getValues()
+                )
+            )
+        );
     }
     
     public static void trainOnData(String dataPath) {
