@@ -22,7 +22,7 @@ public class qPerfTTest {
     /**
      * Test of main method, of class qPerfT.
      */
-    @Test
+    //@Test
     public void testMain() {
          System.out.println("generateAllMoves");
         ChessBoard board = ChessBoardUtil.getNewCB("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - ");

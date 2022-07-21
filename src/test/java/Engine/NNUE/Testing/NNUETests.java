@@ -26,9 +26,9 @@ public class NNUETests {
      */
     @Test
     public void nnueTestFunc() {
-        NNUE temp = NNUEFactory.getNewNetwork();
-        NNUEFactory.exportNet(temp);
+        NNUE temp = NNUEFactory.importNet();
         
-        //System.out.println(Arrays.toString(temp.main.getLayers().toArray()));
+        System.out.println(temp.main.summary());
+        System.out.println(temp.ft.summary());
     }
 }
