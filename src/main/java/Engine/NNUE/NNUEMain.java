@@ -4,6 +4,14 @@
  */
 package Engine.NNUE;
 import org.apache.commons.lang3.*;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.Adam;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import Engine.MoveGen.*;
+import Engine.*;
 
 /**
  *
@@ -18,9 +26,10 @@ public class NNUEMain {
     //like deeplearning for java, im using deepnetts for now as it is simpiler
     String nnueBin = "bin/nnue.bin";
     
+    
     private static float[][] concat;
     
-//    public static Tensor evalPos(ChessBoard pos, NNUE net) {
+//    public static INDArray evalPos(ChessBoard pos, NNUE net) {
 //        //float arrs for player to move and other
 //        int playerToMove;
 //        int playerOther;
@@ -28,7 +37,7 @@ public class NNUEMain {
 //        //TODO: add incremental updating so this call
 //        //does not have to be made
 //        InputsUtil.setInputsArr(pos);
-//        float[][] features = InputsUtil.getFeatures();
+//        INDArray features = InputsUtil.getFeatures();
 //        
 //        //get color to move
 //        int color = pos.colorToMove;

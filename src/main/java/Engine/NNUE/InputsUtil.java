@@ -6,17 +6,17 @@ package Engine.NNUE;
 
 import Engine.MoveGen.*;
 import static Engine.EngineValues.PAWN;
-import static Engine.EngineValues.KNIGHT;
-import static Engine.EngineValues.BISHOP;
-import static Engine.EngineValues.ROOK;
 import static Engine.EngineValues.QUEEN;
 import static Engine.EngineValues.KING;
-
 import static Engine.EngineValues.WHITE;
 import static Engine.EngineValues.BLACK;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
+
 public class InputsUtil {
-    static float[][] inputs = new float[2][NNUEConstants.ft];
+    static INDArray inputs = Nd4j.zeros(2,NNUEConstants.ft);
 
     //EFFECTS: returns an array, where arr[WHITE] is features
     //from white point of view and arr[BLACK] is features from blacks 
@@ -30,7 +30,7 @@ public class InputsUtil {
                 long pieces = board.pieces[c][type];
                 while (pieces != 0) {
                     int pieceSquare = Long.numberOfTrailingZeros(pieces);
-                    inputs[perspective][getIndex(perspective, kingSquare, pieceSquare, type, c)] = 1;
+                    inputs.get(NDArrayIndex.point(perspective), NDArrayIndex.point(getIndex(perspective, kingSquare, pieceSquare, type, c))).addi(1.0);
                     pieces &= pieces - 1;
                 }
             }
@@ -46,15 +46,15 @@ public class InputsUtil {
                 long pieces = board.pieces[c][type];
                 while (pieces != 0) {
                     int pieceSquare = 63 - Long.numberOfTrailingZeros(pieces);
-                    //need to get inverse color, as white pieces are now enemy pieces              
-                    inputs[perspective][getIndex(perspective, kingSquare, pieceSquare, type, c)] = 1;
+                    //need to get inverse color, as white pieces are now enemy pieces            
+                    inputs.get(NDArrayIndex.point(perspective), NDArrayIndex.point(getIndex(perspective, kingSquare, pieceSquare, type, c))).addi(1.0);
                     pieces &= pieces - 1;
                 }
             }
         }
     }
     
-    public static float[][] getFeatures() {
+    public static INDArray getFeatures() {
         return inputs;
     }
 
