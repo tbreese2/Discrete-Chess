@@ -18,9 +18,11 @@ import static Engine.EngineValues.BLACK;
 public class InputsUtil {
     static float[][] inputs = new float[2][NNUEConstants.ft];
 
+    //EFFECTS: returns an array, where arr[WHITE] is features
+    //from white point of view and arr[BLACK] is features from blacks 
+    //pov
     public static void setInputsArr(ChessBoard board) {
-        //will use same perspective for differen't weights
-        //white king perspective features
+        //side to move perspective
         int perspective = WHITE;
         int kingSquare = Long.numberOfTrailingZeros(board.pieces[perspective][KING]);
         for(int c = WHITE; c <= BLACK; c++) {
@@ -28,13 +30,15 @@ public class InputsUtil {
                 long pieces = board.pieces[c][type];
                 while (pieces != 0) {
                     int pieceSquare = Long.numberOfTrailingZeros(pieces);
-                    inputs[perspective][getIndex(kingSquare, pieceSquare, type, c)] = 1;
+                    inputs[perspective][getIndex(perspective, kingSquare, pieceSquare, type, c)] = 1;
                     pieces &= pieces - 1;
                 }
             }
         }
         
         //black king perspective features
+        //black pieces are seen as its own pieces
+        //so colors must be switched
         perspective = BLACK;
         kingSquare = 63 - Long.numberOfTrailingZeros(board.pieces[perspective][KING]);
         for(int c = WHITE; c <= BLACK; c++) {
@@ -42,7 +46,8 @@ public class InputsUtil {
                 long pieces = board.pieces[c][type];
                 while (pieces != 0) {
                     int pieceSquare = 63 - Long.numberOfTrailingZeros(pieces);
-                    inputs[perspective][getIndex(kingSquare, pieceSquare, type, c)] = 1;
+                    //need to get inverse color, as white pieces are now enemy pieces              
+                    inputs[perspective][getIndex(perspective, kingSquare, pieceSquare, type, c)] = 1;
                     pieces &= pieces - 1;
                 }
             }
@@ -57,9 +62,14 @@ public class InputsUtil {
 
     }
 
-    public static int getIndex(int kingSquare, int pieceSQ, int pieceType, int pieceColor) {
+    public static int getIndex(int perspective, int kingSquare, int pieceSQ, int pieceType, int pieceColor) {
         //adjust input as piece type starts at 1
         pieceType--;
+        
+        //black becomes white when perspective switches
+        if(perspective == BLACK) pieceColor = pieceColor == WHITE ? 1 : 0;
+        
+        //now calculate indecies
         int index = pieceType * 2 + pieceColor;
         return ((kingSquare * 10) * 64) + (index * 64) + pieceSQ;
     }
