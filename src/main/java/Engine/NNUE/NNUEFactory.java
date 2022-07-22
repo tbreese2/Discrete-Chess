@@ -10,6 +10,31 @@ import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
+import org.deeplearning4j.datasets.iterator.impl.MnistDataSetIterator;
+import org.nd4j.evaluation.classification.Evaluation;
+import org.deeplearning4j.nn.api.OptimizationAlgorithm;
+import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.Updater;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.nn.conf.layers.SubsamplingLayer;
+import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
+import org.deeplearning4j.nn.conf.inputs.InputType;
+import org.deeplearning4j.nn.conf.distribution.UniformDistribution;
+//import org.deeplearning4j.nn.conf.layers.{DenseLayer, OutputLayer};
+//import org.deeplearning4j.nn.conf.{ComputationGraphConfiguration, MultiLayerConfiguration, NeuralNetConfiguration, Updater};
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.learning.config.Nesterovs;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
+import org.nd4j.linalg.lossfunctions.LossFunctions.LossFunction;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.learning.config.Adam;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
 
 import java.io.*;
 import java.io.File;
@@ -28,23 +53,22 @@ public class NNUEFactory {
             .activation(Activation.RELU)
             .weightInit(WeightInit.XAVIER)
             .list()
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.ft).nOut(NNUEConstants.L_0)
+            .layer(new DenseLayer.Builder().nIn(NNUEConstants.ft).nOut(NNUEConstants.L_0).activation(Activation.RELU)
                 .build())
             .build();
         
         MultiLayerConfiguration main_c = new NeuralNetConfiguration.Builder()
             .seed(seed)
-            .weightInit(WeightInit.XAVIER)
+            .activation(Activation.RELU)
             .weightInit(WeightInit.XAVIER)
             .list()
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_0*2).nOut(NNUEConstants.L_1)
+            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_0*2).nOut(NNUEConstants.L_1).activation(Activation.RELU)
                 .build())
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_1).nOut(NNUEConstants.L_2)
+            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_1).nOut(NNUEConstants.L_2).activation(Activation.RELU)
                 .build())
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_2).nOut(NNUEConstants.L_3)
+            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_2).nOut(NNUEConstants.L_3).activation(Activation.RELU)
                 .build())
             .build();
-
         //run the model
         
         //build feature networks

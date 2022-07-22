@@ -9,6 +9,7 @@ import Engine.NNUE.*;
 import org.junit.*;
 import Engine.MoveGen.*;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.indexing.NDArrayIndex;
 
 public class NNUETests {
     public NNUETests() {
@@ -21,11 +22,19 @@ public class NNUETests {
     
     public static void tearDownClass() {
     }
+    
+    //@Test
+    public void printNets() {
+        NNUE net = NNUEFactory.getNewNetwork();
+        
+        System.out.println(net.ft.summary());
+        System.out.println(net.main.summary());
+    }
 
     /**
      * Test of bestMove method, of class MinMax.
      */
-    @Test
+    //@Test
     public void nnueTestHalfKP() {
         
         //now we will test halfkp
@@ -50,5 +59,19 @@ public class NNUETests {
         }
         
         System.out.println(values.length == valuesB.length);
+    }
+    
+    @Test
+    public void nnueTestBasicEval() {
+        
+        //now we will test halfkp
+        ChessBoard instance = ChessBoardUtil.getNewCB("r1bqk1nr/pp2p2p/2np1p2/2p5/5P2/2NP4/PPP1P1PP/R1BQK1NR w KQkq - 0 1");
+        InputsUtil.setInputsArr(instance);
+        
+        NNUE net = NNUEFactory.getNewNetwork();
+        
+        INDArray out = NNUEMain.evalPos(instance, net);
+        
+        System.out.println(out.toString());
     }
 }
