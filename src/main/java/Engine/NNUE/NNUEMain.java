@@ -3,15 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Engine.NNUE;
-import org.apache.commons.lang3.*;
-import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.dataset.DataSet;
-import org.nd4j.linalg.factory.*;
 import org.nd4j.linalg.factory.Nd4j;
 import Engine.MoveGen.*;
 import Engine.*;
-import org.nd4j.linalg.indexing.NDArrayIndex;
+import Engine.NNUE.NetParts.CReLu;
 
 /**
  *
@@ -49,7 +45,7 @@ public class NNUEMain {
         //concatanate arrays and return network prediction   
         INDArray output = net.ft.output(features.getRow(playerToMove, true));
         INDArray output1 = net.ft.output(features.getRow(playerOther, true));
-        
+
         return net.main.output(Nd4j.concat(1,output, output1));
     }
     

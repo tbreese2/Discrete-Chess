@@ -6,10 +6,11 @@ package Engine.NNUE.Testing;
 
 
 import Engine.NNUE.*;
+import Engine.NNUE.NetParts.CReLu;
 import org.junit.*;
 import Engine.MoveGen.*;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.indexing.NDArrayIndex;
+import org.nd4j.linalg.factory.Nd4j;
 
 public class NNUETests {
     public NNUETests() {
@@ -61,7 +62,7 @@ public class NNUETests {
         System.out.println(values.length == valuesB.length);
     }
     
-    @Test
+    //@Test
     public void nnueTestBasicEval() {
         
         //now we will test halfkp
@@ -73,5 +74,22 @@ public class NNUETests {
         INDArray out = NNUEMain.evalPos(instance, net);
         
         System.out.println(out.toString());
+    }
+    
+    @Test
+    public void clippedReluTest() {
+        double[] testRelu = {1.5, 1.9, 2.8, -3.1, .5, .8, 9.9};
+        double[] correctOut = {1.0, 1.0, 1.0, 0, .5, .8, 1.0};
+        INDArray correct = Nd4j.create(correctOut);
+        
+        INDArray in = Nd4j.create(testRelu);
+        
+        CReLu clipped = new CReLu();
+        
+        clipped.getActivation(in, false);
+        
+        for(int i = 0; i < in.size(0); i++) {
+            if(in.getFloat(i) != correct.getFloat(i)) System.out.println("FAILED!!!");
+        }
     }
 }
