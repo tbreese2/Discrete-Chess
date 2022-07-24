@@ -29,7 +29,7 @@ public class NNUEFactory {
 
         MultiLayerConfiguration ft_c = new NeuralNetConfiguration.Builder()
             .seed(seed)
-            .activation(Activation.RELU)
+            .activation(crelu)
             .weightInit(WeightInit.XAVIER)
             .list()
             .layer(new DenseLayer.Builder().nIn(NNUEConstants.ft).nOut(NNUEConstants.L_0).activation(crelu)
@@ -38,7 +38,7 @@ public class NNUEFactory {
         
         MultiLayerConfiguration main_c = new NeuralNetConfiguration.Builder()
             .seed(seed)
-            .activation(Activation.RELU)
+            .activation(crelu)
             .weightInit(WeightInit.XAVIER)
             .list()
             .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_0*2).nOut(NNUEConstants.L_1).activation(crelu)
