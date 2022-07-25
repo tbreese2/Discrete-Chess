@@ -13,6 +13,8 @@ import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
+import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
 
 import java.io.*;
 import java.io.File;
@@ -47,7 +49,7 @@ public class NNUEFactory {
                 .build())
             .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_1).nOut(NNUEConstants.L_2).activation(crelu)
                 .build())
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.L_2).nOut(NNUEConstants.L_3).activation(crelu)
+            .layer(new OutputLayer.Builder(LossFunctions.LossFunction.MSE).nIn(NNUEConstants.L_2).nOut(NNUEConstants.L_3).activation(crelu)
                 .build())
             .build();
         //run the model
