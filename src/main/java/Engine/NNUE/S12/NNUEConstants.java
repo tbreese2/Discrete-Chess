@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Engine.NNUE;
+package Engine.NNUE.S12;
 
 /**
  *
@@ -19,4 +19,8 @@ public class NNUEConstants {
     //net file
     public static final String ftNetFile = "ft.bin";
     public static final String mainNetFile = "main.bin";
+    
+    //training constants
+    public static final String trainingPath = System.getProperty("user.dir") + "/training_data";
+    public static final String plainExtension = "plain";
 }

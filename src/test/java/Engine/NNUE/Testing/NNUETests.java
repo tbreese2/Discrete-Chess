@@ -5,8 +5,11 @@
 package Engine.NNUE.Testing;
 
 
+import Engine.NNUE.S12.NNUEFactory;
+import Engine.NNUE.S12.NNUE;
+import Engine.NNUE.S12.InputsUtil;
 import Engine.NNUE.*;
-import Engine.NNUE.NetParts.CReLu;
+import Engine.NNUE.CReLu;
 import org.junit.*;
 import Engine.MoveGen.*;
 import org.nd4j.linalg.api.ndarray.INDArray;

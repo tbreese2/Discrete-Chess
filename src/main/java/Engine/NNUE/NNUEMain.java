@@ -3,11 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Engine.NNUE;
+import Engine.NNUE.S12.NNUE;
+import Engine.NNUE.S12.InputsUtil;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import Engine.MoveGen.*;
 import Engine.*;
-import Engine.NNUE.NetParts.CReLu;
 
 /**
  *

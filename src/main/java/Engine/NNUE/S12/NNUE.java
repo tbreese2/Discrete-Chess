@@ -1,4 +1,4 @@
-package Engine.NNUE;
+package Engine.NNUE.S12;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 

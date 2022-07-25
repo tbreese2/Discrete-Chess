@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package Engine.NNUE;
+package Engine.NNUE.S12;
 
-import Engine.NNUE.NetParts.CReLu;
+import Engine.NNUE.CReLu;
+import Engine.NNUE.S12.NNUEConstants;
+import Engine.NNUE.S12.NNUE;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
