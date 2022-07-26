@@ -36,7 +36,7 @@ public class NNUEFactory {
             .activation(crelu)
             .weightInit(WeightInit.XAVIER)
             .list()
-            .layer(new DenseLayer.Builder().nIn(NNUEConstants.ft).nOut(NNUEConstants.L_0).activation(crelu)
+            .layer(new DenseLayer.Builder().nIn(NNUEConstants.FT).nOut(NNUEConstants.L_0).activation(crelu)
                 .build())
             .build();
         
@@ -66,8 +66,8 @@ public class NNUEFactory {
     
     public static void exportNet(NNUE network) {
         try {
-            network.ft.save(new File(networkExportTag + NNUEConstants.ftNetFile));
-            network.main.save(new File(networkExportTag + NNUEConstants.mainNetFile));
+            network.ft.save(new File(networkExportTag + NNUEConstants.FT_NET_FILE));
+            network.main.save(new File(networkExportTag + NNUEConstants.MAIN_NET_FILE));
 	} catch (IOException e) {
             e.printStackTrace();
 	}
@@ -78,8 +78,8 @@ public class NNUEFactory {
         NNUE nn = new NNUE(); 
         
         try {
-           nn.ft = MultiLayerNetwork.load(new File(NNUEConstants.ftNetFile), true);
-           nn.main = MultiLayerNetwork.load(new File(NNUEConstants.mainNetFile), true); 
+           nn.ft = MultiLayerNetwork.load(new File(NNUEConstants.FT_NET_FILE), true);
+           nn.main = MultiLayerNetwork.load(new File(NNUEConstants.MAIN_NET_FILE), true); 
         } catch (IOException e) {
             System.out.println("Couldn't import net");
         }
