@@ -82,7 +82,27 @@ public class InputsUtil {
     }
 
     public static void doMove(int move, ChessBoard board) {
-
+        final int fromIndex = MoveUtil.getFromIndex(move);
+        int toIndex = MoveUtil.getToIndex(move);
+        long toMask = 1L << toIndex;
+        final long fromToMask = (1L << fromIndex) ^ toMask;
+        final int sourcePieceIndex = MoveUtil.getSourcePieceIndex(move);
+        final int attackedPieceIndex = MoveUtil.getAttackedPieceIndex(move);
+        
+        //handled in 3 cats: normal, king move, promotion
+        if(!MoveUtil.isPromotion(move) && !MoveUtil.isCastlingMove(move) && sourcePieceIndex != KING) {
+            //get rid of originial piece from white perspective
+            int kingSquare = Long.numberOfTrailingZeros(board.pieces[WHITE][KING]);
+            inputs.get(NDArrayIndex.point(WHITE), NDArrayIndex.point(getIndex(WHITE, kingSquare, fromIndex, sourcePieceIndex, board.colorToMove))).subi(1.0);
+            
+            //get rid of original piece from blacks perspective
+            kingSquare = 63 - Long.numberOfTrailingZeros(board.pieces[BLACK][KING]);
+            inputs.get(NDArrayIndex.point(BLACK), NDArrayIndex.point(getIndex(BLACK, kingSquare, 63 - fromIndex, sourcePieceIndex, board.colorToMove))).subi(1.0);
+        } else if(MoveUtil.isPromotion(move)) {
+            
+        } else {
+            
+        }
     }
 
     public static void undoMove(int move, ChessBoard board) {

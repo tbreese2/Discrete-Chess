@@ -123,9 +123,6 @@ public class MoveUtil {
         }
     }
 
-    /**
-     * no promotion and no attack
-     */
     public static boolean isQuiet(final int move) {
         return (move & MASK_QUIET) == 0;
     }
