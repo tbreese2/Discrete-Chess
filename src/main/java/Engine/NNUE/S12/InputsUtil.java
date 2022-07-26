@@ -15,10 +15,15 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 
+import org.apache.commons.math3.analysis.function.Sigmoid;
+
 public class InputsUtil {
     //inputs array, that will be operated in place on for the 
     //duration of the program
     private static INDArray inputs = Nd4j.zeros(2,NNUEConstants.FT);
+    
+    //sigmoid function
+    private static Sigmoid sig = new Sigmoid();
 
     //EFFECTS: returns an array, where arr[WHITE] is features
     //from white point of view and arr[BLACK] is features from blacks 
@@ -84,11 +89,7 @@ public class InputsUtil {
 
     }
     
-    public static double wdlToCP(float wdl) {
-        return Sigmoid.getX(wdl) * NNUEConstants.SCALING_FACTOR;
-    }
-    
     public static double cpToWdl(float cp) {
-        return Sigmoid.getY(cp / NNUEConstants.SCALING_FACTOR);
+        return sig.value(cp / NNUEConstants.SCALING_FACTOR);
     }
 }
